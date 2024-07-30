@@ -12,10 +12,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.liftlog.core.navigation.Screen.Screen
-import com.example.liftlog.presentation.exercise.ExerciseScreen
-import com.example.liftlog.presentation.routine.RoutineScreen
+import com.example.liftlog.core.presentation.exercise.ExerciseScreen
+import com.example.liftlog.core.presentation.exercise.state.ExerciseScreenUseCaseState
+import com.example.liftlog.routine_feature.presntation.routine.RoutineScreen
+import com.example.liftlog.routine_feature.presntation.routine_list.RoutineListScreen
 import com.example.liftlog.ui.theme.LiftLogTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,23 +27,42 @@ class MainActivity : ComponentActivity() {
         setContent {
             LiftLogTheme {
 
+
+
                 val navController = rememberNavController()
-                NavHost(navController = navController , startDestination = Screen.RoutinesScreen()){
+                NavHost(navController = navController , startDestination = Screen.RoutineListScreen()){
 
 
-                    composable(route = Screen.RoutineScreen().route){
-                        val routeId = it.arguments?.getString(Screen.RoutineScreen.ROUTINE_ID)
+                    composable(route = Screen.RoutineListScreen()){
 
-                        RoutineScreen(routineId = routeId)
+
+                        RoutineListScreen(
+                            onAddRoutine = {
+                                navController.navigate(Screen.RoutineScreen())
+                            }
+                        )
 
                     }
 
-                    composable(route = Screen.ExerciseScreen().route){
+                    composable(
+                        route = Screen.ExerciseScreen.route,
+                        arguments = Screen.ExerciseScreen.arguments
+                    ){
 
-                        val exerciseId = it.arguments?.getString(Screen.ExerciseScreen.EXERCISE_ID)
+                        val exerciseId = it.arguments?.getString(Screen.ExerciseScreen.EXERCISE_ID_ARGUMENT)
 
-                        ExerciseScreen()
+                        ExerciseScreen(exerciseId = exerciseId, useCaseState = ExerciseScreenUseCaseState.NewExerciseUseCase)
 
+                    }
+
+                    composable(
+                        route = Screen.RoutineScreen.route,
+                        arguments = Screen.RoutineScreen.arguments
+                    ){
+                        val routineId = it.arguments?.getString(Screen.RoutineScreen.ROUTINE_ID_ARGUMENT)
+                        RoutineScreen(
+                            routineId = routineId
+                        )
                     }
                 }
             }

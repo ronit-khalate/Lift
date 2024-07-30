@@ -2,51 +2,37 @@ package com.example.liftlog.core.navigation.Screen
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.liftlog.core.navigation.Screen.Screen.RoutineScreen.ROUTINE_ID_ARGUMENT
 
-sealed class Screen( val route:String ){
-
-
-    class RoutineScreen():Screen("routines_screen/{$ROUTINE_ID}"){
-
-        companion object{
-           const val ROUTINE_ID:String= "route_id"
-        }
+sealed class Screen(  val route:String ){
 
 
 
-        operator fun invoke(routeId: String):String ="${this.route}/{$routeId}"
-        val arguments = listOf(navArgument(ROUTINE_ID){type= NavType.StringType})
+     data object RoutineScreen:Screen("routineScreen/{routineID}"){
+
+         const val ROUTINE_ID_ARGUMENT ="routineID"
+        operator fun invoke(routeId: String?=null):String ="routineScreen/{$routeId}"
+        val arguments = listOf(navArgument(ROUTINE_ID_ARGUMENT){type= NavType.StringType})
 
     }
 
-    data object RoutinesScreen:Screen("routine_screen"){
+    data object RoutineListScreen:Screen("routineScreen"){
+
+
+        const val EXERCISE_ID_ARGUMENT:String ="exerciseID"
 
         operator fun invoke():String = this.route
 
     }
 
-    class ExerciseScreen():Screen("exercise_screen/{$EXERCISE_ID}"){
+    data object ExerciseScreen:Screen("exerciseScreen/"){
 
-        companion object{
-           const val EXERCISE_ID :String="exercise_id"
-        }
+        const val EXERCISE_ID_ARGUMENT:String ="exerciseID"
 
-        operator fun invoke(exercise:String?=null) ="${this.route}/{$exercise}"
+        val arguments = listOf(navArgument(EXERCISE_ID_ARGUMENT){type= NavType.StringType})
+        operator fun invoke(exercise:String?=null) ="exerciseScreen/{$exercise}"
     }
 
 
 }
 
-
-inline fun String.appendParams(vararg params:Pair<String,Any?>):String{
-
-    val builder = StringBuilder(this)
-
-    params.forEach {
-        it.second?.toString()?.let { arg->
-            builder.append("/$arg")
-        }
-    }
-
-    return  builder.toString()
-}
