@@ -11,8 +11,12 @@ sealed class Screen(  val route:String ){
      data object RoutineScreen:Screen("routineScreen/{routineID}"){
 
          const val ROUTINE_ID_ARGUMENT ="routineID"
-        operator fun invoke(routeId: String?=null):String ="routineScreen/{$routeId}"
-        val arguments = listOf(navArgument(ROUTINE_ID_ARGUMENT){type= NavType.StringType})
+        operator fun invoke(routeId: String?=null):String ="routineScreen/$routeId"
+        val arguments = listOf(
+            navArgument(ROUTINE_ID_ARGUMENT){
+                type= NavType.StringType
+                nullable =true
+            })
 
     }
 
@@ -30,7 +34,7 @@ sealed class Screen(  val route:String ){
         const val EXERCISE_ID_ARGUMENT:String ="exerciseID"
 
         val arguments = listOf(navArgument(EXERCISE_ID_ARGUMENT){type= NavType.StringType})
-        operator fun invoke(exercise:String?=null) ="exerciseScreen/{$exercise}"
+        operator fun invoke(exercise:String?=null) ="exerciseScreen/$exercise"
     }
 
 
