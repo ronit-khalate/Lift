@@ -10,7 +10,7 @@ class Routine:RealmObject {
 
     var _id:ObjectId = ObjectId()
     var name:String=""
-    var note:String?=null
+    var note:String=""
     var exercise:RealmList<Exercise> = realmListOf()
     var date: RealmInstant = RealmInstant.now()
 

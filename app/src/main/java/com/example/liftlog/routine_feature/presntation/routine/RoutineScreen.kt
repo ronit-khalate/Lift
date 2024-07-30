@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.liftlog.core.presentation.component.ClickableRow
 import com.example.liftlog.core.presentation.component.ThreeSectionTopBar
 
@@ -62,6 +63,11 @@ fun RoutineScreen(
     modifier: Modifier = Modifier,
     routineId:String?=null
 ) {
+
+    val viewModel = hiltViewModel<RoutineScreenViewModel,RoutineScreenViewModel.RoutineScreenViewModelFactory> {factory ->
+        factory.create(routineId)
+
+    }
 
 
     Scaffold(
@@ -102,7 +108,11 @@ fun RoutineScreen(
 
                 rightContent = {
 
-                        Image(imageVector = Icons.Default.Add, contentDescription = "Add Routine")
+                        Image(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add Routine",
+                            colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onBackground)
+                        )
 
 //                        Spacer(modifier = Modifier.width(1.dp))
 
@@ -123,6 +133,7 @@ fun RoutineScreen(
             // Routine Name
             Row (
                 modifier = Modifier
+                    .padding(start = 10.dp)
                     .fillMaxWidth()
                     .height(50.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -130,7 +141,7 @@ fun RoutineScreen(
                 Text(
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
-                    text = "Routine"
+                    text = if(viewModel.state.routineName.isBlank()) "Unnamed Routine" else viewModel.state.routineName
                 )
             }
 
@@ -145,6 +156,7 @@ fun RoutineScreen(
             ) {
                 Row (
                     Modifier
+                        .padding(start = 10.dp)
                         .fillMaxSize()
                         .padding(start = 10.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -177,6 +189,7 @@ fun RoutineScreen(
 
                     Row(
                         modifier = Modifier
+                            .padding(start = 10.dp)
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -184,10 +197,11 @@ fun RoutineScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(30.dp),
-                            value = "",
+                            value = viewModel.state.routineName,
                             onValueChange = {  },
                             textStyle = TextStyle(
-                                fontSize = 15.sp
+                                fontSize = 15.sp,
+                                color = MaterialTheme.colorScheme.onBackground
                             ),
                             decorationBox = { innerTextField ->
                                 Box(
@@ -195,13 +209,12 @@ fun RoutineScreen(
                                     contentAlignment = Alignment.CenterStart
                                 ) {
 
-                                    // TODO correct if
-                                    if (true) {
+                                    if (viewModel.state.routineName.isBlank()) {
                                         Text(
-                                            text = "Name",
+                                            text = "Unnamed Routine",
                                             style = TextStyle(
                                                 fontSize = 15.sp,
-                                                color = Color.Gray
+                                                color = MaterialTheme.colorScheme.secondary
                                             )
                                         )
                                     }
@@ -214,6 +227,7 @@ fun RoutineScreen(
                     HorizontalDivider(color = MaterialTheme.colorScheme.onBackground)
                     Row(
                         modifier = Modifier
+                            .padding(start = 10.dp)
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -221,10 +235,11 @@ fun RoutineScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(30.dp),
-                            value = "",
+                            value = viewModel.state.routineName,
                             onValueChange = {  },
                             textStyle = TextStyle(
-                                fontSize = 15.sp
+                                fontSize = 15.sp,
+                                color = MaterialTheme.colorScheme.onBackground
                             ),
                             decorationBox = { innerTextField ->
                                 Box(
@@ -232,13 +247,13 @@ fun RoutineScreen(
                                     contentAlignment = Alignment.CenterStart
                                 ) {
 
-                                    // TODO correct if
-                                    if (true) {
+
+                                    if (viewModel.state.note.isBlank()) {
                                         Text(
-                                            text = "Note",
+                                            text = "Notes",
                                             style = TextStyle(
                                                 fontSize = 15.sp,
-                                                color = Color.Gray
+                                                color = MaterialTheme.colorScheme.secondary
                                             )
                                         )
                                     }
@@ -253,36 +268,40 @@ fun RoutineScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
             //? Exercises
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            ) {
 
-                Column (
+            if(viewModel.state.exerciseList.isNotEmpty()) {
+
+
+                Card(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(10.dp)
-                ){
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                ) {
 
-                    // TODO Show Exercise
-                    for (i in 1..3){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(10.dp)
+                    ) {
 
-                        ClickableRow(height = 50, text = "Exercie", onClick = { /*TODO*/ }) {
-                            Image(
-                                modifier = Modifier
-                                    .size(20.dp),
-                                imageVector = Icons.AutoMirrored.Default.KeyboardArrowRight,
-                                contentDescription = null,
-                                colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onBackground)
+                        viewModel.state.exerciseList.forEach {
 
-                            )
+                            ClickableRow(height = 50, text = it.name, onClick = { /*TODO*/ }) {
+                                Image(
+                                    modifier = Modifier
+                                        .size(20.dp),
+                                    imageVector = Icons.AutoMirrored.Default.KeyboardArrowRight,
+                                    contentDescription = null,
+                                    colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onBackground)
+
+                                )
+                            }
+
+                            HorizontalDivider(color = MaterialTheme.colorScheme.onBackground)
                         }
-
-                        HorizontalDivider(color = MaterialTheme.colorScheme.onBackground)
                     }
-                }
 
+                }
             }
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -290,11 +309,12 @@ fun RoutineScreen(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(40.dp),
+                    .height(45.dp),
                 onClick = { /*TODO*/ }
             ) {
                 Row (
                     Modifier
+                        .padding(start = 10.dp)
                         .fillMaxSize()
                         .padding(start = 10.dp),
                     verticalAlignment = Alignment.CenterVertically

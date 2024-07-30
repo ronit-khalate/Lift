@@ -12,14 +12,14 @@ class RoutineDetailRepositoryImpl @Inject  constructor(
     private val realm: Realm
 ): RoutineDetailRepository {
     override suspend fun getRoutineInfo(routineId: String):RealmResults<Routine> {
-        return realm.query<Routine>("routineID == ${routineId}").find()
+        return realm.query<Routine>("_id == ${routineId}").find()
     }
 
-    override suspend fun addExerciseToRoutine(routineId: String,exerciseID:String) {
+    override suspend fun addExerciseToRoutine(routineId: String, exerciseId:String) {
         realm.writeBlocking {
 
             val routine = query<Routine>("_id == $routineId").find().first()
-            val exercise = query<Exercise>("_id == $exerciseID").find().first()
+            val exercise = query<Exercise>("_id == $exerciseId").find().first()
 
             routine.exercise.add(exercise)
         }
