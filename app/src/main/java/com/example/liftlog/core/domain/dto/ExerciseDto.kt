@@ -1,4 +1,4 @@
-package com.example.liftlog.core.presentation.exercise.dto
+package com.example.liftlog.core.domain.dto
 
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmList

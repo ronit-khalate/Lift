@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -50,7 +51,7 @@ fun SearchBar(
             .fillMaxWidth()
             .clip(shape = RoundedCornerShape(30.dp))
             .background(
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.tertiary,
                 shape = RoundedCornerShape(50.dp)
             ),
         verticalAlignment = Alignment.CenterVertically
@@ -74,7 +75,8 @@ fun SearchBar(
                     .padding(horizontal = 2.dp, vertical = 1.dp,)
                     .align(Alignment.Center),
                 imageVector = Icons.TwoTone.Search ,
-                contentDescription = null
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onTertiary)
             )
         }
 

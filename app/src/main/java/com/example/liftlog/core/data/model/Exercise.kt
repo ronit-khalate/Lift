@@ -9,7 +9,7 @@ class Exercise:RealmObject {
 
     var _id:ObjectId = ObjectId()
     var name:String=""
-    var Note:String?=null
+    var note:String?=null
     var muscleGroup:String?=null
     var setCount:Int =1
     var sets:RealmList<Set> = realmListOf()

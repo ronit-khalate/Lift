@@ -27,16 +27,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.liftlog.core.presentation.component.ThreeSectionTopBar
-import com.example.liftlog.core.presentation.exercise.state.ExerciseScreenUseCaseState
+import com.example.liftlog.core.presentation.exercise.event.ExerciseScreenEvent
 
 
 @Composable
 fun ExerciseScreen(
     modifier: Modifier = Modifier,
     exerciseId:String?=null,
-    useCaseState: ExerciseScreenUseCaseState
+    navController: NavController
 ) {
+
+
+    val viewModel = hiltViewModel <ExerciseViewModel,ExerciseViewModel.ExerciseViewModelFactory>{ factory->
+
+        factory.create(exerciseId)
+
+    }
 
 
     Scaffold(
@@ -46,7 +56,7 @@ fun ExerciseScreen(
         topBar = {
             ThreeSectionTopBar(
                 leftContent = {
-                    TextButton(onClick = { TODO("Implement navigation Back") }) {
+                    TextButton(onClick = {navController.popBackStack()}) {
                         Text("Cancel")
                         
                     }
@@ -58,7 +68,15 @@ fun ExerciseScreen(
                 },
 
                 rightContent = {
-                    TextButton(onClick = { TODO("Implement Adding Exercise") }) {
+                    TextButton(
+                        onClick = {
+                            viewModel.onEvent(
+                                ExerciseScreenEvent.onDoneBtnClicked{
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                    ) {
                         Text(text = "Done")
                     }
                 }
@@ -100,8 +118,8 @@ fun ExerciseScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(30.dp),
-                                value = "",
-                                onValueChange = {  },
+                                value = viewModel.exercise.name,
+                                onValueChange = { viewModel.onEvent(ExerciseScreenEvent.OnNameChange(it)) },
                                 textStyle = TextStyle(
                                     fontSize = 15.sp
                                 ),
@@ -112,7 +130,7 @@ fun ExerciseScreen(
                                     ) {
 
                                         // TODO correct if
-                                        if (true) {
+                                        if (viewModel.exercise.name.isEmpty()) {
                                             Text(
                                                 text = "Name",
                                                 style = TextStyle(
@@ -138,8 +156,8 @@ fun ExerciseScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(30.dp),
-                                value = "",
-                                onValueChange = {  },
+                                value = viewModel.exercise.muscleGroup?:"",
+                                onValueChange = { viewModel.onEvent(ExerciseScreenEvent.OnMuscleGroupChange(it)) },
                                 textStyle = TextStyle(
                                     fontSize = 15.sp
                                 ),
@@ -150,7 +168,7 @@ fun ExerciseScreen(
                                     ) {
 
                                         // TODO correct if
-                                        if (true) {
+                                        if (viewModel.exercise.muscleGroup.isNullOrEmpty()) {
                                             Text(
                                                 text = "Muscle Group",
                                                 style = TextStyle(
@@ -173,7 +191,7 @@ fun ExerciseScreen(
                     modifier = Modifier
                         .padding(start = 10.dp, bottom = 5.dp),
                     color = MaterialTheme.colorScheme.secondary,
-                    text = "Description"
+                    text = "Note"
                 )
             
                 Card(
@@ -198,8 +216,8 @@ fun ExerciseScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .heightIn(min = 30.dp, max = Dp.Infinity),
-                                value = "",
-                                onValueChange = {  },
+                                value = viewModel.exercise.note?:"",
+                                onValueChange = { viewModel.onEvent(ExerciseScreenEvent.OnNoteChange(it)) },
                                 singleLine = false,
 
                                 textStyle = TextStyle(
@@ -212,7 +230,7 @@ fun ExerciseScreen(
                                     ) {
 
                                         // TODO correct if
-                                        if (true) {
+                                        if (viewModel.exercise.note.isNullOrEmpty()) {
                                             Text(
                                                 text = "Description",
                                                 style = TextStyle(
@@ -242,6 +260,6 @@ fun ExerciseScreen(
 @Composable
 fun ExerciseScreenPreview() {
 
-    ExerciseScreen(useCaseState = ExerciseScreenUseCaseState.ExistingExerciseUseCase)
+    ExerciseScreen(navController = rememberNavController())
 
 }

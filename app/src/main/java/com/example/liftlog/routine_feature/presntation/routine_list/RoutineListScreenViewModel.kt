@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.liftlog.core.data.model.Routine
 import com.example.liftlog.routine_feature.data.RoutineListRepositoryImpl
+import com.example.liftlog.routine_feature.domain.model.RoutineDto
 import com.example.liftlog.routine_feature.domain.repository.RoutineListRepository
 import com.example.liftlog.routine_feature.presntation.routine_list.event.RoutineListScreenEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +25,9 @@ class RoutineListScreenViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             repository.getAllRoutine().collect{
-                routineList.addAll(it.list)
+
+                routineList.clear()
+                routineList.addAll(it)
             }
         }
 

@@ -34,7 +34,8 @@ import com.example.liftlog.core.presentation.component.ThreeSectionTopBar
 @Composable
 fun RoutineListScreen(
     modifier: Modifier = Modifier,
-    onAddRoutine:()->Unit
+    onAddRoutine:()->Unit,
+    onRoutineClicked:(id:String)->Unit
 ){
 
     val viewModel  = hiltViewModel<RoutineListScreenViewModel>()
@@ -42,8 +43,7 @@ fun RoutineListScreen(
     Scaffold(
 
         modifier = Modifier
-            .fillMaxSize()
-            .safeDrawingPadding(),
+            .fillMaxSize(),
 
         topBar = {
             ThreeSectionTopBar(
@@ -105,7 +105,13 @@ fun RoutineListScreen(
 
 
                 items(items = viewModel.routineList) {routine->
-                    ClickableRow(height = 50, text = routine.name, onClick = { /*TODO*/ }) {
+                    ClickableRow(
+                        height = 50,
+                        text = routine.name,
+                        onClick ={
+                            onRoutineClicked(routine._id.toHexString())
+                        }
+                    ) {
                         Image(
                             imageVector = Icons.AutoMirrored.Default.KeyboardArrowRight,
                             contentDescription = "",
@@ -124,5 +130,5 @@ fun RoutineListScreen(
 @Preview
 @Composable
 fun RoutinesScreenPreview() {
-    RoutineListScreen(){}
+    RoutineListScreen(onRoutineClicked = {}, onAddRoutine = {})
 }
