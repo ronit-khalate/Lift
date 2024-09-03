@@ -10,6 +10,11 @@ class Set:RealmObject {
 
     @PrimaryKey
     var _id:ObjectId = ObjectId()
+    var exercise:Exercise?=null
     var weight:Float = 0.0f
-    var repetitons:Int =0
+    var repetitions:Int =0
+    var notes:String=""
+
+
+
 }

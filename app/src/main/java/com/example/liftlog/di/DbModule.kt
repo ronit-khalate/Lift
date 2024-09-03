@@ -3,6 +3,7 @@ package com.example.liftlog.di
 import com.example.liftlog.core.data.model.Exercise
 import com.example.liftlog.core.data.model.Log
 import com.example.liftlog.core.data.model.Routine
+import com.example.liftlog.core.data.model.ExerciseLog
 import com.example.liftlog.core.data.model.Set
 import dagger.Module
 import dagger.Provides
@@ -21,7 +22,7 @@ object DbModule {
     @Singleton
     fun provideRealm():Realm {
         val config = RealmConfiguration.create(
-            schema = setOf(Set::class, Exercise::class, Routine::class, Log::class)
+            schema = setOf(Set::class, Exercise::class, Routine::class, Log::class,ExerciseLog::class)
         )
 
         return Realm.open(config)
