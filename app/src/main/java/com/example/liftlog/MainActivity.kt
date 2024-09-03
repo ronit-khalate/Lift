@@ -90,6 +90,9 @@ class MainActivity : ComponentActivity() {
                                 onBackBtnClicked = {
                                     navController.popBackStack()
                                 },
+                                onExerciseClick = {exerciseId->
+                                    navController.navigate(Screens.ExerciseScreen(exerciseId))
+                                }
                             )
                         }
 

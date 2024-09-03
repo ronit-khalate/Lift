@@ -6,6 +6,8 @@ import com.example.liftlog.core.domain.dto.ExerciseDto
 import com.example.liftlog.routine_feature.domain.model.RoutineDto
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmList
+import org.mongodb.kbson.BsonObjectId
+import org.mongodb.kbson.ObjectId
 
 
 fun Exercise.toExerciseDto(): ExerciseDto {
@@ -21,6 +23,13 @@ fun Exercise.toExerciseDto(): ExerciseDto {
 
 fun ExerciseDto.toExercise():Exercise{
     return Exercise().apply {
+
+        if(this@toExercise._id != null){
+
+            _id = ObjectId(this@toExercise._id)
+        }
+
+
         name = this@toExercise.name
         note = this@toExercise.Note
         muscleGroup = this@toExercise.muscleGroup

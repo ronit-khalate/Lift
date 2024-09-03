@@ -20,7 +20,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.ext.copyFromRealm
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.ext.toRealmList
+import io.realm.kotlin.notifications.DeletedList
+import io.realm.kotlin.notifications.DeletedObject
+import io.realm.kotlin.notifications.InitialList
+import io.realm.kotlin.notifications.InitialObject
+import io.realm.kotlin.notifications.PendingObject
+import io.realm.kotlin.notifications.SingleQueryChange
+import io.realm.kotlin.notifications.UpdatedList
+import io.realm.kotlin.notifications.UpdatedObject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.BsonObjectId
 import org.mongodb.kbson.ObjectId
@@ -43,20 +52,55 @@ class RoutineScreenViewModel @AssistedInject constructor(
 
    init {
 
+
       routineId?.let { id->
 
          viewModelScope.launch {
 
-            routineDetailRepositoryImpl.getRoutineInfo(id)?.let { routine:Routine ->
 
-               state= RoutineScreenState(
-                  routineId = routine._id,
-                  routineName = routine.name,
-                  note = routine.note,
-                  exerciseList = routine.exercise
-               )
+            routineDetailRepositoryImpl.getRoutineInfo(id).collect{changes:SingleQueryChange<Routine>->
+
+               when(changes){
+
+                  is InitialObject -> {
+                     state= RoutineScreenState(
+                        routineId = changes.obj._id,
+                        routineName = changes.obj.name,
+                        note = changes.obj.note,
+                        exerciseList = changes.obj.exercise
+                     )
+                  }
+                  is DeletedObject -> TODO()
+
+                  is UpdatedObject -> {
+                     state= RoutineScreenState(
+                        routineId = changes.obj._id,
+                        routineName = changes.obj.name,
+                        note = changes.obj.note,
+                        exerciseList = changes.obj.exercise
+                     )
+                  }
+                  is PendingObject -> TODO()
+               }
+
             }
 
+
+         }
+         viewModelScope.launch {
+
+            routineDetailRepositoryImpl.getExerciseChangeNotification(ObjectId(id)).collect{changes->
+
+               when(changes){
+                  is DeletedList -> TODO()
+                  is InitialList -> {}
+                  is UpdatedList -> {
+                     state=state.copy(
+                        exerciseList = changes.list
+                     )
+                  }
+               }
+            }
 
          }
       }

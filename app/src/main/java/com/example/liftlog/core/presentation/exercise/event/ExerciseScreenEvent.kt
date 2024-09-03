@@ -5,6 +5,5 @@ sealed interface ExerciseScreenEvent {
     data class OnMuscleGroupChange(val muscleGroup: String) : ExerciseScreenEvent
     data class OnNoteChange(val note: String) : ExerciseScreenEvent
 
-    data class onDoneBtnClicked(val onComplete:()->Unit):ExerciseScreenEvent
-
+    data class OnDoneBtnClicked(val onComplete:()->Unit):ExerciseScreenEvent
 }

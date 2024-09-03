@@ -11,6 +11,7 @@ interface ExerciseRepository {
     suspend fun addExercise(exercise: Exercise):Unit
     suspend fun getAllExercises(): Flow<List<Exercise>>
     suspend fun getExercise(exerciseID:String): Exercise?
+    suspend fun updateExercise(exercise: Exercise)
 
     suspend fun getAllRoutinesExercises(routineId:String):Array<Exercise>
 }

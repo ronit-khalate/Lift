@@ -6,6 +6,7 @@ import com.example.liftlog.core.data.model.Routine
 import com.example.liftlog.core.data.repository.ExerciseRepository
 import com.example.liftlog.core.domain.dto.ExerciseDto
 import io.realm.kotlin.Realm
+import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.notifications.ResultsChange
 import io.realm.kotlin.query.RealmSingleQuery
@@ -41,6 +42,27 @@ class ExerciseRepositoryImpl @Inject constructor(private val realm: Realm): Exer
     override suspend fun getExercise(exerciseID: String): Exercise? {
 
         return realm.query<Exercise>("_id == $0",ObjectId(exerciseID)).first().find()
+    }
+
+    override suspend fun updateExercise(exercise: Exercise) {
+
+        realm.writeBlocking {
+
+            val managedExercise = query<Exercise>("_id==$0", exercise._id).find().firstOrNull()
+
+            managedExercise?.let {
+
+                managedExercise.name=exercise.name
+                managedExercise.note=exercise.note
+                managedExercise.muscleGroup=exercise.muscleGroup
+
+                copyToRealm(managedExercise,UpdatePolicy.ALL)
+            }
+
+
+
+
+        }
     }
 
     override suspend fun getAllRoutinesExercises(routineId: String): Array<Exercise> {

@@ -71,7 +71,7 @@ fun ExerciseScreen(
                     TextButton(
                         onClick = {
                             viewModel.onEvent(
-                                ExerciseScreenEvent.onDoneBtnClicked{
+                                ExerciseScreenEvent.OnDoneBtnClicked{
                                     navController.popBackStack()
                                 }
                             )

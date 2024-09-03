@@ -11,19 +11,26 @@ import com.example.liftlog.routine_feature.presntation.routine.state.RoutineScre
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
 import io.realm.kotlin.UpdatePolicy
+import io.realm.kotlin.ext.asFlow
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.ext.toRealmList
+import io.realm.kotlin.notifications.ListChange
+import io.realm.kotlin.notifications.ObjectChange
+import io.realm.kotlin.notifications.SingleQueryChange
 import io.realm.kotlin.query.RealmResults
 import io.realm.kotlin.types.RealmList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import org.mongodb.kbson.ObjectId
 import javax.inject.Inject
 
 class RoutineDetailRepositoryImpl @Inject  constructor(
     private val realm: Realm
 ): RoutineDetailRepository {
-    override suspend fun getRoutineInfo(routineId: String):Routine? {
-        return realm.query<Routine>("_id == $0",ObjectId(routineId)).first().find()
+    override suspend fun getRoutineInfo(routineId: String): Flow<SingleQueryChange<Routine>> {
+        return realm.query<Routine>("_id == $0",ObjectId(routineId)).first().asFlow()
     }
 
     override suspend fun addExerciseToRoutine(routineId: String, exerciseId:String) {
@@ -90,6 +97,11 @@ class RoutineDetailRepositoryImpl @Inject  constructor(
 
 
         }
+    }
+
+    override suspend fun getExerciseChangeNotification(routineId: ObjectId): Flow<ListChange<Exercise>> {
+
+        return realm.query<Routine>("_id==$0",routineId).find().first().exercise.asFlow()
     }
 
 

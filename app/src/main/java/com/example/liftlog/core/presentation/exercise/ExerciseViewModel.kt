@@ -65,20 +65,42 @@ class ExerciseViewModel @AssistedInject constructor(
                 exercise = exercise.copy(name = event.name)
             }
 
-            is ExerciseScreenEvent.onDoneBtnClicked -> {
+            is ExerciseScreenEvent.OnDoneBtnClicked -> {
 
-                viewModelScope.launch {
-                    val ex = ExerciseDto(
-                        name = exercise.name,
-                        muscleGroup = exercise.muscleGroup,
-                        Note = exercise.note
+                val ex = ExerciseDto(
+                    _id = exerciseId,
+                    name = exercise.name,
+                    muscleGroup = exercise.muscleGroup,
+                    Note = exercise.note
 
-                    )
+                )
+               onDoneBtnClicked(
+                   exercise = ex.toExercise(),
+                   onComplete = {event.onComplete()}
+               )
+            }
+        }
+    }
 
-                    repositoryImpl.addExercise(ex.toExercise())
+    private fun onDoneBtnClicked(exercise:Exercise,onComplete:()->Unit){
 
-                    event.onComplete()
-                }
+        if(exerciseId != null){
+            viewModelScope.launch {
+
+                repositoryImpl.updateExercise(exercise)
+            }.invokeOnCompletion {
+                onComplete()
+            }
+        }
+        else{
+            viewModelScope.launch {
+
+
+                repositoryImpl.addExercise(exercise)
+
+
+            }.invokeOnCompletion {
+                onComplete()
             }
         }
     }

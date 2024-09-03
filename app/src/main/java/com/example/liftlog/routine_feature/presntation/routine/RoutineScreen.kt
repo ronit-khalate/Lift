@@ -80,7 +80,8 @@ fun RoutineScreen(
     modifier: Modifier = Modifier,
     routineId:String?=null,
     onNavigateToExerciseScreen:()->Unit,
-    onBackBtnClicked:()->Unit
+    onBackBtnClicked:()->Unit,
+    onExerciseClick:(exerciseId:String)->Unit
 
 ) {
 
@@ -350,7 +351,7 @@ fun RoutineScreen(
                                 ClickableRow(
                                     height = 50,
                                     text = exercise.name,
-                                    onClick = { /*TODO*/ }
+                                    onClick = { onExerciseClick(exercise._id.toHexString()) }
                                 ) {
                                     Image(
                                         modifier = Modifier
