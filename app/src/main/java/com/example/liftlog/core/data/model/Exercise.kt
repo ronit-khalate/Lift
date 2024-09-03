@@ -12,7 +12,6 @@ class Exercise:RealmObject {
     var note:String?=null
     var muscleGroup:String?=null
     var setCount:Int =1
-    var sets:RealmList<Set> = realmListOf()
 
 
 }

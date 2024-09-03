@@ -11,7 +11,6 @@ data class ExerciseScreenState(
     val note:String="",
     var muscleGroup:String="",
     var setCount:Int =1,
-    var sets: RealmList<Set> = realmListOf()
 
 )
 
