@@ -42,7 +42,7 @@ class ExerciseViewModel @AssistedInject constructor(
                         note = it.note?:"",
                         muscleGroup = it.muscleGroup?:"",
                         setCount = it.setCount,
-                        sets = it.sets
+
 
                     )
                 }

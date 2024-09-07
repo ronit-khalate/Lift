@@ -82,7 +82,8 @@ fun RoutineScreen(
     routineId:String?=null,
     onNavigateToExerciseScreen:()->Unit,
     onBackBtnClicked:()->Unit,
-    onExerciseClick:(exerciseId:String)->Unit
+    onExerciseClick:(exerciseId:String)->Unit,
+    onStartRoutineClicked:(id:String)->Unit
 
 ) {
 
@@ -133,6 +134,7 @@ fun RoutineScreen(
 
                             Text(
                                 fontSize = 20.sp,
+                                color = MaterialTheme.colorScheme.onPrimary,
                                 text = "Routines"
                             )
                         }
@@ -201,7 +203,14 @@ fun RoutineScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(40.dp),
-                    onClick = { /*TODO*/ }
+                    onClick = {
+
+
+                        routineId?.let {
+                            onStartRoutineClicked(it)
+                        }
+
+                    }
                 ) {
                     Row(
                         Modifier

@@ -1,7 +1,9 @@
 package com.example.liftlog.core.navigation.Screen
 
+import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.liftlog.start_routine_feature.presentation.components.StartRoutineScreenTopBar
 
 sealed class Screens(val route:String ){
 
@@ -39,17 +41,23 @@ sealed class Screens(val route:String ){
         operator fun invoke(exercise:String?=null) ="exerciseScreen/${exercise}"
     }
 
-    data object ExerciseListScreen:Screens("exerciseListScreen"){
+
+
+    data object StartRoutineScreen:Screens("start_exercise_screen/{routine_id}"){
+
+        const val ROUTINE_ID_ARGUMENT:String ="routine_id"
+
+        val arguments = listOf(
+            navArgument(ROUTINE_ID_ARGUMENT){
+                type = NavType.StringType
+                nullable = true
+            }
+        )
 
 
 
-        enum class USECASE{
 
-            ADD_EXERCISE_TO_ROUTINE,
-            EXPLORE_EXERCISES
-        }
-
-
+        operator fun invoke(routineId:String) = "start_exercise_screen/$routineId"
     }
 
 

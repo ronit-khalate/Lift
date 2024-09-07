@@ -1,6 +1,8 @@
 package com.example.liftlog.routine_feature.presntation.routine_list
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +23,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.liftlog.core.presentation.component.ClickableRow
 import com.example.liftlog.core.presentation.component.ThreeSectionTopBar
+import com.example.liftlog.ui.theme.black
+import com.example.liftlog.ui.theme.white
 
 
 @Composable
@@ -59,7 +64,7 @@ fun RoutineListScreen(
                 rightContent = {
                     IconButton(onClick = onAddRoutine) {
                         Image(
-                            colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onBackground),
+                            colorFilter = ColorFilter.tint(color = white),
                             imageVector = Icons.Default.Add,
                             contentDescription = "Add Routine"
                         )
@@ -67,13 +72,18 @@ fun RoutineListScreen(
                 }
             )
         }
+
     ) { it ->
+
+
 
         Column(
             modifier = Modifier
+                .background(color = black)
                 .padding(it)
                 .fillMaxSize()
                 .padding(start = 10.dp, end = 10.dp, bottom = 4.dp)
+
 
         ) {
 
@@ -86,9 +96,12 @@ fun RoutineListScreen(
                     .height(50.dp),
                 verticalAlignment = Alignment.CenterVertically
             ){
+
+
                 Text(
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
                     text = "Routines"
                 )
             }

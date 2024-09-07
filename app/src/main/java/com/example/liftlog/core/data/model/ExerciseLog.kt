@@ -8,6 +8,7 @@ import org.mongodb.kbson.ObjectId
 class ExerciseLog:EmbeddedRealmObject {
 
 
-    var exercise:Exercise?=null
+    var _id:ObjectId = ObjectId()
+    var exercise:Exercise? = Exercise()
     var setList:RealmList<Set> = realmListOf()
 }
