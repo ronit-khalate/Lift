@@ -83,7 +83,7 @@ fun RoutineScreen(
     onNavigateToExerciseScreen:()->Unit,
     onBackBtnClicked:()->Unit,
     onExerciseClick:(exerciseId:String)->Unit,
-    onStartRoutineClicked:(id:String)->Unit
+    onStartRoutineClicked:(id:String,name:String)->Unit
 
 ) {
 
@@ -207,7 +207,7 @@ fun RoutineScreen(
 
 
                         routineId?.let {
-                            onStartRoutineClicked(it)
+                            onStartRoutineClicked(it,viewModel.state.routineName)
                         }
 
                     }

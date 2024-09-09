@@ -2,12 +2,15 @@ package com.example.liftlog.core.data.mappers
 
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import com.example.liftlog.core.data.model.Exercise
+import com.example.liftlog.core.data.model.ExerciseLog
 import com.example.liftlog.core.data.model.Log
 import com.example.liftlog.core.data.model.Routine
+import com.example.liftlog.core.data.model.Set
 import com.example.liftlog.core.domain.dto.ExerciseDto
 import com.example.liftlog.routine_feature.domain.model.RoutineDto
 import com.example.liftlog.start_routine_feature.presentation.state.StartRoutineScreenState
 import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.ext.toRealmList
 import io.realm.kotlin.types.RealmInstant
 import io.realm.kotlin.types.RealmList
 import org.mongodb.kbson.BsonObjectId
@@ -55,31 +58,31 @@ fun Routine.toRoutineDto():RoutineDto{
 }
 
 
-fun StartRoutineScreenState.toLog():Log{
+fun StartRoutineScreenState.toLog(): Log {
+    return Log().apply {
+        val l = realmListOf<ExerciseLog>()
+        l.addAll(this@toLog.exercisesLog)
+        this.exercisesLog = l
 
-    return  Log().apply {
-
-        this.exercisesLog=this@toLog.exercisesLog.toRealmList()
-        this.routineId=this@toLog.routine?._id
-        this.routineName=this@toLog.routine?.name!!
-        this.bodyWeight= try {
+        this.routineId = this@toLog.routine?._id
+        this.routineName = this@toLog.routine?.name ?: ""
+        this.bodyWeight = try {
             this@toLog.bodyWeight.toFloat()
-        }
-        catch (e:Exception){
+        } catch (e: Exception) {
             0.0F
         }
 
         this.endTime = RealmInstant.now()
-
     }
 }
+
 
 fun <T>List<T>.toRealmList(): RealmList<T> {
 
     val realmlist = realmListOf<T>()
 
     this.forEach {
-        realmlist.add(it)
+        realmlist.addAll(this)
     }
 
     return realmlist

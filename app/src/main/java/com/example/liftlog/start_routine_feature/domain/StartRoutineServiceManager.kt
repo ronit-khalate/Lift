@@ -1,35 +1,106 @@
 package com.example.liftlog.start_routine_feature.domain
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.example.liftlog.LiftLogApp
 import com.example.liftlog.start_routine_feature.StartRoutineService
+import com.example.liftlog.start_routine_feature.presentation.state.StartRoutineScreenState
 
 object StartRoutineServiceManager {
 
-    private var isRunning by mutableStateOf(false)
-    private var serviceBinder: StartRoutineService.LocalBinder? = null
+    private val serviceConnection = object :ServiceConnection{
+        override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
+            val localBinder =  binder as StartRoutineService.LocalBinder
 
-    // Check if the service is running
-    fun isServiceRunning(): Boolean = isRunning
+            serviceBinder = localBinder
+            service = localBinder.getService()
 
-    // Set the service running state
-    fun setServiceRunning(running: Boolean) {
-        isRunning = running
+            isRunning  = true
+            isBound = true
+
+        }
+
+        override fun onServiceDisconnected(p0: ComponentName?) {
+
+            serviceBinder=null
+            isBound = false
+        }
+
     }
 
-    // Get the service binder if available
-    fun getServiceBinder(): StartRoutineService.LocalBinder? = serviceBinder
+    var service:StartRoutineService?=null
+        private set
+    var isRunning by mutableStateOf(false)
+        private set
+    var isBound = false
+        private set
+
+    val routineId : String?
+        get() = service?.routineID
+
+    var serviceBinder: StartRoutineService.LocalBinder? = null
+        private set
+
 
     // Set the service binder
-    fun setServiceBinder(binder: StartRoutineService.LocalBinder?) {
-        serviceBinder = binder
+
+    fun unbind(){
+
+
+        if(isBound){
+
+
+            LiftLogApp.contex.unbindService(serviceConnection)
+            serviceBinder=null
+            service=null
+            isBound=false
+        }
+    }
+
+    fun setState(state:StartRoutineScreenState){
+        service?.setLog(state)
+    }
+
+    fun bind(routineID: String, routineName: String) {
+
+
+
+
+            Intent(LiftLogApp.contex,StartRoutineService::class.java)
+                .apply {
+                    putExtra(StartRoutineService.ROUTINE_ID,routineID)
+                    putExtra(StartRoutineService.ROUTINE_NAME,routineName)
+                }
+                .also {
+
+                    LiftLogApp.contex.bindService(it, serviceConnection, Context.BIND_AUTO_CREATE)
+                }
+
+
+
+    }
+
+    fun startService(routineID: String,routineName: String){
+
+        val intent = Intent(LiftLogApp.contex,StartRoutineService::class.java).apply {
+            putExtra(StartRoutineService.ROUTINE_ID,routineID)
+            putExtra(StartRoutineService.ROUTINE_NAME,routineName)
+        }
+        LiftLogApp.contex.startService(intent)
+        isRunning=true
     }
 
     fun stopService(){
 
-        serviceBinder?.getService()?.stopSelf()
+
+        unbind()
+        LiftLogApp.contex.stopService(Intent(LiftLogApp.contex, StartRoutineService::class.java))
         isRunning=false
-        serviceBinder = null
     }
 }

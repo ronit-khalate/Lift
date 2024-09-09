@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -30,8 +31,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.liftlog.LiftLogApp
 import com.example.liftlog.core.presentation.component.ClickableRow
 import com.example.liftlog.core.presentation.component.ThreeSectionTopBar
+import com.example.liftlog.start_routine_feature.StartRoutineService
 import com.example.liftlog.ui.theme.black
 import com.example.liftlog.ui.theme.white
 
@@ -40,7 +43,7 @@ import com.example.liftlog.ui.theme.white
 fun RoutineListScreen(
     modifier: Modifier = Modifier,
     onAddRoutine:()->Unit,
-    onRoutineClicked:(id:String)->Unit
+    onRoutineClicked:(id:String,name:String)->Unit
 ){
 
     val viewModel  = hiltViewModel<RoutineListScreenViewModel>()
@@ -58,6 +61,21 @@ fun RoutineListScreen(
                 leftContent = {
                     TextButton(onClick = { /*TODO*/ }) {
                         Text(text = "Edit")
+                    }
+                },
+                middleContent = {
+                    
+                    IconButton(onClick = {
+                        LiftLogApp.isServiceRunning(
+                            LiftLogApp.contex,
+                            StartRoutineService::class.java
+                        )
+                    }) {
+                        Image(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(color = white)
+                        )
                     }
                 },
 
@@ -122,7 +140,7 @@ fun RoutineListScreen(
                         height = 50,
                         text = routine.name,
                         onClick ={
-                            onRoutineClicked(routine._id.toHexString())
+                            onRoutineClicked(routine._id.toHexString(),routine.name)
                         }
                     ) {
                         Image(
@@ -143,5 +161,6 @@ fun RoutineListScreen(
 @Preview
 @Composable
 fun RoutinesScreenPreview() {
-    RoutineListScreen(onRoutineClicked = {}, onAddRoutine = {})
+    RoutineListScreen(onRoutineClicked = { i,g->
+    }, onAddRoutine = {})
 }

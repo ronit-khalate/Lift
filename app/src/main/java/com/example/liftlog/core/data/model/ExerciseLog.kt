@@ -3,9 +3,10 @@ package com.example.liftlog.core.data.model
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.EmbeddedRealmObject
 import io.realm.kotlin.types.RealmList
+import io.realm.kotlin.types.RealmObject
 import org.mongodb.kbson.ObjectId
 
-class ExerciseLog:EmbeddedRealmObject {
+class ExerciseLog:RealmObject {
 
 
     var _id:ObjectId = ObjectId()

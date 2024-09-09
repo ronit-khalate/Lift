@@ -31,6 +31,7 @@ import com.example.liftlog.ui.theme.white
 fun StickyBottomCard(
     modifier: Modifier = Modifier,
     routineName:String,
+    onCardClick:()->Unit,
     onFinishBtnClick:()->Unit
 ) {
 
@@ -38,9 +39,11 @@ fun StickyBottomCard(
 
         Card(
             modifier = Modifier
+                .padding( bottom = 50.dp)
                 .fillMaxWidth()
                 .height(36.dp)
-                .padding(start = 20.dp, end = 20.dp),
+                .clickable { onCardClick() }
+
 
         ) {
 
@@ -99,5 +102,5 @@ fun StickyBottomCard(
 @Composable
 private fun Preview() {
 
-    StickyBottomCard(routineName = "Chest & Tripce", onFinishBtnClick = {})
+    StickyBottomCard(routineName = "Chest & Tripce", onFinishBtnClick = {}, onCardClick = {})
 }

@@ -5,18 +5,25 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import android.util.Log.*
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import com.example.liftlog.core.data.mappers.toLog
 import com.example.liftlog.core.data.model.Log
 import com.example.liftlog.start_routine_feature.data.repository.StartRoutineRepositoryImpl
 import com.example.liftlog.start_routine_feature.presentation.state.StartRoutineScreenState
+import com.example.liftlog.ui.theme.white
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.time.delay
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class StartRoutineService:Service() {
 
 
@@ -28,16 +35,11 @@ class StartRoutineService:Service() {
 
     var routineName:String? = null
         private set
+    var routineID:String? = null
+        private set
 
     var state:StartRoutineScreenState?=null
         private set
-    override fun onBind(p0: Intent?): IBinder? {
-
-        return binder
-    }
-
-    var num=0;
-
 
 
     fun setLog(state: StartRoutineScreenState){
@@ -45,17 +47,44 @@ class StartRoutineService:Service() {
         this.state = state
     }
 
-    inner class LocalBinder: Binder(){
+    override fun onBind(intent: Intent?): IBinder? {
 
-        fun getService():StartRoutineService = this@StartRoutineService
+        CoroutineScope(Dispatchers.Main).launch{
+
+            var count=0
+            while(this.isActive){
+
+                d(TAG,count.toString())
+                count++
+                delay(1000L)
+            }
+        }
+        routineName = intent?.getStringExtra(ROUTINE_NAME)
+        routineID = intent?.getStringExtra(ROUTINE_ID)
+        return binder
     }
+
+    var num=0;
+
+
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
 
+        CoroutineScope(Dispatchers.Main).launch{
+
+            var count=0
+            while(this.isActive){
+
+                d(TAG,count.toString())
+                count++
+                delay(1000L)
+            }
+        }
 
             routineName = intent?.getStringExtra(ROUTINE_NAME)
+            routineID = intent?.getStringExtra(ROUTINE_ID)
 
 
         return START_NOT_STICKY
@@ -64,19 +93,34 @@ class StartRoutineService:Service() {
     override fun onDestroy() {
         super.onDestroy()
 
-        CoroutineScope(Dispatchers.Unconfined).launch{
+       stopSelf()
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+
+
+        CoroutineScope(Dispatchers.Default).launch{
 
             state?.let {
-                startRoutineRepositoryImpl.saveLog(it.toLog())
+                startRoutineRepositoryImpl.saveLog(it)
             }
-
         }
+
+        return super.onUnbind(intent)
+
     }
 
 
 
+
+
+    inner class LocalBinder: Binder(){
+
+        fun getService():StartRoutineService = this@StartRoutineService
+    }
     companion object{
 
         const val ROUTINE_NAME = "routine_name"
+        const val ROUTINE_ID ="routine_id"
     }
 }

@@ -1,9 +1,7 @@
 package com.example.liftlog.core.navigation.Screen
 
-import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.example.liftlog.start_routine_feature.presentation.components.StartRoutineScreenTopBar
 
 sealed class Screens(val route:String ){
 
@@ -12,12 +10,14 @@ sealed class Screens(val route:String ){
      data object RoutineScreen:Screens("routineScreen/{routineID}"){
 
          const val ROUTINE_ID_ARGUMENT ="routineID"
-        operator fun invoke(routeId: String?=null):String ="routineScreen/$routeId"
+
+        operator fun invoke(routeId: String? = null):String ="routineScreen/$routeId"
         val arguments = listOf(
             navArgument(ROUTINE_ID_ARGUMENT){
                 type= NavType.StringType
                 nullable =true
-            })
+            }
+        )
 
     }
 
@@ -43,21 +43,25 @@ sealed class Screens(val route:String ){
 
 
 
-    data object StartRoutineScreen:Screens("start_exercise_screen/{routine_id}"){
+    data object StartRoutineScreen:Screens("start_exercise_screen/{routine_id}/{routineName}"){
 
         const val ROUTINE_ID_ARGUMENT:String ="routine_id"
+        const val ROUTINE_NAME_ARGUMENT ="routineName"
 
         val arguments = listOf(
             navArgument(ROUTINE_ID_ARGUMENT){
                 type = NavType.StringType
                 nullable = true
-            }
+            },
+            navArgument(ROUTINE_NAME_ARGUMENT){
+                type= NavType.StringType
+            },
         )
 
 
 
 
-        operator fun invoke(routineId:String) = "start_exercise_screen/$routineId"
+        operator fun invoke(routineId:String,routineName:String) = "start_exercise_screen/$routineId/$routineName"
     }
 
 
