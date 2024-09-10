@@ -11,6 +11,7 @@ import org.mongodb.kbson.ObjectId
 
 class Log: RealmObject {
 
+
     var _id:ObjectId = ObjectId()
     var routineName: String =""
     var routineId:ObjectId?=null

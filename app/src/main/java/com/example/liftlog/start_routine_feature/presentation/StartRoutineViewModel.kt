@@ -10,6 +10,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.liftlog.core.data.model.ExerciseLog
 import com.example.liftlog.core.data.model.Set
 import com.example.liftlog.core.domain.RealmResponse
+import com.example.liftlog.start_routine_feature.data.model.ExerciseLogDto
+import com.example.liftlog.start_routine_feature.data.model.SetDto
 import com.example.liftlog.start_routine_feature.data.repository.StartRoutineRepositoryImpl
 import com.example.liftlog.start_routine_feature.domain.StartRoutineServiceManager
 import com.example.liftlog.start_routine_feature.presentation.event.StartRoutineScreenEvent
@@ -68,9 +70,15 @@ class StartRoutineViewModel @AssistedInject constructor(
                             routine = response.data,
                             date = Date().time,
                             exercisesLog = response.data.exercise.map {
-                                ExerciseLog().apply {
-                                    this.exercise = it
-                                }
+
+                                ExerciseLogDto(
+                                    exerciseID = it._id.toHexString(),
+                                    name = it.name,
+                                    muscleGroup = it.muscleGroup?:"",
+                                    note = ""
+
+
+                                )
                             }.toMutableStateList()
                         )
                     }
@@ -101,6 +109,7 @@ class StartRoutineViewModel @AssistedInject constructor(
                         Log.d(TAG,response.error.message.toString())
                     }
                     is RealmResponse.Success -> {
+
                         response.data?.let {
                             state = state.copy(
                                 lastLog = it.exercisesLog
@@ -147,17 +156,20 @@ class StartRoutineViewModel @AssistedInject constructor(
 
 
 
-                updateSetProperty(event.id,event.data,event.exLogId){this.weight = it}
+                updateSetProperty(event.id,event.data,event.exLogId){
+
+                    this.copy(weight = it)
+                }
             }
 
             is StartRoutineScreenEvent.OnUpdateReps -> {
 
-                updateSetProperty(event.id,event.data,event.exLogId){this.repetitions = it}
+                updateSetProperty(event.id,event.data,event.exLogId){this.copy(repetitions = it)}
 
             }
 
             is StartRoutineScreenEvent.OnUpdateNotes -> {
-                updateSetProperty(event.id,event.data,event.exLogId){this.notes = it}
+                updateSetProperty(event.id,event.data,event.exLogId){this.copy(notes = it)}
             }
 
             is StartRoutineScreenEvent.OnRoutineFinish -> {
@@ -169,29 +181,25 @@ class StartRoutineViewModel @AssistedInject constructor(
     }
 
 
-    private fun updateSetProperty(setId:String, data:String ,exLogId: String , update: Set.(data:String)-> Unit){
-        val exLogIndex = state.exercisesLog.indexOfFirst { it._id.toHexString()== exLogId }
+    private fun updateSetProperty(setId:String, data:String ,exLogId: String , update: SetDto.(data:String)-> SetDto){
+        val exLogIndex = state.exercisesLog.indexOfFirst { it.id.toHexString()== exLogId }
 
         if (exLogIndex != -1){
 
             val exLog = state.exercisesLog[exLogIndex]
 
-            val setToBeUpdated = exLog.setList.find { it._id.toHexString() == setId }
+            val setToBeUpdatedIndex = exLog.setList.indexOfFirst { it.id.toHexString() == setId }
 
-            setToBeUpdated?.update(data)
 
-            exLog.setList.removeIf { it._id.toHexString() == setId }
+            if(setToBeUpdatedIndex != -1){
 
-            setToBeUpdated?.let {
+                var setToBeUpdated = exLog.setList[setToBeUpdatedIndex]
+                setToBeUpdated = setToBeUpdated.update(data)
 
-                exLog.setList.add(setToBeUpdated)
+                exLog.setList[setToBeUpdatedIndex] = setToBeUpdated
             }
 
-            state.exercisesLog[exLogIndex] = ExerciseLog().apply {
-                this._id = exLog._id
-                this.exercise = exLog.exercise
-                this.setList = exLog.setList
-            }
+            state.exercisesLog[exLogIndex] =exLog.copy()
         }
     }
 
@@ -199,7 +207,7 @@ class StartRoutineViewModel @AssistedInject constructor(
     private fun addSetInExerciseLog(id: String) {
 
 
-        val exLogIndex = state.exercisesLog.indexOfFirst { it._id.toHexString()== id }
+        val exLogIndex = state.exercisesLog.indexOfFirst { it.id.toHexString()== id }
 
 
         if(exLogIndex != -1) {
@@ -207,12 +215,12 @@ class StartRoutineViewModel @AssistedInject constructor(
 
             val exLogToUpdate = state.exercisesLog[exLogIndex]
 
-            exLogToUpdate.setList.add(Set())
-            state.exercisesLog[exLogIndex] = ExerciseLog().apply {
-                this._id = exLogToUpdate._id
-                this.exercise = exLogToUpdate.exercise
-                this.setList = exLogToUpdate.setList
-            }
+            exLogToUpdate.setList.add(
+                SetDto(
+                    exerciseId = exLogToUpdate.exerciseID,
+                )
+            )
+            state.exercisesLog[exLogIndex] = exLogToUpdate.copy(setList = exLogToUpdate.setList)
 
 
             state = state.copy(exercisesLog = state.exercisesLog)

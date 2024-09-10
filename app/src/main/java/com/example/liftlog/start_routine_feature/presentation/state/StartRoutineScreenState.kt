@@ -14,7 +14,7 @@ data class StartRoutineScreenState(
     val endTime: RealmInstant? = null,
     val date:Long=0L,
     val bodyWeight:String="",
-    val exercisesLog: SnapshotStateList<ExerciseLog> = mutableStateListOf(),
+    val exercisesLog: SnapshotStateList<ExerciseLogDto> = mutableStateListOf(),
 
     val lastLog:List<ExerciseLog>? =null
 )

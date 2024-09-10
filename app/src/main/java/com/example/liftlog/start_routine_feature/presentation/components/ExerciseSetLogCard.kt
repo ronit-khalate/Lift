@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -35,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.liftlog.core.data.model.ExerciseLog
 import com.example.liftlog.core.data.model.Set
+import com.example.liftlog.start_routine_feature.data.model.ExerciseLogDto
+import com.example.liftlog.start_routine_feature.data.model.SetDto
 import com.example.liftlog.ui.theme.black
 import com.example.liftlog.ui.theme.textGray
 import com.example.liftlog.ui.theme.white
@@ -45,7 +50,7 @@ import io.realm.kotlin.ext.realmListOf
 fun ExerciseSetLogCard(
     modifier: Modifier = Modifier,
     count:Int,
-    exerciseLog:ExerciseLog,
+    exerciseLog:ExerciseLogDto,
     onAddSetBtnClick:(id:String)->Unit,
     updateWeight: (id:String,exLogId:String,data:String)->Unit,
     updateReps: (id:String,exLogId:String,data:String)->Unit,
@@ -68,7 +73,7 @@ fun ExerciseSetLogCard(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "${count}.${exerciseLog.exercise?.name}",
+                    text = "${count}.${exerciseLog.name}",
                     color = white,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
@@ -96,17 +101,20 @@ fun ExerciseSetLogCard(
             exerciseLog.setList.forEachIndexed {index, set->
 
 
-                ExerciseSetLogData(
-                    setTextWidth = setTextWidth,
-                    kgTextWidth = kgTextWidth,
-                    repsTextWidth = repsTextWidth,
-                    set = set,
-                    exId = exerciseLog._id.toHexString(),
-                    index=index + 1,
-                    updateWeight = updateWeight,
-                    updateReps = updateReps,
-                    updateNotes = updateNotes
-                )
+
+                    ExerciseSetLogData(
+                        setTextWidth = setTextWidth,
+                        kgTextWidth = kgTextWidth,
+                        repsTextWidth = repsTextWidth,
+                        set = set,
+                        exId = exerciseLog.id.toHexString(),
+                        index = index + 1,
+                        updateWeight = updateWeight,
+                        updateReps = updateReps,
+                        updateNotes = updateNotes
+                    )
+
+
             }
             // Data End
 
@@ -121,7 +129,7 @@ fun ExerciseSetLogCard(
 
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = white),
-                onClick = { onAddSetBtnClick(exerciseLog._id.toHexString()) }
+                onClick = { onAddSetBtnClick(exerciseLog.id.toHexString()) }
             ) {
 
                 Text(
@@ -277,7 +285,7 @@ private fun ExerciseSetLogData(
     updateReps: (id: String, exLogId: String, data: String) -> Unit,
     updateNotes: (id: String, exLogId: String, data: String) -> Unit,
     exId:String,
-    set: Set,
+    set: SetDto,
     index: Int
 ) {
     Row (
@@ -303,7 +311,7 @@ private fun ExerciseSetLogData(
 
                 Column(
                     modifier = Modifier
-                        .fillMaxHeight(),
+                        .wrapContentHeight(),
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
@@ -336,7 +344,7 @@ private fun ExerciseSetLogData(
             // Weight
             Column(
                 modifier = Modifier
-                    .fillMaxHeight()
+                    .wrapContentHeight()
                     .weight(30f),
                 horizontalAlignment = Alignment.Start,
 
@@ -356,7 +364,7 @@ private fun ExerciseSetLogData(
 
                         value = if(set.weight.toString() =="0.0") "" else set.weight.toString(),
                         cursorBrush = SolidColor(white),
-                        onValueChange = { updateWeight(set._id.toHexString(),exId,it) },
+                        onValueChange = { updateWeight(set.id.toHexString(),exId,it) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         decorationBox = {
 
@@ -377,7 +385,7 @@ private fun ExerciseSetLogData(
             // Resp
             Column(
                 modifier = Modifier
-                    .fillMaxHeight()
+                    .wrapContentHeight()
                     .weight(30f),
                 horizontalAlignment = Alignment.Start,
 
@@ -397,7 +405,7 @@ private fun ExerciseSetLogData(
                         textStyle = TextStyle(color = white , fontSize = 10.sp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         value = set.repetitions.toString(),
-                        onValueChange = {updateReps(set._id.toHexString(),exId,it)},
+                        onValueChange = {updateReps(set.id.toHexString(),exId,it)},
                         cursorBrush = SolidColor(white),
 
                         decorationBox = {
@@ -433,7 +441,7 @@ private fun ExerciseSetLogData(
                     textStyle = TextStyle(color = white , fontSize = 10.sp),
 
                     value = set.notes,
-                    onValueChange = {updateNotes(set._id.toHexString(),exId , it)},
+                    onValueChange = {updateNotes(set.id.toHexString(),exId , it)},
                     cursorBrush = SolidColor(white),
 
                     decorationBox = {
@@ -467,33 +475,33 @@ val b = black.toArgb().toLong()
 @Composable
 private fun ExerciseSetLogCardPreview() {
 
-    ExerciseSetLogCard(
-        count = 1,
-        exerciseLog = ExerciseLog().apply {
-            this.setList = realmListOf(
-                Set().apply {
-                    this.notes = "start form 30"
-                    this.weight="43.0F"
-                    this.repetitions="5"
-                },
-                Set().apply {
-                    this.notes = "start form 30"
-                    this.weight= "43.0F"
-                    this.repetitions="5"
-                },
-
-                Set().apply {
-                    this.notes = "start form 30"
-                    this.weight= "43.0F"
-                    this.repetitions="5"
-                },
-            )
-
-        },
-        onAddSetBtnClick = {},
-        updateWeight = {id,ex,data ->},
-        updateReps = {id,ex,data ->},
-        updateNotes = {id,ex,data ->},
-
-    )
+//    ExerciseSetLogCard(
+//        count = 1,
+//        exerciseLog = ExerciseLog().apply {
+//            this.setList = realmListOf(
+//                Set().apply {
+//                    this.notes = "start form 30"
+//                    this.weight="43.0F"
+//                    this.repetitions="5"
+//                },
+//                Set().apply {
+//                    this.notes = "start form 30"
+//                    this.weight= "43.0F"
+//                    this.repetitions="5"
+//                },
+//
+//                Set().apply {
+//                    this.notes = "start form 30"
+//                    this.weight= "43.0F"
+//                    this.repetitions="5"
+//                },
+//            )
+//
+//        },
+//        onAddSetBtnClick = {},
+//        updateWeight = {id,ex,data ->},
+//        updateReps = {id,ex,data ->},
+//        updateNotes = {id,ex,data ->},
+//
+//    )
 }

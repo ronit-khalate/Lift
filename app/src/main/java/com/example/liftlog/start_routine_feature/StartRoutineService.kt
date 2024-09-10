@@ -8,7 +8,7 @@ import android.os.IBinder
 import android.util.Log.*
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
-import com.example.liftlog.core.data.mappers.toLog
+
 import com.example.liftlog.core.data.model.Log
 import com.example.liftlog.start_routine_feature.data.repository.StartRoutineRepositoryImpl
 import com.example.liftlog.start_routine_feature.presentation.state.StartRoutineScreenState

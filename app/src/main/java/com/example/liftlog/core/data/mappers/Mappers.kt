@@ -58,23 +58,23 @@ fun Routine.toRoutineDto():RoutineDto{
 }
 
 
-fun StartRoutineScreenState.toLog(): Log {
-    return Log().apply {
-        val l = realmListOf<ExerciseLog>()
-        l.addAll(this@toLog.exercisesLog)
-        this.exercisesLog = l
-
-        this.routineId = this@toLog.routine?._id
-        this.routineName = this@toLog.routine?.name ?: ""
-        this.bodyWeight = try {
-            this@toLog.bodyWeight.toFloat()
-        } catch (e: Exception) {
-            0.0F
-        }
-
-        this.endTime = RealmInstant.now()
-    }
-}
+//fun StartRoutineScreenState.toLog(): Log {
+//    return Log().apply {
+//        val l = realmListOf<ExerciseLog>()
+//        l.addAll(this@toLog.exercisesLog)
+//        this.exercisesLog = l
+//
+//        this.routineId = this@toLog.routine?._id
+//        this.routineName = this@toLog.routine?.name ?: ""
+//        this.bodyWeight = try {
+//            this@toLog.bodyWeight.toFloat()
+//        } catch (e: Exception) {
+//            0.0F
+//        }
+//
+//        this.endTime = RealmInstant.now()
+//    }
+//}
 
 
 fun <T>List<T>.toRealmList(): RealmList<T> {

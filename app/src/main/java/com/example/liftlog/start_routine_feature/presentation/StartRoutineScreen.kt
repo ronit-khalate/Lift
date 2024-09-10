@@ -107,7 +107,7 @@ fun StartRoutineScreen(
                 }
 
 
-                items(items = viewmodel.state.exercisesLog, key = {it._id.toHexString()}) {exerciseLog->
+                items(items = viewmodel.state.exercisesLog, key = {it.id.toHexString()}) {exerciseLog->
 
                     var count= 1
                     ExerciseSetLogCard(
