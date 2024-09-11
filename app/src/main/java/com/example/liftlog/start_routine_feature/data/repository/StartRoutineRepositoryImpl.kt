@@ -49,6 +49,8 @@ class StartRoutineRepositoryImpl @Inject constructor(
 
         return try {
 
+
+            // TODO Get latest by time
             val t = realm.query<Log>()
             val result = realm.query<Log>("routineId == $0" , routineId).find()
 
@@ -69,51 +71,9 @@ class StartRoutineRepositoryImpl @Inject constructor(
 
         return try {
 
-//            realm.writeBlocking {
-//
-//                findLatest(log)
-//                val exerciseLogSetList = realmListOf(
-//                    *log.exercisesLog.map {exLog->
-//                        exLog.setList.map {
-//
-//                            Set().apply {
-//                                this._id=it._id
-//                                this.exercise=it.exercise
-//                                this.notes=it.notes
-//                                this.weight=it.notes
-//                                this.repetitions=it.repetitions
-//                            }
-//                        }
-//                    }.flatten().toTypedArray()
-//                )
-//                val exerciseLogList = realmListOf(
-//                    log.exercisesLog.map {
-//
-//                        ExerciseLog().apply {
-//                            this._id=it._id
-//                            this.setList=exerciseLogSetList
-//                        }
-//                    }
-//                )
-//
-//                g
-//                findLatest(log)
-//                copyToRealm(log)
-//            }
-
-
-
-
-
             realm.writeBlocking {
 
                 val log = Log().apply {
-
-                    //  state.exercisesLog  //<- bug  causing
-
-
-
-
 
                     val exLogList :List<ExerciseLog> = state.exercisesLog.map { exercisesLogDto->
 
@@ -147,7 +107,6 @@ class StartRoutineRepositoryImpl @Inject constructor(
                     this.endTime = RealmInstant.now()
                 }
 
-                log
 
                 copyToRealm(log)
             }
