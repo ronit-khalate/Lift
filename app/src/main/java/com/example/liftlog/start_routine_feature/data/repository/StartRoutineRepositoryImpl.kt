@@ -50,9 +50,9 @@ class StartRoutineRepositoryImpl @Inject constructor(
         return try {
 
 
-            // TODO Get latest by time
+
             val t = realm.query<Log>()
-            val result = realm.query<Log>("routineId == $0" , routineId).find()
+            val result = realm.query<Log>("routineId == $0" , routineId).find().sortedByDescending {  it.date}
 
             val log = result.first()
 
@@ -104,6 +104,7 @@ class StartRoutineRepositoryImpl @Inject constructor(
                         0.0F
                     }
 
+                    this.date = state.date
                     this.endTime = RealmInstant.now()
                 }
 
