@@ -48,7 +48,8 @@ import com.example.liftlog.ui.theme.primary
 fun RoutineListScreen(
     modifier: Modifier = Modifier,
     onAddRoutine:()->Unit,
-    onRoutineClicked:(id:String,name:String)->Unit
+    onStartRoutineClicked:(routineId:String,routineName:String)->Unit,
+    onCardClicked:(id:String)->Unit
 ) {
 
     val viewModel  = hiltViewModel<RoutineListScreenViewModel>()
@@ -137,8 +138,8 @@ fun RoutineListScreen(
 
                             routineName = routine.name,
                             exerciseCount = routine.exercise.size,
-                            onCardClick = {},
-                            onStartNowClick = {},
+                            onCardClick = { onCardClicked(routine._id.toHexString()) },
+                            onStartNowClick = { onStartRoutineClicked(routine._id.toHexString(),routine.name) },
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
@@ -157,6 +158,5 @@ fun RoutineListScreen(
 @Preview
 @Composable
 fun RoutinesScreenPreview() {
-    RoutineListScreen(onRoutineClicked = { i,g->
-    }, onAddRoutine = {})
+    RoutineListScreen(onStartRoutineClicked = {id,name ->}, onCardClicked = {} ,onAddRoutine = {})
 }

@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(it)
-                            ,
+
                     ) {
 
 
@@ -93,14 +93,13 @@ class MainActivity : ComponentActivity() {
                                     onAddRoutine = {
                                         navController.navigate(Screens.RoutineScreen())
                                     },
-                                    onRoutineClicked = { routineID, routineName ->
+                                    onCardClicked = {routineId ->
+                                        navController.navigate(route = Screens.RoutineScreen.invoke(routineId))
+                                    },
+                                    onStartRoutineClicked ={ id,name->
+                                        navController.navigate(route = Screens.StartRoutineScreen(routineId = id, routineName = name))
+                                    } ,
 
-                                        navController.navigate(
-                                            route = Screens.RoutineScreen.invoke(
-                                                routeId = routineID,
-                                            )
-                                        )
-                                    }
                                 )
 
                             }
