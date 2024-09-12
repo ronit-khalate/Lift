@@ -1,5 +1,6 @@
 package com.example.liftlog.core.domain.repository
 
+import android.util.Log
 import com.example.liftlog.core.data.mappers.toExerciseDto
 import com.example.liftlog.core.data.model.Exercise
 import com.example.liftlog.core.data.model.Routine
@@ -23,7 +24,14 @@ class ExerciseRepositoryImpl @Inject constructor(private val realm: Realm): Exer
 
         realm.writeBlocking {
 
-            copyToRealm(exercise)
+            try {
+                copyToRealm(exercise)
+            }
+            catch (e:Exception){
+              Log.d("ExerciseRepo", e.message.toString())
+
+            }
+
         }
     }
 

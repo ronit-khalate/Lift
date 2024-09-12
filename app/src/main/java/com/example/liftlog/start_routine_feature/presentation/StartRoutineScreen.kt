@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,12 +24,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.liftlog.start_routine_feature.domain.StartRoutineServiceManager
 import com.example.liftlog.start_routine_feature.presentation.components.ExerciseSetLogCard
 import com.example.liftlog.start_routine_feature.presentation.components.StartRoutineScreenTopBar
 import com.example.liftlog.start_routine_feature.presentation.event.StartRoutineScreenEvent
 import com.example.liftlog.ui.theme.black
-import com.example.liftlog.ui.theme.white
+import com.example.liftlog.ui.theme.primary
 
 @Composable
 fun StartRoutineScreen(
@@ -97,7 +95,7 @@ fun StartRoutineScreen(
 
                         Text(
                             text = viewmodel.routineName,
-                            color = white,
+                            color = primary,
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold
                         )

@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.liftlog.ui.theme.blue
-import com.example.liftlog.ui.theme.containerGray
-import com.example.liftlog.ui.theme.white
+import com.example.liftlog.ui.theme.neutral
+import com.example.liftlog.ui.theme.primary
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +51,7 @@ fun StickyBottomCard(
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = containerGray),
+                    .background(color = neutral),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -64,7 +64,7 @@ fun StickyBottomCard(
                     modifier = Modifier
                         .padding(start = 20.dp),
                     text = routineName,
-                    color = white,
+                    color = primary,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -89,7 +89,7 @@ fun StickyBottomCard(
                             text = "Finish",
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
-                            color = white
+                            color = primary
                         )
                     }
                 }

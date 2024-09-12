@@ -1,26 +1,19 @@
 package com.example.liftlog.start_routine_feature
 
-import android.app.IntentService
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log.*
-import androidx.core.app.NotificationCompat
-import androidx.core.app.ServiceCompat
 
-import com.example.liftlog.core.data.model.Log
 import com.example.liftlog.start_routine_feature.data.repository.StartRoutineRepositoryImpl
 import com.example.liftlog.start_routine_feature.presentation.state.StartRoutineScreenState
-import com.example.liftlog.ui.theme.white
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.time.delay
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
