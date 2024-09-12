@@ -6,6 +6,10 @@ import androidx.navigation.navArgument
 sealed class Screens(val route:String ){
 
 
+    data object ProfileScreen:Screens("profileScreen")
+    data object LogScreen:Screens("LogScreen")
+    data object StartScreen:Screens("startScreen")
+    data object RoutineListScreen:Screens("routineListScreen")
 
      data object RoutineScreen:Screens("routineScreen/{routineID}"){
 
@@ -21,14 +25,7 @@ sealed class Screens(val route:String ){
 
     }
 
-    data object RoutineListScreen:Screens("routineScreen"){
 
-
-        const val EXERCISE_ID_ARGUMENT:String ="exerciseID"
-
-        operator fun invoke():String = this.route
-
-    }
 
     data object ExerciseScreen:Screens("exerciseScreen/{exerciseID}"){
 

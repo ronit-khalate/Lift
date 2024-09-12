@@ -5,16 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -36,14 +32,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.liftlog.core.data.model.ExerciseLog
-import com.example.liftlog.core.data.model.Set
 import com.example.liftlog.start_routine_feature.data.model.ExerciseLogDto
 import com.example.liftlog.start_routine_feature.data.model.SetDto
 import com.example.liftlog.ui.theme.black
-import com.example.liftlog.ui.theme.textGray
-import com.example.liftlog.ui.theme.white
-import io.realm.kotlin.ext.realmListOf
+import com.example.liftlog.ui.theme.body
+import com.example.liftlog.ui.theme.primary
 
 
 @Composable
@@ -74,7 +67,7 @@ fun ExerciseSetLogCard(
             ) {
                 Text(
                     text = "${count}.${exerciseLog.name}",
-                    color = white,
+                    color = primary,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -128,7 +121,7 @@ fun ExerciseSetLogCard(
                     .height(32.dp),
 
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = white),
+                colors = ButtonDefaults.buttonColors(containerColor = primary),
                 onClick = { onAddSetBtnClick(exerciseLog.id.toHexString()) }
             ) {
 
@@ -179,7 +172,7 @@ private fun ExerciseSetLogCardHeader(
                             setTextWidth.value= it.size.width
                         },
                     text = "SET",
-                    color = textGray,
+                    color = body,
                     fontSize = 10.sp
                 )
             }
@@ -210,7 +203,7 @@ private fun ExerciseSetLogCardHeader(
                             kgTextWidth.value= it.size.width
                         },
                     text = "KG",
-                    color = textGray,
+                    color = body,
                     fontSize = 10.sp
                 )
             }
@@ -239,7 +232,7 @@ private fun ExerciseSetLogCardHeader(
                 Text(
                     modifier = Modifier,
                     text = "REPS",
-                    color = textGray,
+                    color = body,
                     fontSize = 10.sp
                 )
             }
@@ -264,7 +257,7 @@ private fun ExerciseSetLogCardHeader(
                 Text(
                     modifier = Modifier,
                     text = "NOTES",
-                    color = textGray,
+                    color = body,
                     fontSize = 10.sp
                 )
             }
@@ -320,7 +313,7 @@ private fun ExerciseSetLogData(
                     BasicTextField(
                         modifier = Modifier
                             .padding(vertical = 5.dp),
-                        textStyle = TextStyle(color = white , fontSize = 10.sp),
+                        textStyle = TextStyle(color = primary , fontSize = 10.sp),
 
                         value = "$index",
                         onValueChange = {},
@@ -360,10 +353,10 @@ private fun ExerciseSetLogData(
                     BasicTextField(
                         modifier = Modifier
                             .padding(vertical = 5.dp),
-                        textStyle = TextStyle(color = white , fontSize = 10.sp),
+                        textStyle = TextStyle(color = primary , fontSize = 10.sp),
 
                         value = if(set.weight.toString() =="0.0") "" else set.weight.toString(),
-                        cursorBrush = SolidColor(white),
+                        cursorBrush = SolidColor(primary),
                         onValueChange = { updateWeight(set.id.toHexString(),exId,it) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         decorationBox = {
@@ -402,11 +395,11 @@ private fun ExerciseSetLogData(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 5.dp),
-                        textStyle = TextStyle(color = white , fontSize = 10.sp),
+                        textStyle = TextStyle(color = primary , fontSize = 10.sp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         value = set.repetitions.toString(),
                         onValueChange = {updateReps(set.id.toHexString(),exId,it)},
-                        cursorBrush = SolidColor(white),
+                        cursorBrush = SolidColor(primary),
 
                         decorationBox = {
 
@@ -438,11 +431,11 @@ private fun ExerciseSetLogData(
                     modifier = Modifier
                         .wrapContentWidth()
                         .padding(vertical = 5.dp),
-                    textStyle = TextStyle(color = white , fontSize = 10.sp),
+                    textStyle = TextStyle(color = primary , fontSize = 10.sp),
 
                     value = set.notes,
                     onValueChange = {updateNotes(set.id.toHexString(),exId , it)},
-                    cursorBrush = SolidColor(white),
+                    cursorBrush = SolidColor(primary),
 
                     decorationBox = {
 

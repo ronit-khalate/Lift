@@ -20,25 +20,21 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.liftlog.core.data.model.Exercise
-import com.example.liftlog.core.presentation.component.ClickableRow
+import com.example.liftlog.routine_feature.presntation.routine_list.components.RoutineCard
 import com.example.liftlog.core.presentation.component.SearchBar
 import com.example.liftlog.core.presentation.component.ThreeSectionTopBar
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -161,34 +157,15 @@ fun ExerciseListScreen(
                             exerciseNotSelectedColor
                         }
 
-                    SwipeToDismissBox(
-                        state = dismissState,
-                        backgroundContent = {
-                            ClickableRow(
-                                height = 35,
-                                text = "",
-                                onClick = {
 
-                                },
-                                backGroundColor = MaterialTheme.colorScheme.error,
-                                leftIcon = {
-                                    Icon(imageVector = Icons.Default.Delete, contentDescription ="" )
-                                }
-                            )
-                        },
 
-                    ) {
-
-                        ClickableRow(
-                            height = 35,
-                            text = exercise.name,
-                            onClick = {
-                                viewModel.onExerciseSelected(exercise)
-                            },
-                            backGroundColor = bg ,
-                            leftIcon = { Image(imageVector = Icons.Outlined.Info, contentDescription = null) }
+                        RoutineCard(
+                            routineName = exercise.name,
+                            onCardClick = {viewModel.onExerciseSelected(exercise)},
+                            onStartNowClick = {},
+                            exerciseCount = 1,
                         )
-                    }
+
                 }
             }
         }
