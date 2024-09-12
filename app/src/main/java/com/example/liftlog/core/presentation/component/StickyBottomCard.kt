@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,7 +23,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.liftlog.core.presentation.exercise.event.ExerciseScreenEvent
+import com.example.liftlog.ui.theme.black
 import com.example.liftlog.ui.theme.blue
+import com.example.liftlog.ui.theme.body
 import com.example.liftlog.ui.theme.neutral
 import com.example.liftlog.ui.theme.primary
 
@@ -31,6 +36,7 @@ import com.example.liftlog.ui.theme.primary
 fun StickyBottomCard(
     modifier: Modifier = Modifier,
     routineName:String,
+    totalExercise:Int,
     onCardClick:()->Unit,
     onFinishBtnClick:()->Unit
 ) {
@@ -39,10 +45,11 @@ fun StickyBottomCard(
 
         Card(
             modifier = Modifier
-                .padding( bottom = 50.dp)
+                .padding(bottom = 50.dp)
                 .fillMaxWidth()
-                .height(36.dp)
-                .clickable { onCardClick() }
+                .height(68.dp)
+                .clickable { onCardClick() },
+            colors = CardDefaults.cardColors(containerColor = neutral)
 
 
         ) {
@@ -51,7 +58,7 @@ fun StickyBottomCard(
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = neutral),
+                    .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -59,27 +66,49 @@ fun StickyBottomCard(
 
 
 
-
-                Text(
+                Column(
                     modifier = Modifier
-                        .padding(start = 20.dp),
-                    text = routineName,
-                    color = primary,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                        .wrapContentSize(),
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.SpaceAround
+                ) {
+
+                    Text(
+                        text = routineName,
+                        fontStyle = MaterialTheme.typography.titleSmall.fontStyle,
+                        fontWeight = FontWeight.Bold,
+                        color = primary,
+                        fontSize = MaterialTheme.typography.titleSmall.fontSize
+
+                    )
+
+                    Text(
+                        text = "$totalExercise exercises",
+                        fontStyle = MaterialTheme.typography.labelSmall.fontStyle,
+                        fontWeight = FontWeight.Normal,
+                        color = body,
+                        fontSize = MaterialTheme.typography.labelSmall.fontSize
+
+                    )
+
+
+
+
+                }
 
                 Card(
                     modifier = Modifier
                         .padding(horizontal = 5.dp)
-                        .height(28.dp)
-                        .width(85.dp)
-                        .clickable {onFinishBtnClick()},
-                    colors = CardDefaults.cardColors(containerColor = blue)
+                        .height(40.dp)
+                        .width(80.dp)
+                        .clickable { onFinishBtnClick() },
+                    shape = MaterialTheme.shapes.small,
+                    colors = CardDefaults.cardColors(containerColor = primary)
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxSize(),
+
 
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -87,9 +116,10 @@ fun StickyBottomCard(
 
                         Text(
                             text = "Finish",
-                            fontSize = 10.sp,
+                            fontStyle = MaterialTheme.typography.labelMedium.fontStyle,
+                            fontSize = MaterialTheme.typography.labelMedium.fontSize,
                             fontWeight = FontWeight.Bold,
-                            color = primary
+                            color = black
                         )
                     }
                 }
@@ -102,5 +132,5 @@ fun StickyBottomCard(
 @Composable
 private fun Preview() {
 
-    StickyBottomCard(routineName = "Chest & Tripce", onFinishBtnClick = {}, onCardClick = {})
+    StickyBottomCard(routineName = "Chest & Tripce", totalExercise = 6, onFinishBtnClick = {}, onCardClick = {})
 }
