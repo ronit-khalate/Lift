@@ -38,7 +38,8 @@ fun BottomBar(
 
         modifier = Modifier
             .clip(RoundedCornerShape(topStart = 15.dp , topEnd = 15.dp)),
-        containerColor = neutral
+        containerColor = neutral,
+
 
     ) {
 
@@ -46,7 +47,13 @@ fun BottomBar(
         NavigationBarItem(
             modifier = Modifier,
             selected =false ,
-            onClick = { /*TODO*/ },
+            onClick = {
+                navController.navigate(route = Screens.RoutineListScreen.route){
+                    popUpTo(route = Screens.RoutineListScreen.route){
+                        inclusive = true
+                    }
+                }
+          },
 
             colors = NavigationBarItemDefaults.colors(selectedIconColor = black, unselectedIconColor = neutral,),
             icon = {

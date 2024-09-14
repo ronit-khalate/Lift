@@ -11,5 +11,5 @@ data class RoutineScreenState(
     val routineId:ObjectId? =null,
     val routineName:String="",
     val note:String="",
-    val exerciseList:RealmList<Exercise> = realmListOf()
+    val exerciseList:List<Exercise> = emptyList()
 )

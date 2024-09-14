@@ -17,8 +17,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
@@ -40,16 +43,24 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.liftlog.core.data.model.Exercise
+import com.example.liftlog.core.presentation.component.MaxWidthButton
 import com.example.liftlog.routine_feature.presntation.routine_list.components.RoutineCard
 import com.example.liftlog.core.presentation.component.ThreeSectionTopBar
+import com.example.liftlog.routine_feature.presntation.routine.components.ExerciseCard
 import com.example.liftlog.routine_feature.presntation.routine.event.RoutineScreenEvent
+import com.example.liftlog.ui.theme.body
+import com.example.liftlog.ui.theme.neutral
+import com.example.liftlog.ui.theme.primary
+import com.example.liftlog.ui.theme.tertiary
 
 
 /*
@@ -87,345 +98,93 @@ fun RoutineScreen(
 
     var showExerciseListBottomSheet by rememberSaveable { mutableStateOf(false) }
 
-
-
-
-
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(16.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
-
-        Scaffold(
-            modifier = modifier
+        Column(
+            modifier = Modifier
                 .fillMaxSize(),
-            topBar = {
-                ThreeSectionTopBar(
+            horizontalAlignment = Alignment.CenterHorizontally
+        )
+        {
+            Row(
+                modifier = Modifier
+                    .height(64.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                BasicTextField(
                     modifier = Modifier
-                        .height(70.dp)
-                        .padding(15.dp),
-                    leftContent = {
-                        Row(
-                            modifier = Modifier
-                                .clickable { onBackBtnClicked()},
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                        .fillMaxWidth(),
+                    textStyle = MaterialTheme.typography.headlineSmall.copy(color = primary),
 
-                            Image(
-                                modifier = Modifier
-                                    .size(35.dp),
-                                imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft,
-                                contentDescription = null,
-                                colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onBackground)
+                    value = viewModel.state.routineName,
+                    onValueChange = { viewModel.onEvent(RoutineScreenEvent.OnRoutineNameEntered(it)) },
+                    decorationBox = {
 
-                            )
-
-                            Spacer(modifier = Modifier.width(4.dp))
-
+                        if (viewModel.state.routineName.isEmpty() || viewModel.state.routineName.isBlank()) {
 
                             Text(
-                                fontSize = 20.sp,
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                text = "Routines"
+                                text = "Routine Name",
+                                style = MaterialTheme.typography.headlineSmall,
+                                color = body
                             )
                         }
-                    },
-
-                    rightContent = {
-
-
-
-                        IconButton(
-                            onClick = {
-                                viewModel.onEvent(
-                                    RoutineScreenEvent.OnDoneBtnClicked(
-                                        onCompleteUpserting = onBackBtnClicked
-                                    )
-                                )
-                            }
-
-                        ) {
-
-
-                            Image(
-                                imageVector = Icons.Default.Done,
-                                contentDescription = "Add Routine",
-                                colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onBackground)
-                            )
-                        }
-
-
-//                        Spacer(modifier = Modifier.width(1.dp))
-
+                        it()
                     }
                 )
             }
-        ) { paddingValues ->
 
 
-            Column(
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LazyColumn(
                 modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-                    .padding(start = 20.dp, end = 20.dp)
-                    .verticalScroll(state = rememberScrollState())
+                    .fillMaxWidth()
+                    .weight(1f)
             ) {
 
+                items(items = viewModel.state.exerciseList, key = {it._id.toHexString()}) {
 
-                // Routine Name
-                Row(
-                    modifier = Modifier
-                        .padding(start = 10.dp)
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        text = if (viewModel.state.routineName.isBlank()) "Unnamed Routine" else viewModel.state.routineName
+                    ExerciseCard(
+                        exerciseName = it.name,
+                        muscleGroup = it.muscleGroup?:"",
+                        onClick = { onExerciseClick(it._id.toHexString()) }
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
-
-                Spacer(modifier = Modifier.height(13.dp))
-
-                // start this workout button
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp),
-                    onClick = {
-
-
-                        routineId?.let {
-                            onStartRoutineClicked(it,viewModel.state.routineName)
-                        }
-
-                    }
-                ) {
-                    Row(
-                        Modifier
-                            .padding(start = 10.dp)
-                            .fillMaxSize()
-                            .padding(start = 10.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            fontSize = 15.sp,
-                            text = "Start this workout"
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(30.dp))
-
-                // info card
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
-                    onClick = { /*TODO*/ }
-
-                ) {
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(10.dp),
-                        verticalArrangement = Arrangement.Center
-                    ) {
-
-
-                        Row(
-                            modifier = Modifier
-                                .padding(start = 10.dp)
-                                .fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            BasicTextField(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(30.dp),
-                                value = viewModel.state.routineName,
-                                onValueChange = {
-                                    viewModel.onEvent(
-                                        RoutineScreenEvent.OnRoutineNameEntered(it)
-                                    )
-                                },
-                                textStyle = TextStyle(
-                                    fontSize = 15.sp,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                ),
-                                decorationBox = { innerTextField ->
-                                    Box(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        contentAlignment = Alignment.CenterStart
-                                    ) {
-
-                                        if (viewModel.state.routineName.isBlank()) {
-                                            Text(
-                                                text = "Unnamed Routine",
-                                                style = TextStyle(
-                                                    fontSize = 15.sp,
-                                                    color = MaterialTheme.colorScheme.secondary
-                                                )
-                                            )
-                                        }
-                                        innerTextField()
-                                    }
-                                }
-                            )
-                        }
-
-                        HorizontalDivider(
-                            color = MaterialTheme.colorScheme.onSurface,
-                            thickness = 1.dp
-                        )
-                        Row(
-                            modifier = Modifier
-                                .padding(start = 10.dp)
-                                .fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            BasicTextField(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(30.dp),
-                                value = viewModel.state.note,
-                                onValueChange = {
-
-                                    viewModel.onEvent(RoutineScreenEvent.OnRoutineNoteEntered(it))
-                                },
-                                textStyle = TextStyle(
-                                    fontSize = 15.sp,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                ),
-                                decorationBox = { innerTextField ->
-                                    Box(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        contentAlignment = Alignment.CenterStart
-                                    ) {
-
-
-                                        if (viewModel.state.note.isBlank()) {
-                                            Text(
-                                                text = "Notes",
-                                                style = TextStyle(
-                                                    fontSize = 15.sp,
-                                                    color = MaterialTheme.colorScheme.secondary
-                                                )
-                                            )
-                                        }
-                                        innerTextField()
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(30.dp))
-
-                //? Exercises
-
-                if (viewModel.state.exerciseList.isNotEmpty()) {
-
-
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                    ) {
-
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 5.dp)
-                        ) {
-
-
-
-
-                            for (exercise in viewModel.state.exerciseList) {
-
-
-//                                RoutineCard(
-//                                    height = 50,
-//                                    routineName = exercise.name,
-//                                    onClick = { onExerciseClick(exercise._id.toHexString()) }
-//                                ) {
-//                                    Image(
-//                                        modifier = Modifier
-//                                            .size(20.dp),
-//                                        imageVector = Icons.AutoMirrored.Default.KeyboardArrowRight,
-//                                        contentDescription = null,
-//                                        colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onBackground)
-//
-//                                    )
-//                                }
-
-
-                                if (exercise != viewModel.state.exerciseList.last()) {
-                                    HorizontalDivider(
-                                        color = MaterialTheme.colorScheme.onBackground,
-                                        thickness = 1.dp
-                                    )
-                                }
-
-                            }
-
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(30.dp))
-                }
-
-
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(45.dp),
-                        onClick = {
-
-                            showExerciseListBottomSheet = !showExerciseListBottomSheet
-                        }
-                    ) {
-                        Row(
-                            Modifier
-                                .padding(start = 10.dp)
-                                .fillMaxSize()
-                                .padding(start = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                fontSize = 15.sp,
-                                text = "Add Exercise"
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(40.dp))
-
-
-
-
             }
 
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            MaxWidthButton(onClick = {showExerciseListBottomSheet = !showExerciseListBottomSheet}, text = "+  Add Exercise")
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+
         }
-        AnimatedVisibility(
-            visible = showExerciseListBottomSheet,
-            enter = slideInVertically(
-                animationSpec = tween(
-                    durationMillis = 300,
-                    easing = EaseOut
-                ),
-                initialOffsetY = { it }
+
+
+    }
+    AnimatedVisibility(
+        visible = showExerciseListBottomSheet,
+        enter = slideInVertically(
+            animationSpec = tween(
+                durationMillis = 300,
+                easing = EaseOut
             ),
-            exit = slideOutVertically(
-                targetOffsetY = { it }
-            )
-        ) {
+            initialOffsetY = { it }
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { it }
+        )
+    ) {
 
             ExerciseListScreen(
                 routineId = routineId,
@@ -448,6 +207,8 @@ fun RoutineScreen(
         }
 
     }
-}
+
+
+
 
 

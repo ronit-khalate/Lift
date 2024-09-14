@@ -7,8 +7,10 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
@@ -52,12 +54,29 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 val currentBackStackEntry = navController.currentBackStackEntryAsState()
+                val currentDestination = currentBackStackEntry.value?.destination?.route
 
 
 
 
                 Scaffold(
-                    bottomBar = { BottomBar(navController = navController)}
+                    bottomBar = {
+
+                        AnimatedVisibility(
+                            visible = currentDestination == Screens.RoutineListScreen.route ||
+                                    currentDestination == Screens.LogScreen.route ||
+                                    currentDestination == Screens.StartScreen.route ||
+                                    currentDestination == Screens.ProfileScreen.route,
+                            enter = expandVertically(),
+
+                        ){
+                            BottomBar(navController = navController)
+                        }
+
+
+
+
+                    }
                 )
                 {
 
