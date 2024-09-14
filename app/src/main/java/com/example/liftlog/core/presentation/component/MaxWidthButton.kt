@@ -24,7 +24,7 @@ fun MaxWidthButton(
     text:String
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(32.dp),
         onClick = onClick,

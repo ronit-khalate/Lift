@@ -61,38 +61,43 @@ fun ExerciseSetLogCard(
                 .wrapContentHeight()
         ) {
 
-            Row(
+            Column (
                 modifier = Modifier
                     .fillMaxWidth()
+                    .wrapContentHeight()
             ) {
-                Text(
-                    text = "${count}.${exerciseLog.name}",
-                    color = primary,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = "${count}.${exerciseLog.name}",
+                        color = primary,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+                /// Header
+
+                ExerciseSetLogCardHeader(
+                    setTextWidth = setTextWidth,
+                    kgTextWidth = kgTextWidth,
+                    repsTextWidth = repsTextWidth
                 )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
 
 
-            /// Header
-
-            ExerciseSetLogCardHeader(
-                setTextWidth = setTextWidth,
-                kgTextWidth = kgTextWidth,
-                repsTextWidth = repsTextWidth
-            )
+                // Header End
 
 
-            // Header End
+                // Data
 
-
-
-            // Data
-
-            exerciseLog.setList.forEachIndexed {index, set->
-
+                exerciseLog.setList.forEachIndexed { index, set ->
 
 
                     ExerciseSetLogData(
@@ -108,13 +113,14 @@ fun ExerciseSetLogCard(
                     )
 
 
+                }
+                // Data End
+
+
             }
-            // Data End
+
 
             Spacer(modifier = Modifier.height(15.dp))
-
-
-
             Button(
                 modifier = Modifier
                     .fillMaxWidth()

@@ -62,16 +62,25 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     bottomBar = {
 
-                        AnimatedVisibility(
-                            visible = currentDestination == Screens.RoutineListScreen.route ||
+//                        AnimatedVisibility(
+//                            visible = currentDestination == Screens.RoutineListScreen.route ||
+//                                    currentDestination == Screens.LogScreen.route ||
+//                                    currentDestination == Screens.StartScreen.route ||
+//                                    currentDestination == Screens.ProfileScreen.route,
+//                            enter = expandVertically(),
+//
+//                        ){
+//
+//                        }
+
+                        if (currentDestination == Screens.RoutineListScreen.route ||
                                     currentDestination == Screens.LogScreen.route ||
                                     currentDestination == Screens.StartScreen.route ||
-                                    currentDestination == Screens.ProfileScreen.route,
-                            enter = expandVertically(),
-
+                                    currentDestination == Screens.ProfileScreen.route
                         ){
                             BottomBar(navController = navController)
                         }
+
 
 
 

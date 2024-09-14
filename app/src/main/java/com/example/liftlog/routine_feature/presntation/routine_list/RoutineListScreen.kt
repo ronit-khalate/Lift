@@ -77,7 +77,7 @@ fun RoutineListScreen(
             modifier = Modifier
                 .fillMaxSize()
 
-                .background(brush),
+                .background(color = Color(0xFF8EA5FF) ),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
