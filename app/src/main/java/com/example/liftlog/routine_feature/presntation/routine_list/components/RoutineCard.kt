@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.liftlog.core.presentation.component.MaxWidthButton
 import com.example.liftlog.ui.theme.black
 import com.example.liftlog.ui.theme.neutral
 import com.example.liftlog.ui.theme.body
@@ -81,32 +82,7 @@ fun RoutineCard(
             }
 
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(32.dp),
-                onClick = onStartNowClick,
-                shape = MaterialTheme.shapes.small,
-                colors = CardDefaults.cardColors(containerColor = primary, contentColor = black)
-
-
-            ) {
-
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-
-
-                    Text(
-                        text = "Start now",
-                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                        fontStyle = MaterialTheme.typography.bodySmall.fontStyle,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
+           MaxWidthButton(onClick = onStartNowClick, text = "Start Now")
         }
     }
 

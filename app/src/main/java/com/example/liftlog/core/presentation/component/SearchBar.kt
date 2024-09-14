@@ -3,7 +3,10 @@ package com.example.liftlog.core.presentation.component
 import androidx.annotation.DimenRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -11,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -18,7 +22,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Search
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,26 +41,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.liftlog.ui.theme.body
+import com.example.liftlog.ui.theme.neutral
 import kotlin.math.sin
+import kotlin.math.truncate
 
 
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
+    query:String,
+    label:String,
+    onQueryEntered:(String)->Unit,
+    onSearch:() ->Unit,
     height: Dp = 40.dp
 ) {
-
-
 
 
     Row(
         modifier = Modifier
             .height(height)
             .fillMaxWidth()
-            .clip(shape = RoundedCornerShape(30.dp))
+            .clip(shape = MaterialTheme.shapes.medium)
             .background(
-                color = MaterialTheme.colorScheme.tertiary,
-                shape = RoundedCornerShape(50.dp)
+                color = neutral,
             ),
         verticalAlignment = Alignment.CenterVertically
 
@@ -62,8 +74,8 @@ fun SearchBar(
         Spacer(modifier = Modifier.width(9.dp))
         Box(
             modifier=Modifier
-
-                .weight(1f),
+                .weight(1f)
+               ,
 
             contentAlignment = Alignment.Center
         ) {
@@ -72,32 +84,50 @@ fun SearchBar(
                 modifier = Modifier
                     .padding(4.dp)
                     .fillMaxSize()
+                    .background(
+                        color = neutral,
+                        shape = MaterialTheme.shapes.large
+                    )
+                    .clickable { onSearch() }
                     .padding(horizontal = 2.dp, vertical = 1.dp,)
                     .align(Alignment.Center),
                 imageVector = Icons.TwoTone.Search ,
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onTertiary)
+                colorFilter = ColorFilter.tint(color = body)
             )
         }
 
         BasicTextField(
-            value = "",
-            onValueChange ={ TODO("Implement Search Text value change") },
+            value = query,
+            onValueChange =onQueryEntered,
             modifier = Modifier
                 .weight(10f)
-                .padding(5.dp)
-                .fillMaxSize(),
+                .padding(horizontal = 5.dp),
 
 
 
-            textStyle = TextStyle(
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 20.sp,
-
-
-            ),
+            textStyle = MaterialTheme.typography.bodyLarge.copy(color = body),
+            singleLine = true,
 
             decorationBox = {
+
+                Box (
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.CenterStart
+                ){
+
+                    it()
+                    if(query.isBlank() || query.isEmpty()){
+                        Text(
+                            text = label,
+                            style =MaterialTheme.typography.bodyLarge,
+                            color = body
+                        )
+                    }
+
+                }
+
 
 
             },
@@ -106,7 +136,7 @@ fun SearchBar(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Search
             ),
-            keyboardActions = KeyboardActions(onSearch = {TODO("implement on search")})
+            keyboardActions = KeyboardActions(onSearch = {onSearch()})
         )
 
     }
@@ -122,6 +152,11 @@ fun SearchBar(
 @Composable()
 fun SearchBarPreview() {
 
-    SearchBar()
+    SearchBar(
+        query = "",
+        onQueryEntered = {},
+        onSearch = {},
+        label = "Search Exercise"
+    )
 
 }

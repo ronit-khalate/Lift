@@ -67,7 +67,7 @@ class RoutineScreenViewModel @AssistedInject constructor(
                         routineId = changes.obj._id,
                         routineName = changes.obj.name,
                         note = changes.obj.note,
-                        exerciseList = changes.obj.exercise
+                        exerciseList = listOf(*changes.obj.exercise.toTypedArray())
                      )
                   }
                   is DeletedObject -> TODO()
@@ -77,7 +77,7 @@ class RoutineScreenViewModel @AssistedInject constructor(
                         routineId = changes.obj._id,
                         routineName = changes.obj.name,
                         note = changes.obj.note,
-                        exerciseList = changes.obj.exercise
+                        exerciseList = listOf(*changes.obj.exercise.toTypedArray())
                      )
                   }
                   is PendingObject -> TODO()
@@ -141,8 +141,10 @@ class RoutineScreenViewModel @AssistedInject constructor(
 
 
 
+
+
          state = state.copy(
-            exerciseList = exerciseList.toRealmList()
+            exerciseList =   exerciseList
          )
 
 
