@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -85,7 +86,8 @@ fun RoutineListScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = barPadding.dp),
+                    .wrapContentHeight()
+                    .padding(horizontal = 16.dp, vertical = 54.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -93,7 +95,7 @@ fun RoutineListScreen(
                 Text(
                     text = "Routines",
                     fontSize = MaterialTheme.typography.displaySmall.fontSize,
-                    fontWeight = FontWeight.W900,
+                    fontWeight = FontWeight(1000),
                     color = black
                 )
 

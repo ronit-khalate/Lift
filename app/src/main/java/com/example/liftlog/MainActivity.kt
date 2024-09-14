@@ -157,6 +157,7 @@ class MainActivity : ComponentActivity() {
                                     onExerciseClick = { exerciseId ->
                                         navController.navigate(Screens.ExerciseScreen(exerciseId))
                                     },
+                                    onDoneSavingRoutine = {navController.navigateUp()},
                                     onStartRoutineClicked = { id, name ->
 
                                         navController.popBackStack()

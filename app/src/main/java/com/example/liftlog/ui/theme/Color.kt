@@ -2,7 +2,7 @@ package com.example.liftlog.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val black = Color(0xFF000000)
-val primary = Color(0xFFFFFFFF)
+val primary = Color(0xFFF5EFF7)
 val blue = Color(0xFF007AFF)
 val body = Color(0xFF5B5B5B)
 val neutral = Color(0xFF2B2B2E)

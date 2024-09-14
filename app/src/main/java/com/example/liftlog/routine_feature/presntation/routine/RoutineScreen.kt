@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -55,6 +56,7 @@ import com.example.liftlog.core.data.model.Exercise
 import com.example.liftlog.core.presentation.component.MaxWidthButton
 import com.example.liftlog.routine_feature.presntation.routine_list.components.RoutineCard
 import com.example.liftlog.core.presentation.component.ThreeSectionTopBar
+import com.example.liftlog.core.presentation.exercise.event.ExerciseScreenEvent
 import com.example.liftlog.routine_feature.presntation.routine.components.ExerciseCard
 import com.example.liftlog.routine_feature.presntation.routine.event.RoutineScreenEvent
 import com.example.liftlog.ui.theme.body
@@ -86,6 +88,7 @@ fun RoutineScreen(
     onNavigateToExerciseScreen:()->Unit,
     onBackBtnClicked:()->Unit,
     onExerciseClick:(exerciseId:String)->Unit,
+    onDoneSavingRoutine:()->Unit,
     onStartRoutineClicked:(id:String,name:String)->Unit
 
 ) {
@@ -98,78 +101,120 @@ fun RoutineScreen(
 
     var showExerciseListBottomSheet by rememberSaveable { mutableStateOf(false) }
 
-    Box(
+    Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        )
-        {
-            Row(
-                modifier = Modifier
-                    .height(64.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                BasicTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    textStyle = MaterialTheme.typography.headlineSmall.copy(color = primary),
-
-                    value = viewModel.state.routineName,
-                    onValueChange = { viewModel.onEvent(RoutineScreenEvent.OnRoutineNameEntered(it)) },
-                    decorationBox = {
-
-                        if (viewModel.state.routineName.isEmpty() || viewModel.state.routineName.isBlank()) {
-
-                            Text(
-                                text = "Routine Name",
-                                style = MaterialTheme.typography.headlineSmall,
-                                color = body
-                            )
-                        }
-                        it()
+            .fillMaxSize(),
+        topBar = {
+            ThreeSectionTopBar(
+                leftContent = {
+                    IconButton(onClick = onBackBtnClicked) {
+                        Icon(imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft, contentDescription = "")
                     }
-                )
-            }
+                },
 
+                middleContent = {
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-
-                items(items = viewModel.state.exerciseList, key = {it._id.toHexString()}) {
-
-                    ExerciseCard(
-                        exerciseName = it.name,
-                        muscleGroup = it.muscleGroup?:"",
-                        onClick = { onExerciseClick(it._id.toHexString()) }
+                    Text(
+                        text = "Edit Routine",
+                        fontSize = 16.sp,
+                        style = MaterialTheme.typography.bodySmall
                     )
+                },
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                rightContent = {
+                    IconButton(onClick = {
+
+                        viewModel.onEvent(RoutineScreenEvent.OnDoneBtnClicked(onDoneSavingRoutine))
+                    }) {
+                        Icon(imageVector = Icons.Default.Done, contentDescription = "")
+                    }
                 }
+            )
+        }
+    ) {
+
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+                .padding(16.dp),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            )
+            {
+                Row(
+                    modifier = Modifier
+                        .height(64.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    BasicTextField(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        textStyle = MaterialTheme.typography.headlineSmall.copy(color = primary),
+
+                        value = viewModel.state.routineName,
+                        onValueChange = {
+                            viewModel.onEvent(
+                                RoutineScreenEvent.OnRoutineNameEntered(
+                                    it
+                                )
+                            )
+                        },
+                        decorationBox = {
+
+                            if (viewModel.state.routineName.isEmpty() || viewModel.state.routineName.isBlank()) {
+
+                                Text(
+                                    text = "Routine Name",
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    color = body
+                                )
+                            }
+                            it()
+                        }
+                    )
+                }
+
+
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+
+                    items(items = viewModel.state.exerciseList, key = { it._id.toHexString() }) {
+
+                        ExerciseCard(
+                            exerciseName = it.name,
+                            muscleGroup = it.muscleGroup ?: "",
+                            onClick = { onExerciseClick(it._id.toHexString()) }
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+
+
+
+
             }
-
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            MaxWidthButton(onClick = {showExerciseListBottomSheet = !showExerciseListBottomSheet}, text = "+  Add Exercise")
-
-            Spacer(modifier = Modifier.height(15.dp))
-
+            MaxWidthButton(onClick = {
+                showExerciseListBottomSheet = !showExerciseListBottomSheet
+            }, text = "+  Add Exercise")
 
         }
-
 
     }
     AnimatedVisibility(
