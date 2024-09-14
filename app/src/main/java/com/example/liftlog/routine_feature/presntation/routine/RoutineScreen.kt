@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -137,26 +139,26 @@ fun RoutineScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
-                .padding(16.dp),
+                .padding(it),
             contentAlignment = Alignment.BottomCenter
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                ,
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
                 Row(
                     modifier = Modifier
-                        .height(64.dp)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
                     BasicTextField(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .padding( 16.dp),
                         textStyle = MaterialTheme.typography.headlineSmall.copy(color = primary),
 
                         value = viewModel.state.routineName,
@@ -186,6 +188,7 @@ fun RoutineScreen(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(start = 16.dp , end = 16.dp , bottom = 16.dp)
                         .weight(1f)
                 ) {
 
@@ -207,12 +210,14 @@ fun RoutineScreen(
 
 
 
-
+                MaxWidthButton(
+                    modifier = Modifier.padding(16.dp),
+                    onClick = { showExerciseListBottomSheet = !showExerciseListBottomSheet },
+                    text = "+  Add Exercise"
+                )
 
             }
-            MaxWidthButton(onClick = {
-                showExerciseListBottomSheet = !showExerciseListBottomSheet
-            }, text = "+  Add Exercise")
+
 
         }
 

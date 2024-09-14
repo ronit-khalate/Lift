@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,6 +52,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -101,7 +103,6 @@ fun ExerciseListScreen(
     Scaffold(
         modifier = modifier
 
-
             .fillMaxSize(),
         topBar = {
             // Top Bar
@@ -147,8 +148,6 @@ fun ExerciseListScreen(
 
             modifier = Modifier
                 .padding(top = paddingValues.calculateTopPadding())
-
-                .padding(16.dp)
                 .fillMaxSize(),
 
             verticalArrangement = Arrangement.Top
@@ -157,7 +156,7 @@ fun ExerciseListScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+                    .padding(16.dp),
             ) {
 
                 SearchBar(
@@ -173,10 +172,17 @@ fun ExerciseListScreen(
            LazyRow(
                modifier = Modifier
                    .fillMaxWidth()
-                   .padding(vertical = 8.dp)
+
            ) {
 
+
+               item {
+                   Spacer(Modifier.width(16.dp))
+               }
+
+
                items(10){
+
                    FilterChip(
                        modifier = Modifier,
                        selected = true,
@@ -195,7 +201,7 @@ fun ExerciseListScreen(
                        }
                    )
 
-                   Spacer(modifier = Modifier.width(8.dp))
+                   Spacer(modifier = Modifier.width(16.dp))
                }
            }
 
@@ -222,6 +228,7 @@ fun ExerciseListScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .padding(start = 16.dp , end = 16.dp , top=8.dp , bottom = 8.dp)
                             .height(IntrinsicSize.Min),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -246,13 +253,17 @@ fun ExerciseListScreen(
                         )
                     }
                     
-                    Spacer(modifier = Modifier.height(16.dp))
+
 
 
                 }
             }
 
-            MaxWidthButton(onClick = onCreateNewExercise, text = "Create Exercise")
+            MaxWidthButton(
+                modifier = Modifier.padding(16.dp),
+                onClick = onCreateNewExercise,
+                text = "Create Exercise"
+            )
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.liftlog.core.presentation.exercise
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -69,6 +70,7 @@ fun ExerciseScreen(
 
     Scaffold(
         modifier = modifier
+
             .fillMaxSize(),
 
         topBar = {
@@ -83,6 +85,7 @@ fun ExerciseScreen(
 
                     Text(
                         text = "Add Exercise",
+                        fontSize = 16.sp,
                         style = MaterialTheme.typography.bodySmall
                     )
                 },
@@ -117,14 +120,14 @@ fun ExerciseScreen(
 
             Row(
                 modifier = Modifier
-                    .height(64.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
                 BasicTextField(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(16.dp),
                     textStyle = MaterialTheme.typography.headlineSmall.copy(color = primary),
 
                     value = viewModel.exercise.name,
@@ -134,7 +137,7 @@ fun ExerciseScreen(
                         if (viewModel.exercise.name.isBlank()) {
 
                             Text(
-                                text = "Routine Name",
+                                text = "Exercise Name",
                                 style = MaterialTheme.typography.headlineSmall,
                                 color = body
                             )
@@ -149,15 +152,15 @@ fun ExerciseScreen(
 
 
             ContextualFlowRow(
-                modifier = Modifier,
+                modifier = Modifier
+                    .padding(start = 16.dp , end = 16.dp ),
                 itemCount = 10,
 
             ) {
                 this.lineIndex
                 FilterChip(
                     modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .padding(end = 6.dp)
+                        .padding(bottom = 6.dp, end = 6.dp)
                         .height(32.dp)
 
                         ,
