@@ -1,6 +1,8 @@
 package com.example.liftlog.start_routine_feature.presentation.components
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -16,7 +18,9 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +33,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,6 +41,7 @@ import com.example.liftlog.start_routine_feature.data.model.ExerciseLogDto
 import com.example.liftlog.start_routine_feature.data.model.SetDto
 import com.example.liftlog.ui.theme.black
 import com.example.liftlog.ui.theme.body
+import com.example.liftlog.ui.theme.neutral
 import com.example.liftlog.ui.theme.primary
 
 
@@ -274,6 +280,9 @@ private fun ExerciseSetLogCardHeader(
 }
 
 
+
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ExerciseSetLogData(
     modifier: Modifier = Modifier,
@@ -356,25 +365,35 @@ private fun ExerciseSetLogData(
 
                     ) {
 
+
                     BasicTextField(
                         modifier = Modifier
                             .padding(vertical = 5.dp),
                         textStyle = TextStyle(color = primary , fontSize = 10.sp),
 
-                        value = if(set.weight.toString() =="0.0") "" else set.weight.toString(),
+                        value = if(set.weight=="0.0") "" else set.weight,
                         cursorBrush = SolidColor(primary),
                         onValueChange = { updateWeight(set.id.toHexString(),exId,it) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         decorationBox = {
 
-                            Row(
+                            Box(
                                 modifier = Modifier
                                     .wrapContentWidth(),
-                                horizontalArrangement = Arrangement.Center
                             ) {
                                 it()
+                                if(set.weight.isBlank()){
+
+                                    Text(
+                                        text = set.prevWeight.ifBlank { "0" },
+                                        style = TextStyle(color = body , fontSize = 10.sp)
+                                    )
+                                }
+
+
                             }
                         }
+
                     )
 
                 }
@@ -409,12 +428,20 @@ private fun ExerciseSetLogData(
 
                         decorationBox = {
 
-                            Row(
+                            Box(
                                 modifier = Modifier
                                     .wrapContentWidth(),
-                                horizontalArrangement = Arrangement.Center
                             ) {
                                 it()
+                                if(set.repetitions.isBlank()){
+
+                                    Text(
+                                        text = set.prevRepetitions.ifBlank { "0" },
+                                        style = TextStyle(color = body , fontSize = 10.sp)
+                                    )
+                                }
+
+
                             }
                         }
 
@@ -444,13 +471,21 @@ private fun ExerciseSetLogData(
                     cursorBrush = SolidColor(primary),
 
                     decorationBox = {
-
-                        Row(
+                        Box(
                             modifier = Modifier
                                 .wrapContentWidth(),
-                            horizontalArrangement = Arrangement.Start
                         ) {
+
+                            if(set.notes.isBlank()){
+
+                                Text(
+                                    text = set.prevNotes,
+                                    style = TextStyle(color = body , fontSize = 10.sp)
+                                )
+                            }
                             it()
+
+
                         }
                     }
 

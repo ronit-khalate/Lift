@@ -84,6 +84,7 @@ class StartRoutineRepositoryImpl @Inject constructor(
                                Set().apply {
                                    this.exercise =  query<Exercise>("_id == $0" , ObjectId(it.exerciseId)).find().firstOrNull()
                                    this.weight=it.weight
+                                   this.setNo = it.setNo
                                    this.repetitions= it.repetitions
                                    this.notes=it.notes
                                }

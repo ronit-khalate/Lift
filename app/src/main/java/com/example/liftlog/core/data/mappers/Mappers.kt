@@ -80,10 +80,8 @@ fun Routine.toRoutineDto():RoutineDto{
 fun <T>List<T>.toRealmList(): RealmList<T> {
 
     val realmlist = realmListOf<T>()
+    realmlist.addAll(this)
 
-    this.forEach {
-        realmlist.addAll(this)
-    }
 
     return realmlist
 }

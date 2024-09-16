@@ -46,7 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.Transparent.toArgb()))
+        enableEdgeToEdge()
         setContent {
             LiftLogTheme {
 
@@ -91,7 +91,6 @@ class MainActivity : ComponentActivity() {
 
                     Column(
                         modifier = Modifier
-                            .fillMaxSize()
                             .padding(it)
 
                     ) {

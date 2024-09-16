@@ -11,10 +11,12 @@ import com.example.liftlog.start_routine_feature.presentation.state.StartRoutine
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @AndroidEntryPoint
 class StartRoutineService:Service() {
@@ -22,6 +24,8 @@ class StartRoutineService:Service() {
 
     @Inject
     lateinit var startRoutineRepositoryImpl: StartRoutineRepositoryImpl
+
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
     private val TAG = "start_routine"
     private val binder = LocalBinder()
@@ -42,7 +46,7 @@ class StartRoutineService:Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
 
-        CoroutineScope(Dispatchers.Main).launch{
+        coroutineScope.launch(){
 
             var count=0
             while(this.isActive){
@@ -85,6 +89,8 @@ class StartRoutineService:Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+
+        coroutineScope.cancel()
 
        stopSelf()
     }

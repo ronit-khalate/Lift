@@ -110,6 +110,33 @@ class StartRoutineViewModel @AssistedInject constructor(
                     }
                     is RealmResponse.Success -> {
 
+
+                        val previousExerciseLog = response.data?.exercisesLog
+                        val currentExerciseLog = state.exercisesLog
+
+                        if(previousExerciseLog != null) {
+
+
+                            currentExerciseLog.zip(previousExerciseLog).forEach {pair: Pair<ExerciseLogDto, ExerciseLog> ->
+
+
+                                pair.second.setList.sortedBy { it.setNo }.forEach {preSet: Set ->
+
+                                    pair.first.setList.add(
+                                        SetDto(
+                                            setNo = preSet.setNo,
+                                            exerciseId = pair.first.exerciseID,
+                                            prevWeight = preSet.weight,
+                                            prevRepetitions = preSet.repetitions,
+                                            prevNotes = preSet.notes
+                                        )
+                                    )
+                                }
+
+
+                            }
+                        }
+
                         response.data?.let {
                             state = state.copy(
                                 lastLog = it.exercisesLog
