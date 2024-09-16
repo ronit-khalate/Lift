@@ -1,5 +1,6 @@
 package com.example.liftlog.start_routine_feature.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -280,9 +282,6 @@ private fun ExerciseSetLogCardHeader(
 }
 
 
-
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ExerciseSetLogData(
     modifier: Modifier = Modifier,
@@ -298,7 +297,6 @@ private fun ExerciseSetLogData(
 ) {
     Row (
         modifier = Modifier
-            .height(IntrinsicSize.Min)
             .fillMaxWidth(),
     ){
 
@@ -359,8 +357,7 @@ private fun ExerciseSetLogData(
                 ) {
 
                 Column(
-                    modifier = Modifier
-                        .wrapContentSize(),
+                    modifier = Modifier,
 
 
                     ) {
@@ -378,8 +375,7 @@ private fun ExerciseSetLogData(
                         decorationBox = {
 
                             Box(
-                                modifier = Modifier
-                                    .wrapContentWidth(),
+                                modifier = Modifier,
                             ) {
                                 it()
                                 if(set.weight.isBlank()){

@@ -52,10 +52,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-
-
-
-
             LiftLogTheme {
 
 
@@ -68,7 +64,6 @@ class MainActivity : ComponentActivity() {
 
 
                 Scaffold(
-
                     bottomBar = {
 
                         AnimatedVisibility(
