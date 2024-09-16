@@ -23,6 +23,10 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -48,6 +52,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
+
+
+
             LiftLogTheme {
 
 
@@ -60,18 +68,19 @@ class MainActivity : ComponentActivity() {
 
 
                 Scaffold(
+
                     bottomBar = {
 
-//                        AnimatedVisibility(
-//                            visible = currentDestination == Screens.RoutineListScreen.route ||
-//                                    currentDestination == Screens.LogScreen.route ||
-//                                    currentDestination == Screens.StartScreen.route ||
-//                                    currentDestination == Screens.ProfileScreen.route,
-//                            enter = expandVertically(),
-//
-//                        ){
-//
-//                        }
+                        AnimatedVisibility(
+                            visible = currentDestination == Screens.RoutineListScreen.route ||
+                                    currentDestination == Screens.LogScreen.route ||
+                                    currentDestination == Screens.StartScreen.route ||
+                                    currentDestination == Screens.ProfileScreen.route,
+                            enter = expandVertically(),
+
+                        ){
+
+                        }
 
                         if (currentDestination == Screens.RoutineListScreen.route ||
                                     currentDestination == Screens.LogScreen.route ||
@@ -89,114 +98,159 @@ class MainActivity : ComponentActivity() {
                 )
                 {
 
-                    Column(
+                    Box(
                         modifier = Modifier
-                            .padding(it)
-
+                            .fillMaxSize()
                     ) {
 
-
-                        NavHost(
+                        Column(
                             modifier = Modifier
-                                .fillMaxSize(),
+                                .padding(it)
 
-                            navController = navController,
-                            startDestination = Screens.RoutineListScreen.route
                         ) {
 
 
-                            Log.d(
-                                "current_des",
-                                currentBackStackEntry.toString()
-                            )
-                            composable(route = Screens.RoutineListScreen.route) {
+                            NavHost(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+
+                                navController = navController,
+                                startDestination = Screens.RoutineListScreen.route
+                            ) {
 
 
                                 Log.d(
                                     "current_des",
                                     currentBackStackEntry.toString()
                                 )
-                                RoutineListScreen(
-                                    onAddRoutine = {
-                                        navController.navigate(Screens.RoutineScreen())
-                                    },
-                                    onCardClicked = {routineId ->
-                                        navController.navigate(route = Screens.RoutineScreen.invoke(routineId))
-                                    },
-                                    onStartRoutineClicked ={ id,name->
-                                        navController.navigate(route = Screens.StartRoutineScreen(routineId = id, routineName = name))
-                                    } ,
+                                composable(route = Screens.RoutineListScreen.route) {
 
-                                )
 
-                            }
+                                    Log.d(
+                                        "current_des",
+                                        currentBackStackEntry.toString()
+                                    )
+                                    RoutineListScreen(
+                                        onAddRoutine = {
+                                            navController.navigate(Screens.RoutineScreen())
+                                        },
+                                        onCardClicked = { routineId ->
+                                            navController.navigate(
+                                                route = Screens.RoutineScreen.invoke(
+                                                    routineId
+                                                )
+                                            )
+                                        },
+                                        onStartRoutineClicked = { id, name ->
+                                            navController.navigate(
+                                                route = Screens.StartRoutineScreen(
+                                                    routineId = id,
+                                                    routineName = name
+                                                )
+                                            )
+                                        },
 
-                            composable(
-                                route = Screens.ExerciseScreen.route,
-                                arguments = Screens.ExerciseScreen.arguments
-                            ) {
-
-                                val exerciseId =
-                                    it.arguments?.getString(Screens.ExerciseScreen.EXERCISE_ID_ARGUMENT)
-
-                                ExerciseScreen(
-                                    exerciseId = exerciseId,
-                                    navController = navController
-                                )
-
-                            }
-
-                            composable(
-                                route = Screens.RoutineScreen.route,
-                                arguments = Screens.RoutineScreen.arguments
-                            ) {
-                                val routineId =
-                                    it.arguments?.getString(Screens.RoutineScreen.ROUTINE_ID_ARGUMENT)
-                                RoutineScreen(
-                                    routineId = routineId,
-                                    onNavigateToExerciseScreen = {
-                                        navController.navigate(Screens.ExerciseScreen()) {
-                                            launchSingleTop = true
-                                        }
-                                    },
-                                    onBackBtnClicked = {
-                                        navController.popBackStack()
-                                    },
-                                    onExerciseClick = { exerciseId ->
-                                        navController.navigate(Screens.ExerciseScreen(exerciseId))
-                                    },
-                                    onDoneSavingRoutine = {navController.navigateUp()},
-                                    onStartRoutineClicked = { id, name ->
-
-                                        navController.popBackStack()
-                                        navController.navigate(
-                                            route = Screens.StartRoutineScreen.invoke(id, name)
                                         )
-                                    }
-                                )
-                            }
+
+                                }
+
+                                composable(
+                                    route = Screens.ExerciseScreen.route,
+                                    arguments = Screens.ExerciseScreen.arguments
+                                ) {
+
+                                    val exerciseId =
+                                        it.arguments?.getString(Screens.ExerciseScreen.EXERCISE_ID_ARGUMENT)
+
+                                    ExerciseScreen(
+                                        exerciseId = exerciseId,
+                                        navController = navController
+                                    )
+
+                                }
+
+                                composable(
+                                    route = Screens.RoutineScreen.route,
+                                    arguments = Screens.RoutineScreen.arguments
+                                ) {
+                                    val routineId =
+                                        it.arguments?.getString(Screens.RoutineScreen.ROUTINE_ID_ARGUMENT)
+                                    RoutineScreen(
+                                        routineId = routineId,
+                                        onNavigateToExerciseScreen = {
+                                            navController.navigate(Screens.ExerciseScreen()) {
+                                                launchSingleTop = true
+                                            }
+                                        },
+                                        onBackBtnClicked = {
+                                            navController.popBackStack()
+                                        },
+                                        onExerciseClick = { exerciseId ->
+                                            navController.navigate(Screens.ExerciseScreen(exerciseId))
+                                        },
+                                        onDoneSavingRoutine = { navController.navigateUp() },
+                                        onStartRoutineClicked = { id, name ->
+
+                                            navController.popBackStack()
+                                            navController.navigate(
+                                                route = Screens.StartRoutineScreen.invoke(id, name)
+                                            )
+                                        }
+                                    )
+                                }
 
 
-                            composable(
-                                route = Screens.StartRoutineScreen.route,
-                                arguments = Screens.StartRoutineScreen.arguments
-                            ) {
+                                composable(
+                                    route = Screens.StartRoutineScreen.route,
+                                    arguments = Screens.StartRoutineScreen.arguments
+                                ) {
 
-                                val routineID =
-                                    it.arguments?.getString(Screens.StartRoutineScreen.ROUTINE_ID_ARGUMENT)
+                                    val routineID =
+                                        it.arguments?.getString(Screens.StartRoutineScreen.ROUTINE_ID_ARGUMENT)
 
-                                val routineName =
-                                    it.arguments?.getString(Screens.StartRoutineScreen.ROUTINE_NAME_ARGUMENT)
-                                StartRoutineScreen(
-                                    routineId = routineID!!,
-                                    routineName = routineName ?: "",
-                                    navController = navController
-                                )
+                                    val routineName =
+                                        it.arguments?.getString(Screens.StartRoutineScreen.ROUTINE_NAME_ARGUMENT)
+                                    StartRoutineScreen(
+                                        routineId = routineID!!,
+                                        routineName = routineName ?: "",
+                                        navController = navController
+                                    )
+                                }
                             }
                         }
+
+                        if (
+
+                            (
+                                    currentDestination == Screens.RoutineListScreen.route ||
+                                            currentDestination == Screens.LogScreen.route ||
+                                            currentDestination == Screens.StartScreen.route ||
+                                            currentDestination == Screens.ProfileScreen.route
+                            )
+
+                            && StartRoutineServiceManager.isRunning
+                        ){
+
+                            StickyBottomCard(
+                                modifier = Modifier
+                                    .padding(it)
+                                    .align(Alignment.BottomCenter),
+                                routineName = StartRoutineServiceManager.routineName?:"",
+                                totalExercise = StartRoutineServiceManager.totalExercises,
+                                onCardClick = {navController.navigate(Screens.StartRoutineScreen(
+                                    routineId = StartRoutineServiceManager.state?.routine?._id?.toHexString()!!,
+                                    routineName = StartRoutineServiceManager.state?.routine?.name?:""
+                                ))},
+                                onFinishBtnClick = {
+                                    StartRoutineServiceManager.stopService()
+                                }
+                            )
+                        }
                     }
-                    }
+
+
                 }
+            }
 
 
 

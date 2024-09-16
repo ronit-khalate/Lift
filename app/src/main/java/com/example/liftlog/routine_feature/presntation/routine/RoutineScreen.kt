@@ -39,6 +39,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -61,6 +62,7 @@ import com.example.liftlog.core.presentation.component.ThreeSectionTopBar
 import com.example.liftlog.core.presentation.exercise.event.ExerciseScreenEvent
 import com.example.liftlog.routine_feature.presntation.routine.components.ExerciseCard
 import com.example.liftlog.routine_feature.presntation.routine.event.RoutineScreenEvent
+import com.example.liftlog.start_routine_feature.domain.StartRoutineServiceManager
 import com.example.liftlog.ui.theme.body
 import com.example.liftlog.ui.theme.neutral
 import com.example.liftlog.ui.theme.primary

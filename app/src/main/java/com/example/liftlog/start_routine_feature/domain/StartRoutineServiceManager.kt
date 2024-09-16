@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.liftlog.LiftLogApp
@@ -41,8 +42,19 @@ object StartRoutineServiceManager {
     var isBound = false
         private set
 
+
+    var routineName by mutableStateOf("")
+        private set
+    var totalExercises by mutableIntStateOf(0)
+        private set
+    val state:StartRoutineScreenState?
+        get() = service?.state
+
+
     val routineId : String?
         get() = service?.routineID
+
+
 
     var serviceBinder: StartRoutineService.LocalBinder? = null
         private set
@@ -64,7 +76,11 @@ object StartRoutineServiceManager {
     }
 
     fun setState(state:StartRoutineScreenState){
-        service?.setLog(state)
+        service?.let {
+            it.setLog(state)
+            routineName = state.routine?.name?:""
+            totalExercises=state.exercisesLog.size
+        }
     }
 
     fun bind(routineID: String, routineName: String) {

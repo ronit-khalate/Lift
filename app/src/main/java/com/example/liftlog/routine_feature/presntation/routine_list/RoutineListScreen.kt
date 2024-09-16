@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.liftlog.routine_feature.presntation.routine_list.components.RoutineCard
+import com.example.liftlog.start_routine_feature.domain.StartRoutineServiceManager
 import com.example.liftlog.ui.theme.black
 import com.example.liftlog.ui.theme.primary
 
@@ -77,7 +79,7 @@ fun RoutineListScreen(
             modifier = Modifier
                 .fillMaxSize()
 
-                .background(color = Color(0xFF8EA5FF) ),
+                .background(color = Color(0xFF8EA5FF)),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
