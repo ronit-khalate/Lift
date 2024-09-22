@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.liftlog"
+    namespace = "com.ronit.liftlog"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.liftlog"
+        applicationId = "com.ronit.liftlog"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -88,6 +88,7 @@ dependencies {
 
     //Data Store
     implementation(libs.datastore.preferences)
+    implementation(kotlin("reflect"))
 }
 
 
