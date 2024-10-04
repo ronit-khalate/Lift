@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -45,7 +46,7 @@ import com.ronit.liftlog.core.presentation.component.ThreeSectionTopBar
 import com.ronit.liftlog.routine_feature.presntation.routine.components.ExerciseCard
 import com.ronit.liftlog.routine_feature.presntation.routine.event.RoutineScreenEvent
 import com.ronit.liftlog.ui.theme.body
-import com.ronit.liftlog.ui.theme.primary
+import com.ronit.liftlog.ui.theme.primaryText
 
 
 /*
@@ -126,17 +127,13 @@ fun RoutineScreen(
                 }
             )
         }
-    ) {
+    ) {paddingValues->
 
 
         Box(
             modifier = Modifier
 
-                .padding(
-                    start = it.calculateStartPadding(LayoutDirection.Ltr),
-                    top = it.calculateTopPadding(),
-                    end = it.calculateEndPadding(LayoutDirection.Rtl)
-                )
+                .padding(paddingValues)
                 .fillMaxSize()
                 ,
             contentAlignment = Alignment.BottomCenter
@@ -158,7 +155,7 @@ fun RoutineScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp),
-                        textStyle = MaterialTheme.typography.headlineSmall.copy(color = primary),
+                        textStyle = MaterialTheme.typography.headlineSmall.copy(color = primaryText),
 
                         value = viewModel.state.routineName.replaceFirstChar { char-> char.titlecase() },
                         onValueChange = {

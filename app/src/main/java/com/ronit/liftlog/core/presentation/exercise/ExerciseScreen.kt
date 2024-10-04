@@ -36,7 +36,7 @@ import com.ronit.liftlog.core.presentation.component.ThreeSectionTopBar
 import com.ronit.liftlog.core.presentation.exercise.event.ExerciseScreenEvent
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.body
-import com.ronit.liftlog.ui.theme.primary
+import com.ronit.liftlog.ui.theme.primaryText
 
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -126,7 +126,7 @@ fun ExerciseScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                    textStyle = MaterialTheme.typography.headlineSmall.copy(color = primary),
+                    textStyle = MaterialTheme.typography.headlineSmall.copy(color = primaryText),
 
                     value = viewModel.exercise.name.replaceFirstChar { char -> char.titlecase() },
                     onValueChange = { viewModel.onEvent(ExerciseScreenEvent.OnNameChange(it)) },
@@ -168,8 +168,8 @@ fun ExerciseScreen(
                         onClick = { viewModel.onEvent(ExerciseScreenEvent.OnMuscleGroupChange(group.ordinal)) },
                         colors = FilterChipDefaults.filterChipColors(
                             containerColor = black,
-                            selectedContainerColor = primary,
-                            labelColor = primary,
+                            selectedContainerColor = primaryText,
+                            labelColor = primaryText,
                             selectedLabelColor = black
                         ),
                         label = {

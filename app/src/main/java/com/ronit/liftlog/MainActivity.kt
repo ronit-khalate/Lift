@@ -9,6 +9,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -16,7 +17,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -25,6 +28,9 @@ import com.ronit.liftlog.core.navigation.Screen.Screens
 import com.ronit.liftlog.core.presentation.component.BottomBar
 import com.ronit.liftlog.core.presentation.component.StickyBottomCard
 import com.ronit.liftlog.core.presentation.exercise.ExerciseScreen
+import com.ronit.liftlog.log_feature.ui.LogScreen
+import com.ronit.liftlog.log_feature.ui.LogViewModel
+import com.ronit.liftlog.log_feature.ui.event.LogScreenUiEvent
 import com.ronit.liftlog.routine_feature.presntation.routine.RoutineScreen
 import com.ronit.liftlog.routine_feature.presntation.routine_list.RoutineListScreen
 import com.ronit.liftlog.start_routine_feature.domain.StartRoutineServiceManager
@@ -40,7 +46,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             LiftLogTheme {
 
-
                 val navController = rememberNavController()
 
                 val currentBackStackEntry = navController.currentBackStackEntryAsState()
@@ -49,46 +54,18 @@ class MainActivity : ComponentActivity() {
 
 
 
-                Scaffold(
-                    bottomBar = {
-
-                        AnimatedVisibility(
-                            visible = currentDestination == Screens.RoutineListScreen.route ||
-                                    currentDestination == Screens.LogScreen.route ||
-                                    currentDestination == Screens.StartScreen.route ||
-                                    currentDestination == Screens.ProfileScreen.route,
-                            enter = expandVertically(),
-
-                        ){
-
-                        }
-
-                        if (currentDestination == Screens.RoutineListScreen.route ||
-                                    currentDestination == Screens.LogScreen.route ||
-                                    currentDestination == Screens.StartScreen.route ||
-                                    currentDestination == Screens.ProfileScreen.route
-                        ){
-                            BottomBar(navController = navController)
-                        }
 
 
-
-
-
-                    }
-                )
-                {
 
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
                     ) {
 
-                        Column(
-                            modifier = Modifier
-                                .padding(it)
 
-                        ) {
+
+
+
 
 
                             NavHost(
@@ -112,6 +89,7 @@ class MainActivity : ComponentActivity() {
                                         currentBackStackEntry.toString()
                                     )
                                     RoutineListScreen(
+                                        navController = navController,
                                         onAddRoutine = {
                                             navController.navigate(Screens.RoutineScreen())
                                         },
@@ -197,8 +175,31 @@ class MainActivity : ComponentActivity() {
                                         navController = navController
                                     )
                                 }
+
+
+                                composable(
+                                    route = Screens.LogScreen.route
+                                ) {
+                                    val viewModel = hiltViewModel<LogViewModel>()
+
+
+                                    LogScreen(
+                                        state = viewModel.state,
+                                        navController = navController,
+                                        onCreateRoutineClicked = { navController.navigate(Screens.RoutineScreen.invoke()) },
+                                        onDateClicked = {
+                                            viewModel.onEvent(
+                                                LogScreenUiEvent.OnDateClicked(
+                                                    it
+                                                )
+                                            )
+                                        }
+
+                                    )
+                                }
                             }
-                        }
+
+
 
                         if (
 
@@ -214,7 +215,6 @@ class MainActivity : ComponentActivity() {
 
                             StickyBottomCard(
                                 modifier = Modifier
-                                    .padding(it)
                                     .align(Alignment.BottomCenter),
                                 routineName = StartRoutineServiceManager.routineName?:"",
                                 totalExercise = StartRoutineServiceManager.totalExercises,
@@ -230,7 +230,7 @@ class MainActivity : ComponentActivity() {
                     }
 
 
-                }
+
             }
 
 

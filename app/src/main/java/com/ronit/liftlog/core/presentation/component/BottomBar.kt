@@ -18,7 +18,7 @@ import com.ronit.liftlog.R
 import com.ronit.liftlog.core.navigation.Screen.Screens
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.neutral
-import com.ronit.liftlog.ui.theme.primary
+import com.ronit.liftlog.ui.theme.primaryText
 import com.ronit.liftlog.ui.theme.tertiary
 
 
@@ -55,7 +55,7 @@ fun BottomBar(
             icon = {
                 Icon(
                     modifier = Modifier,
-                    tint = if(currentRoute == Screens.RoutineListScreen.route) primary else tertiary,
+                    tint = if(currentRoute == Screens.RoutineListScreen.route) primaryText else tertiary,
                     painter = painterResource(id = R.drawable.routine_icon),
                     contentDescription =""
                 )
@@ -65,13 +65,13 @@ fun BottomBar(
         NavigationBarItem(
             modifier = Modifier,
             selected = false,
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate(Screens.LogScreen.route)},
 
-            colors = NavigationBarItemDefaults.colors(selectedIconColor = primary, unselectedIconColor = neutral,),
+            colors = NavigationBarItemDefaults.colors(selectedIconColor = primaryText, unselectedIconColor = neutral,),
             icon = {
                 Icon(
                     modifier = Modifier,
-                    tint = if(currentRoute == Screens.LogScreen.route) primary else tertiary,
+                    tint = if(currentRoute == Screens.LogScreen.route) primaryText else tertiary,
                     painter = painterResource(id = R.drawable.vector),
                     contentDescription =""
                 )
@@ -83,11 +83,11 @@ fun BottomBar(
             selected = false ,
             onClick = { /*TODO*/ },
 
-            colors = NavigationBarItemDefaults.colors(selectedIconColor = primary, unselectedIconColor = neutral,),
+            colors = NavigationBarItemDefaults.colors(selectedIconColor = primaryText, unselectedIconColor = neutral,),
             icon = {
                 Icon(
                     modifier = Modifier,
-                    tint = if(currentRoute == Screens.StartScreen.route) primary else tertiary,
+                    tint = if(currentRoute == Screens.StartScreen.route) primaryText else tertiary,
                     painter = painterResource(id = R.drawable.stat_icon),
                     contentDescription =""
                 )
@@ -98,11 +98,11 @@ fun BottomBar(
             selected = false ,
             onClick = { /*TODO*/ },
 
-            colors = NavigationBarItemDefaults.colors(selectedIconColor = primary, unselectedIconColor = neutral,),
+            colors = NavigationBarItemDefaults.colors(selectedIconColor = primaryText, unselectedIconColor = neutral,),
             icon = {
                 Icon(
                     modifier = Modifier,
-                    tint = if(currentRoute == Screens.ProfileScreen.route) primary else tertiary,
+                    tint = if(currentRoute == Screens.ProfileScreen.route) primaryText else tertiary,
                     painter = painterResource(id = R.drawable.profile),
                     contentDescription =""
                 )

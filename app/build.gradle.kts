@@ -1,3 +1,5 @@
+import java.net.URI
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -12,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.ronit.liftlog"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -50,7 +52,11 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+
 }
+
+
 
 dependencies {
 
@@ -89,6 +95,11 @@ dependencies {
     //Data Store
     implementation(libs.datastore.preferences)
     implementation(kotlin("reflect"))
+
+    implementation (libs.datepickertimeline)
+
+
+
 }
 
 

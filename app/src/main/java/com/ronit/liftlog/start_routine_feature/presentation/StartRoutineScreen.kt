@@ -24,11 +24,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.ronit.liftlog.core.presentation.component.BottomBar
 import com.ronit.liftlog.start_routine_feature.presentation.components.ExerciseSetLogCard
 import com.ronit.liftlog.start_routine_feature.presentation.components.StartRoutineScreenTopBar
 import com.ronit.liftlog.start_routine_feature.presentation.event.StartRoutineScreenEvent
 import com.ronit.liftlog.ui.theme.black
-import com.ronit.liftlog.ui.theme.primary
+import com.ronit.liftlog.ui.theme.primaryText
 
 @Composable
 fun StartRoutineScreen(
@@ -60,7 +61,8 @@ fun StartRoutineScreen(
                     navController.popBackStack()
                 }
             )
-        }
+        },
+        bottomBar = { BottomBar(navController = navController) }
 
     ) {paddingValues->
 
@@ -95,7 +97,7 @@ fun StartRoutineScreen(
 
                         Text(
                             text = viewmodel.routineName,
-                            color = primary,
+                            color = primaryText,
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold
                         )

@@ -1,4 +1,4 @@
-package com.ronit.liftlog.di
+package com.ronit.liftlog.core.di
 
 import com.ronit.liftlog.core.data.model.Exercise
 import com.ronit.liftlog.core.data.model.Log

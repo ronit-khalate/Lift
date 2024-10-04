@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,14 +33,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.ronit.liftlog.core.presentation.component.BottomBar
 import com.ronit.liftlog.routine_feature.presntation.routine_list.components.RoutineCard
 import com.ronit.liftlog.ui.theme.black
-import com.ronit.liftlog.ui.theme.primary
+import com.ronit.liftlog.ui.theme.primaryText
 
 
 @Composable
 fun RoutineListScreen(
     modifier: Modifier = Modifier,
+    navController:NavController,
     onAddRoutine:()->Unit,
     onStartRoutineClicked:(routineId:String,routineName:String)->Unit,
     onCardClicked:(id:String)->Unit
@@ -64,8 +70,15 @@ fun RoutineListScreen(
     }
 
 
+    Scaffold (
+
+        bottomBar = { BottomBar(navController = navController) }
+    ){paddingValues->
+
+
         Column(
             modifier = Modifier
+                .consumeWindowInsets(paddingValues)
                 .fillMaxSize()
 
                 .background(color = Color(0xFF8EA5FF)),
@@ -73,11 +86,10 @@ fun RoutineListScreen(
         ) {
 
 
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 54.dp),
+                    .padding(horizontal = 16.dp, vertical = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -97,12 +109,12 @@ fun RoutineListScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = black),
                     onClick = onAddRoutine,
 
-                ) {
+                    ) {
                     Text(
                         text = "Create +",
                         fontSize = MaterialTheme.typography.labelMedium.fontSize,
                         fontWeight = FontWeight.Bold,
-                        color = primary
+                        color = primaryText
                     )
                 }
             }
@@ -125,14 +137,18 @@ fun RoutineListScreen(
                 ) {
 
 
-
-                    items(items = viewModel.routineList) {routine->
+                    items(items = viewModel.routineList) { routine ->
                         RoutineCard(
 
                             routineName = routine.name,
                             exerciseCount = routine.exercise.size,
                             onCardClick = { onCardClicked(routine._id.toHexString()) },
-                            onStartNowClick = { onStartRoutineClicked(routine._id.toHexString(),routine.name) },
+                            onStartNowClick = {
+                                onStartRoutineClicked(
+                                    routine._id.toHexString(),
+                                    routine.name
+                                )
+                            },
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
@@ -141,6 +157,7 @@ fun RoutineListScreen(
                 }
             }
         }
+    }
 
 
 
@@ -151,5 +168,5 @@ fun RoutineListScreen(
 @Preview
 @Composable
 fun RoutinesScreenPreview() {
-    RoutineListScreen(onStartRoutineClicked = {id,name ->}, onCardClicked = {} ,onAddRoutine = {})
+    RoutineListScreen(onStartRoutineClicked = {id,name ->}, onCardClicked = {} ,onAddRoutine = {}, navController = rememberNavController())
 }

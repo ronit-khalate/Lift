@@ -49,7 +49,7 @@ import com.ronit.liftlog.routine_feature.presntation.routine.components.Selected
 import com.ronit.liftlog.routine_feature.presntation.routine.event.ExerciseListUiEvent
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.blue
-import com.ronit.liftlog.ui.theme.primary
+import com.ronit.liftlog.ui.theme.primaryText
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -97,7 +97,7 @@ fun ExerciseListScreen(
                        Icon(
                            imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft,
                            contentDescription = "cancel",
-                           tint = primary
+                           tint = primaryText
                        )
                    }
                 },
@@ -120,7 +120,7 @@ fun ExerciseListScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Done,
-                            tint = primary,
+                            tint = primaryText,
                             contentDescription = "Add Exercise"
                         )
                     }
@@ -180,8 +180,8 @@ fun ExerciseListScreen(
                        },
                        colors = FilterChipDefaults.filterChipColors(
                            containerColor = black,
-                           selectedContainerColor = primary,
-                           labelColor = primary,
+                           selectedContainerColor = primaryText,
+                           labelColor = primaryText,
                            selectedLabelColor = black
                        ),
                        label = {

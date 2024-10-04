@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ronit.liftlog.ui.theme.blue
-import com.ronit.liftlog.ui.theme.primary
+import com.ronit.liftlog.ui.theme.primaryText
 
 
 @Composable
@@ -45,7 +45,7 @@ fun StartRoutineScreenTopBar(
         IconButton(onClick = onBackNavigate) {
 
             Image(
-                colorFilter = ColorFilter.tint(color = primary),
+                colorFilter = ColorFilter.tint(color = primaryText),
                 imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft,
                 contentDescription = "Navigate Back"
             )
@@ -72,7 +72,7 @@ fun StartRoutineScreenTopBar(
                     text = "Finish",
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
-                    color = primary
+                    color = primaryText
                 )
             }
         }

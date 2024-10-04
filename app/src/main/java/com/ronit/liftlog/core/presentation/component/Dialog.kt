@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import com.ronit.liftlog.ui.theme.black
-import com.ronit.liftlog.ui.theme.primary
+import com.ronit.liftlog.ui.theme.primaryText
 
 @Composable
 fun BasicDialog(
@@ -60,7 +60,7 @@ fun BasicDialog(
             }
 
         },
-        containerColor = primary,
+        containerColor = primaryText,
         title = {
             Text(text = titleText)
         },

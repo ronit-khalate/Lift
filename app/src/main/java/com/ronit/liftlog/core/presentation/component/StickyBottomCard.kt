@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.body
 import com.ronit.liftlog.ui.theme.neutral
-import com.ronit.liftlog.ui.theme.primary
+import com.ronit.liftlog.ui.theme.primaryText
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +75,7 @@ fun StickyBottomCard(
                         text = routineName,
                         fontStyle = MaterialTheme.typography.titleSmall.fontStyle,
                         fontWeight = FontWeight.Bold,
-                        color = primary,
+                        color = primaryText,
                         fontSize = MaterialTheme.typography.titleSmall.fontSize
 
                     )
@@ -101,7 +101,7 @@ fun StickyBottomCard(
                         .width(80.dp)
                         .clickable { onFinishBtnClick() },
                     shape = MaterialTheme.shapes.small,
-                    colors = CardDefaults.cardColors(containerColor = primary)
+                    colors = CardDefaults.cardColors(containerColor = primaryText)
                 ) {
                     Column(
                         modifier = Modifier

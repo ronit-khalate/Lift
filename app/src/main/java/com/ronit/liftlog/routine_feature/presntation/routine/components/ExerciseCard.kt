@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ronit.liftlog.ui.theme.body
 import com.ronit.liftlog.ui.theme.neutral
-import com.ronit.liftlog.ui.theme.primary
+import com.ronit.liftlog.ui.theme.primaryText
 
 
 @Composable
@@ -53,7 +53,7 @@ fun ExerciseCard(
                     text = exerciseName,
                     fontSize = MaterialTheme.typography.titleSmall.fontSize,
                     fontWeight = FontWeight.Bold,
-                    color = primary
+                    color = primaryText
                 )
                 Text(
                     text = muscleGroup,

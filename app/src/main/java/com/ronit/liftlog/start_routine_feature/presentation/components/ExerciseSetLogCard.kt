@@ -36,7 +36,7 @@ import com.ronit.liftlog.start_routine_feature.data.model.ExerciseLogDto
 import com.ronit.liftlog.start_routine_feature.data.model.SetDto
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.body
-import com.ronit.liftlog.ui.theme.primary
+import com.ronit.liftlog.ui.theme.primaryText
 
 
 @Composable
@@ -74,7 +74,7 @@ fun ExerciseSetLogCard(
                 ) {
                     Text(
                         text = "${count}.${exerciseLog.name}",
-                        color = primary,
+                        color = primaryText,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -127,7 +127,7 @@ fun ExerciseSetLogCard(
                     .height(32.dp),
 
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = primary),
+                colors = ButtonDefaults.buttonColors(containerColor = primaryText),
                 onClick = { onAddSetBtnClick(exerciseLog.id.toHexString()) }
             ) {
 
@@ -318,7 +318,7 @@ private fun ExerciseSetLogData(
                     BasicTextField(
                         modifier = Modifier
                             .padding(vertical = 5.dp),
-                        textStyle = TextStyle(color = primary , fontSize = 10.sp),
+                        textStyle = TextStyle(color = primaryText , fontSize = 10.sp),
 
                         value = "$index",
                         onValueChange = {},
@@ -358,10 +358,10 @@ private fun ExerciseSetLogData(
                     BasicTextField(
                         modifier = Modifier
                             .padding(vertical = 5.dp),
-                        textStyle = TextStyle(color = primary , fontSize = 10.sp),
+                        textStyle = TextStyle(color = primaryText , fontSize = 10.sp),
 
                         value = if(set.weight=="0.0") "" else set.weight,
-                        cursorBrush = SolidColor(primary),
+                        cursorBrush = SolidColor(primaryText),
                         onValueChange = { updateWeight(set.id.toHexString(),exId,it) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         decorationBox = {
@@ -408,11 +408,11 @@ private fun ExerciseSetLogData(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 5.dp),
-                        textStyle = TextStyle(color = primary , fontSize = 10.sp),
+                        textStyle = TextStyle(color = primaryText , fontSize = 10.sp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         value = set.repetitions.toString(),
                         onValueChange = {updateReps(set.id.toHexString(),exId,it)},
-                        cursorBrush = SolidColor(primary),
+                        cursorBrush = SolidColor(primaryText),
 
                         decorationBox = {
 
@@ -452,11 +452,11 @@ private fun ExerciseSetLogData(
                     modifier = Modifier
                         .wrapContentWidth()
                         .padding(vertical = 5.dp),
-                    textStyle = TextStyle(color = primary , fontSize = 10.sp),
+                    textStyle = TextStyle(color = primaryText , fontSize = 10.sp),
 
                     value = set.notes,
                     onValueChange = {updateNotes(set.id.toHexString(),exId , it)},
-                    cursorBrush = SolidColor(primary),
+                    cursorBrush = SolidColor(primaryText),
 
                     decorationBox = {
                         Box(

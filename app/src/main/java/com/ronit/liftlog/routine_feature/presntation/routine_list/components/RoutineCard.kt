@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.ronit.liftlog.core.presentation.component.MaxWidthButton
 import com.ronit.liftlog.ui.theme.neutral
 import com.ronit.liftlog.ui.theme.body
-import com.ronit.liftlog.ui.theme.primary
+import com.ronit.liftlog.ui.theme.primaryText
 
 
 @Composable
@@ -60,7 +60,7 @@ fun RoutineCard(
                     text = routineName,
                     fontStyle = MaterialTheme.typography.titleSmall.fontStyle,
                     fontWeight = FontWeight.Bold,
-                    color = primary,
+                    color = primaryText,
                     fontSize = MaterialTheme.typography.titleSmall.fontSize
 
                 )
