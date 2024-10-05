@@ -1,5 +1,6 @@
 package com.ronit.liftlog.routine_feature.presntation.routine_list
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ronit.liftlog.core.presentation.component.BottomBar
 import com.ronit.liftlog.routine_feature.presntation.routine_list.components.RoutineCard
 import com.ronit.liftlog.ui.theme.black
+import com.ronit.liftlog.ui.theme.primary
 import com.ronit.liftlog.ui.theme.primaryText
 
 
@@ -78,10 +81,10 @@ fun RoutineListScreen(
 
         Column(
             modifier = Modifier
-                .consumeWindowInsets(paddingValues)
+                .padding(paddingValues)
                 .fillMaxSize()
 
-                .background(color = Color(0xFF8EA5FF)),
+                .background(color = black),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
@@ -89,23 +92,28 @@ fun RoutineListScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                    .padding(vertical = 16.dp, horizontal = 16.dp)
+                ,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
                 Text(
+                    modifier = Modifier,
                     text = "Routines",
-                    fontSize = MaterialTheme.typography.displaySmall.fontSize,
-                    fontWeight = FontWeight(1000),
-                    color = black
+                    style = MaterialTheme.typography.displaySmall,
+                    fontWeight = FontWeight.Bold,
+                    color = primaryText
                 )
 
-                Button(
+                OutlinedButton(
 
                     modifier = Modifier
                         .height(40.dp)
                         .wrapContentWidth(),
+                    border = BorderStroke(width = 1.dp, color = primary),
+
+
                     colors = ButtonDefaults.buttonColors(containerColor = black),
                     onClick = onAddRoutine,
 
@@ -119,16 +127,6 @@ fun RoutineListScreen(
                 }
             }
 
-            Column(
-                modifier = Modifier
-                    .height(684.dp)
-                    .fillMaxWidth()
-
-                    .background(
-                        color = black,
-                        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
-                    )
-            ) {
 
                 LazyColumn(
                     modifier = Modifier
@@ -155,7 +153,7 @@ fun RoutineListScreen(
                     }
 
                 }
-            }
+
         }
     }
 

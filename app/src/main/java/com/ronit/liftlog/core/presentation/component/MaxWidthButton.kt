@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ronit.liftlog.ui.theme.black
+import com.ronit.liftlog.ui.theme.primary
 import com.ronit.liftlog.ui.theme.primaryText
 
 @Composable
@@ -29,7 +30,7 @@ fun MaxWidthButton(
             .height(32.dp),
         onClick = onClick,
         shape = MaterialTheme.shapes.small,
-        colors = CardDefaults.cardColors(containerColor = primaryText, contentColor = black)
+        colors = CardDefaults.cardColors(containerColor = primary, contentColor = black)
 
 
     ) {

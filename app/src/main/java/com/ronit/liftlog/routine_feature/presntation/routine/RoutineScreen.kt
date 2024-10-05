@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -16,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
@@ -99,7 +102,8 @@ fun RoutineScreen(
 
     Scaffold(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.statusBars),
         topBar = {
             ThreeSectionTopBar(
                 leftContent = {
@@ -130,17 +134,19 @@ fun RoutineScreen(
     ) {paddingValues->
 
 
+        paddingValues
         Box(
             modifier = Modifier
-
                 .padding(paddingValues)
                 .fillMaxSize()
+
                 ,
             contentAlignment = Alignment.BottomCenter
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+
                 ,
                 horizontalAlignment = Alignment.CenterHorizontally
             )
@@ -154,7 +160,7 @@ fun RoutineScreen(
                     BasicTextField(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
+                            .padding(start = 16.dp , end = 16.dp , bottom = 16.dp),
                         textStyle = MaterialTheme.typography.headlineSmall.copy(color = primaryText),
 
                         value = viewModel.state.routineName.replaceFirstChar { char-> char.titlecase() },
