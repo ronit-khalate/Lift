@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import com.ronit.liftlog.LiftLogApp
 import com.ronit.liftlog.start_routine_feature.StartRoutineService
 import com.ronit.liftlog.start_routine_feature.presentation.state.StartRoutineScreenState
+import java.util.Timer
 
 object StartRoutineServiceManager {
 
@@ -42,6 +43,10 @@ object StartRoutineServiceManager {
     var isBound = false
         private set
 
+    var timer by mutableStateOf(Timer())
+
+
+
 
     var routineName by mutableStateOf("")
         private set
@@ -66,7 +71,6 @@ object StartRoutineServiceManager {
 
 
         if(isBound){
-
 
             LiftLogApp.contex.unbindService(serviceConnection)
             serviceBinder=null

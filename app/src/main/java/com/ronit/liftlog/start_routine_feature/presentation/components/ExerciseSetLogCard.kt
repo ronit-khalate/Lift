@@ -1,10 +1,12 @@
 package com.ronit.liftlog.start_routine_feature.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,29 +16,44 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ronit.liftlog.R
+import com.ronit.liftlog.core.data.model.ExerciseLog
+import com.ronit.liftlog.core.navigation.Screen.Screens
 import com.ronit.liftlog.start_routine_feature.data.model.ExerciseLogDto
 import com.ronit.liftlog.start_routine_feature.data.model.SetDto
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.body
+import com.ronit.liftlog.ui.theme.neutral
+import com.ronit.liftlog.ui.theme.primary
 import com.ronit.liftlog.ui.theme.primaryText
+import com.ronit.liftlog.ui.theme.tertiary
+import kotlin.math.sin
 
 
 @Composable
@@ -59,6 +76,8 @@ fun ExerciseSetLogCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
+                .clip(RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp))
+                .background(tertiary)
         ) {
 
             Column (
@@ -68,19 +87,38 @@ fun ExerciseSetLogCard(
             ) {
 
 
+
+
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .background(black)
+                        .padding(6.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+
+
                     Text(
-                        text = "${count}.${exerciseLog.name}",
+                        text = "${exerciseLog.name}",
                         color = primaryText,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
                     )
+
+                    IconButton(onClick = {})
+                    {
+
+                        Icon(
+                            modifier = Modifier,
+                            tint = primary,
+                            painter = painterResource(id = R.drawable.stat_icon),
+                            contentDescription =""
+                        )
+
+                    }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+
 
 
                 /// Header
@@ -120,21 +158,21 @@ fun ExerciseSetLogCard(
             }
 
 
-            Spacer(modifier = Modifier.height(15.dp))
+
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(32.dp),
 
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = primaryText),
+                shape = RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = tertiary),
                 onClick = { onAddSetBtnClick(exerciseLog.id.toHexString()) }
             ) {
 
                 Text(
-                    text = " + Add Set",
+                    text = "Add Set",
                     fontSize = 12.sp,
-                    color = black
+                    color = primaryText
                 )
             }
 
@@ -157,7 +195,10 @@ private fun ExerciseSetLogCardHeader(
 
 ) {
     Row(
-        horizontalArrangement = Arrangement.Start
+        modifier = Modifier
+            .background(neutral),
+        horizontalArrangement = Arrangement.Start,
+
     ) {
         Column(
             modifier = Modifier
@@ -166,20 +207,19 @@ private fun ExerciseSetLogCardHeader(
 
             Column(
                 modifier = Modifier
-                    .wrapContentWidth()
-
-                ,
+                    .wrapContentWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
 
             ) {
                 Text(
                     modifier = Modifier
+
+                        .padding(8.dp)
                         .onGloballyPositioned {
-                            setTextWidth.value= it.size.width
+                            setTextWidth.value = it.size.width
                         },
                     text = "SET",
-                    color = body,
-                    fontSize = 10.sp
+                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText)
                 )
             }
 
@@ -188,7 +228,6 @@ private fun ExerciseSetLogCardHeader(
 
         Column(
             modifier = Modifier
-
                 .weight(30f),
 
 
@@ -205,12 +244,11 @@ private fun ExerciseSetLogCardHeader(
             ) {
                 Text(
                     modifier = Modifier
+                        .padding(8.dp)
                         .onGloballyPositioned {
-                            kgTextWidth.value= it.size.width
+                            kgTextWidth.value = it.size.width
                         },
-                    text = "KG",
-                    color = body,
-                    fontSize = 10.sp
+                    text = "KG", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText)
                 )
             }
 
@@ -236,10 +274,9 @@ private fun ExerciseSetLogCardHeader(
 
             ) {
                 Text(
-                    modifier = Modifier,
-                    text = "REPS",
-                    color = body,
-                    fontSize = 10.sp
+                    modifier = Modifier
+                        .padding(8.dp),
+                    text = "REPS", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText)
                 )
             }
 
@@ -247,7 +284,6 @@ private fun ExerciseSetLogCardHeader(
         }
         Column(
             modifier = Modifier
-
                 .weight(40f),
 
 
@@ -261,10 +297,9 @@ private fun ExerciseSetLogCardHeader(
 
             ) {
                 Text(
-                    modifier = Modifier,
-                    text = "NOTES",
-                    color = body,
-                    fontSize = 10.sp
+                    modifier = Modifier
+                        .padding(8.dp),
+                    text = "NOTES", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText)
                 )
             }
 
@@ -289,7 +324,8 @@ private fun ExerciseSetLogData(
 ) {
     Row (
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .background(tertiary),
     ){
 
 
@@ -309,30 +345,18 @@ private fun ExerciseSetLogData(
 
                 Column(
                     modifier = Modifier
+                        .padding(vertical = 8.dp, horizontal = 8.dp)
                         .wrapContentHeight(),
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
 
 
-                    BasicTextField(
-                        modifier = Modifier
-                            .padding(vertical = 5.dp),
-                        textStyle = TextStyle(color = primaryText , fontSize = 10.sp),
 
-                        value = "$index",
-                        onValueChange = {},
-                        decorationBox = {
-
-                            Row(
-                                modifier = Modifier
-                                    .padding(start = 5.dp)
-                                    .wrapContentWidth(),
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                it()
-                            }
-                        }
+                    Text(
+                        modifier = Modifier,
+                        text = index.toString(),
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText),
                     )
 
                 }
@@ -349,18 +373,20 @@ private fun ExerciseSetLogData(
                 ) {
 
                 Column(
-                    modifier = Modifier,
+                    modifier = Modifier
+
+                        .padding(vertical = 8.dp, horizontal = 8.dp),
 
 
                     ) {
 
 
                     BasicTextField(
-                        modifier = Modifier
-                            .padding(vertical = 5.dp),
-                        textStyle = TextStyle(color = primaryText , fontSize = 10.sp),
+                        modifier = Modifier,
+                        textStyle = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText),
 
                         value = if(set.weight=="0.0") "" else set.weight,
+                        singleLine = true,
                         cursorBrush = SolidColor(primaryText),
                         onValueChange = { updateWeight(set.id.toHexString(),exId,it) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -374,7 +400,8 @@ private fun ExerciseSetLogData(
 
                                     Text(
                                         text = set.prevWeight.ifBlank { "0" },
-                                        style = TextStyle(color = body , fontSize = 10.sp)
+                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = body),
+
                                     )
                                 }
 
@@ -399,17 +426,18 @@ private fun ExerciseSetLogData(
 
                 Column(
                     modifier = Modifier
-                        .wrapContentSize(),
+                        .wrapContentSize()
+                        .padding(vertical = 8.dp, horizontal = 8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
 
                     BasicTextField(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 5.dp),
-                        textStyle = TextStyle(color = primaryText , fontSize = 10.sp),
+                            .fillMaxWidth(),
+                        textStyle = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true,
                         value = set.repetitions.toString(),
                         onValueChange = {updateReps(set.id.toHexString(),exId,it)},
                         cursorBrush = SolidColor(primaryText),
@@ -425,8 +453,9 @@ private fun ExerciseSetLogData(
 
                                     Text(
                                         text = set.prevRepetitions.ifBlank { "0" },
-                                        style = TextStyle(color = body , fontSize = 10.sp)
-                                    )
+                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = body),
+
+                                        )
                                 }
 
 
@@ -451,8 +480,8 @@ private fun ExerciseSetLogData(
                 BasicTextField(
                     modifier = Modifier
                         .wrapContentWidth()
-                        .padding(vertical = 5.dp),
-                    textStyle = TextStyle(color = primaryText , fontSize = 10.sp),
+                        .padding(vertical = 8.dp, horizontal = 8.dp),
+                    textStyle = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText),
 
                     value = set.notes,
                     onValueChange = {updateNotes(set.id.toHexString(),exId , it)},
@@ -493,37 +522,31 @@ private fun ExerciseSetLogData(
 
 
 val b = black.toArgb().toLong()
-@Preview
+@Preview(
+    showBackground = true,
+    showSystemUi = true
+)
 @Composable
 private fun ExerciseSetLogCardPreview() {
 
-//    ExerciseSetLogCard(
-//        count = 1,
-//        exerciseLog = ExerciseLog().apply {
-//            this.setList = realmListOf(
-//                Set().apply {
-//                    this.notes = "start form 30"
-//                    this.weight="43.0F"
-//                    this.repetitions="5"
-//                },
-//                Set().apply {
-//                    this.notes = "start form 30"
-//                    this.weight= "43.0F"
-//                    this.repetitions="5"
-//                },
-//
-//                Set().apply {
-//                    this.notes = "start form 30"
-//                    this.weight= "43.0F"
-//                    this.repetitions="5"
-//                },
-//            )
-//
-//        },
-//        onAddSetBtnClick = {},
-//        updateWeight = {id,ex,data ->},
-//        updateReps = {id,ex,data ->},
-//        updateNotes = {id,ex,data ->},
-//
-//    )
+    ExerciseSetLogCard(
+        count = 1,
+        exerciseLog = ExerciseLogDto(
+            exerciseID = "",
+            name = "Chest",
+            note = "",
+            muscleGroup = "asd",
+            setList = mutableStateListOf(
+                SetDto(
+                    exerciseId = "",
+
+                )
+            )
+        ),
+        onAddSetBtnClick = {},
+        updateWeight = {id,ex,data ->},
+        updateReps = {id,ex,data ->},
+        updateNotes = {id,ex,data ->},
+
+    )
 }

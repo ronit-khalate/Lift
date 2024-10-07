@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.IconButton
@@ -31,11 +33,10 @@ import com.ronit.liftlog.ui.theme.primaryText
 fun StartRoutineScreenTopBar(
     modifier: Modifier = Modifier,
     onBackNavigate:()->Unit,
-    onFinishBtnClick:()->Unit
 ) {
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(50.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -46,36 +47,14 @@ fun StartRoutineScreenTopBar(
 
             Image(
                 colorFilter = ColorFilter.tint(color = primaryText),
-                imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft,
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Navigate Back"
             )
             
         }
 
 
-        Card(
-            modifier = Modifier
-                .height(28.dp)
-                .width(85.dp)
-                .clickable { onFinishBtnClick() },
-            colors = CardDefaults.cardColors(containerColor = blue)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
 
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Text(
-                    text = "Finish",
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = primaryText
-                )
-            }
-        }
 
     }
     
@@ -84,5 +63,5 @@ fun StartRoutineScreenTopBar(
 @Preview
 @Composable
 private fun StartRoutineScreenTopBarPreview() {
-    StartRoutineScreenTopBar(onBackNavigate = {}, onFinishBtnClick = {})
+    StartRoutineScreenTopBar(onBackNavigate = {})
 }
