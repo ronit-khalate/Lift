@@ -7,7 +7,8 @@ val primary = Color(0xFF39FF14)
 val blue = Color(0xFF007AFF)
 val body = Color(0xFF5B5B5B)
 val neutral = Color(0xFF2B2B2E)
-val tertiary = Color(0xFF767676)
+val darkGrey = Color(0xFF333333)
+val tertiary = Color(0xFF444444)
 
 
 
