@@ -8,4 +8,6 @@ interface RoutineListRepository {
     suspend fun getAllRoutine(): Flow<List<Routine>>
     suspend fun addRoutine(routine: Routine)
 
+    suspend fun removeRoutine(routine: Routine)
+
 }

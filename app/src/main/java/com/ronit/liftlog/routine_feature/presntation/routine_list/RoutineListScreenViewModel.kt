@@ -37,6 +37,16 @@ class RoutineListScreenViewModel @Inject constructor(
             is RoutineListScreenEvent.OnRoutineClicked ->{
                 event.navigate()
             }
+
+            is RoutineListScreenEvent.OnDeleteRoutine -> {
+
+
+                viewModelScope.launch {
+
+                    repository.removeRoutine(event.routine)
+                }
+
+            }
         }
     }
 }

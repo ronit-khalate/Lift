@@ -126,6 +126,20 @@ class RoutineScreenViewModel @AssistedInject constructor(
 
          }
 
+         is RoutineScreenEvent.OnRemoveExercise -> {
+
+
+
+            viewModelScope.launch {
+               state=state.copy(
+                  exerciseList = state.exerciseList.filter {
+                     it._id.toHexString() != event.id
+                  }
+               )
+               routineDetailRepositoryImpl.updateRoutine(state)
+            }
+
+         }
       }
    }
 

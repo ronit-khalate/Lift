@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -49,6 +52,7 @@ import com.ronit.liftlog.routine_feature.presntation.routine.components.Selected
 import com.ronit.liftlog.routine_feature.presntation.routine.event.ExerciseListUiEvent
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.blue
+import com.ronit.liftlog.ui.theme.primary
 import com.ronit.liftlog.ui.theme.primaryText
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
@@ -86,8 +90,8 @@ fun ExerciseListScreen(
 
     Scaffold(
         modifier = modifier
-
-            .fillMaxSize(),
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.statusBars),
         topBar = {
             // Top Bar
             ThreeSectionTopBar(
@@ -131,7 +135,7 @@ fun ExerciseListScreen(
         Column(
 
             modifier = Modifier
-                .padding(top = paddingValues.calculateTopPadding())
+                .padding(paddingValues)
                 .fillMaxSize(),
 
             verticalArrangement = Arrangement.Top
@@ -227,7 +231,7 @@ fun ExerciseListScreen(
                         AnimatedVisibility(
                             visible = selected,
                         ) {
-                            SelectedIdentifier(color = blue)
+                            SelectedIdentifier(color = primary)
 
 
                         }
@@ -237,10 +241,11 @@ fun ExerciseListScreen(
                         }
 
 
-                        ExerciseCard(
+                        Exe
+                        rciseCard(
                             onClick = { viewModel.onExerciseSelected(exercise) },
                             exerciseName = exercise.name.replaceFirstChar { char -> char.titlecase() },
-                            muscleGroup = exercise.muscleGroup ?: ""
+                            muscleGroup = exercise.muscleGroup ?: "",
                         )
                     }
                     

@@ -20,6 +20,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,7 +40,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ronit.liftlog.core.presentation.component.BottomBar
+import com.ronit.liftlog.core.presentation.component.SwipeToDeleteContainer
 import com.ronit.liftlog.routine_feature.presntation.routine_list.components.RoutineCard
+import com.ronit.liftlog.routine_feature.presntation.routine_list.event.RoutineListScreenEvent
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.primary
 import com.ronit.liftlog.ui.theme.primaryText
@@ -55,23 +59,7 @@ fun RoutineListScreen(
 
     val viewModel  = hiltViewModel<RoutineListScreenViewModel>()
 
-
-    val brush = Brush.linearGradient(
-        0.6f to Color(0xFFFF9900),
-        3.0f to Color(0xFFAD00FF),
-        start = Offset(0.0f, Float.POSITIVE_INFINITY),
-        end = Offset(Float.POSITIVE_INFINITY, 10.0f)
-
-    )
-
-    var listCardHeight by remember {
-        mutableIntStateOf(684)
-    }
-
-    var barPadding by remember {
-        mutableIntStateOf(20)
-    }
-
+    val snackbarHostState = remember { SnackbarHostState()}
 
     Scaffold (
 
@@ -135,19 +123,29 @@ fun RoutineListScreen(
                 ) {
 
 
-                    items(items = viewModel.routineList) { routine ->
-                        RoutineCard(
+                    items(items = viewModel.routineList) {
 
-                            routineName = routine.name,
-                            exerciseCount = routine.exercise.size,
-                            onCardClick = { onCardClicked(routine._id.toHexString()) },
-                            onStartNowClick = {
-                                onStartRoutineClicked(
-                                    routine._id.toHexString(),
-                                    routine.name
+                        SwipeToDeleteContainer(
+
+                            onDelete = { viewModel.onEvent(RoutineListScreenEvent.OnDeleteRoutine(it))},
+                            dialogTitleText = "This Action Cannot be undone! ",
+                            dialogTextText = "Are you sure you want delete this workout? ",
+                            content = {
+                                RoutineCard(
+
+                                    routineName = it.name,
+                                    exerciseCount = it.exercise.size,
+                                    onCardClick = { onCardClicked(it._id.toHexString()) },
+                                    onStartNowClick = {
+                                        onStartRoutineClicked(
+                                            it._id.toHexString(),
+                                            it.name
+                                        )
+                                    },
                                 )
-                            },
+                            }
                         )
+
 
                         Spacer(modifier = Modifier.height(24.dp))
                     }

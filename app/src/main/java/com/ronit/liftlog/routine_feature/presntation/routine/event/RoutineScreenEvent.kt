@@ -13,4 +13,6 @@ sealed interface RoutineScreenEvent {
     data object OnRoutineStartWorkOutClicked:RoutineScreenEvent
     data class OnDoneBtnClicked(val onCompleteUpserting:()->Unit):RoutineScreenEvent
 
+    data class OnRemoveExercise(val id:String ):RoutineScreenEvent
+
 }
