@@ -178,7 +178,7 @@ fun ExerciseScreen(
                         ),
                         label = {
                             Text(
-                                text = group.toString().titlecase(),
+                                text = group.toString().titlecase().replace('_',' '),
                                 style = MaterialTheme.typography.labelSmall
                             )
                         }
