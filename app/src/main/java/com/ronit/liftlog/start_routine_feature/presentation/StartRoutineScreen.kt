@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -124,10 +125,8 @@ fun StartRoutineScreen(
 
                 items(items = viewmodel.state.exercisesLog, key = {it.id.toHexString()}) {exerciseLog->
 
-                    var count= 1
                     ExerciseSetLogCard(
                         exerciseLog = exerciseLog,
-                        count =count,
                         onAddSetBtnClick = {viewmodel.onEvent(StartRoutineScreenEvent.OnAddSetInExerciseLog(it))},
                         updateWeight = {id:String , exLogId,data:String ->
 
@@ -143,8 +142,9 @@ fun StartRoutineScreen(
                         }
                     )
 
-                    count++
-                    Spacer(modifier = Modifier.height(48.dp))
+
+
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
 

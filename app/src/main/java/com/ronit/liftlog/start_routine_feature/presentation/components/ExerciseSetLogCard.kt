@@ -4,12 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -32,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -45,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import com.ronit.liftlog.R
 import com.ronit.liftlog.core.data.model.ExerciseLog
 import com.ronit.liftlog.core.navigation.Screen.Screens
+import com.ronit.liftlog.routine_feature.presntation.routine.components.SelectedIdentifier
 import com.ronit.liftlog.start_routine_feature.data.model.ExerciseLogDto
 import com.ronit.liftlog.start_routine_feature.data.model.SetDto
 import com.ronit.liftlog.ui.theme.black
@@ -59,7 +63,6 @@ import kotlin.math.sin
 @Composable
 fun ExerciseSetLogCard(
     modifier: Modifier = Modifier,
-    count:Int,
     exerciseLog:ExerciseLogDto,
     onAddSetBtnClick:(id:String)->Unit,
     updateWeight: (id:String,exLogId:String,data:String)->Unit,
@@ -92,18 +95,33 @@ fun ExerciseSetLogCard(
                 Row(
                     modifier = Modifier
                         .background(black)
-                        .padding(6.dp)
+                        .height(intrinsicSize = IntrinsicSize.Min)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
 
-                    Text(
-                        text = "${exerciseLog.name}",
-                        color = primaryText,
-                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
-                    )
+                    Row (
+                        modifier = Modifier,
+
+                        verticalAlignment = Alignment.CenterVertically
+
+                    ){
+
+                        SelectedIdentifier(
+                            color = primary,
+                            shape = RectangleShape
+                        )
+
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = "${exerciseLog.name}",
+                            color = primaryText,
+                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
+                        )
+                    }
+
 
                     IconButton(onClick = {})
                     {
@@ -524,13 +542,11 @@ private fun ExerciseSetLogData(
 val b = black.toArgb().toLong()
 @Preview(
     showBackground = true,
-    showSystemUi = true
 )
 @Composable
 private fun ExerciseSetLogCardPreview() {
 
     ExerciseSetLogCard(
-        count = 1,
         exerciseLog = ExerciseLogDto(
             exerciseID = "",
             name = "Chest",
