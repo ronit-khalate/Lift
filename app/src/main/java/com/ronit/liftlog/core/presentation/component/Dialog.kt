@@ -7,9 +7,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.DialogProperties
 import com.ronit.liftlog.ui.theme.black
+import com.ronit.liftlog.ui.theme.neutral
+import com.ronit.liftlog.ui.theme.primary
 import com.ronit.liftlog.ui.theme.primaryText
 
 @Composable
@@ -22,12 +26,15 @@ fun BasicDialog(
     icon: ImageVector?=null,
     titleText:String,
     textString:String,
+    confirmBtnColor: Color = primaryText,
+    dismissBtnColor: Color = primaryText
 
 ) {
 
 
 
     AlertDialog(
+
         onDismissRequest = onDismiss,
         dismissButton = {
             dismissBtnText?.let {
@@ -36,7 +43,7 @@ fun BasicDialog(
                 ) {
                     Text(
                         text =dismissBtnText,
-                        color = black
+                        color = dismissBtnColor
                     )
                 }
             }
@@ -47,7 +54,7 @@ fun BasicDialog(
                 TextButton(onClick ={onConfirm() }) {
                     Text(
                         text =confirmBtnText,
-                        color = black
+                        color = confirmBtnColor
                     )
                 }
             }
@@ -60,15 +67,20 @@ fun BasicDialog(
             }
 
         },
-        containerColor = primaryText,
+        containerColor = neutral,
         title = {
-            Text(text = titleText)
+            Text(
+                text = titleText
+            )
         },
         text = {
-            Text(text = textString)
+            Text(
+                color = primaryText,
+                text = textString
+            )
         },
-        titleContentColor = black,
-        textContentColor = black,
+        titleContentColor = primaryText,
+        textContentColor = primaryText,
 
 
 

@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ronit.liftlog.ui.theme.body
 import com.ronit.liftlog.ui.theme.neutral
+import com.ronit.liftlog.ui.theme.primaryText
 
 
 @Composable
@@ -90,8 +92,8 @@ fun SearchBar(
                 .padding(horizontal = 5.dp),
 
 
-
-            textStyle = MaterialTheme.typography.bodyLarge.copy(color = body),
+            cursorBrush = SolidColor(primaryText),
+            textStyle = MaterialTheme.typography.bodyLarge.copy(color = primaryText),
             singleLine = true,
 
             decorationBox = {
@@ -132,7 +134,6 @@ fun SearchBar(
 @Preview(
     "SearchBar Preview",
     showBackground = true,
-    showSystemUi = true
 )
 @Composable()
 fun SearchBarPreview() {

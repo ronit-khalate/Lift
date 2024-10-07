@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.body
 import com.ronit.liftlog.ui.theme.neutral
+import com.ronit.liftlog.ui.theme.primary
 import com.ronit.liftlog.ui.theme.primaryText
 
 
@@ -101,7 +102,7 @@ fun StickyBottomCard(
                         .width(80.dp)
                         .clickable { onFinishBtnClick() },
                     shape = MaterialTheme.shapes.small,
-                    colors = CardDefaults.cardColors(containerColor = primaryText)
+                    colors = CardDefaults.cardColors(containerColor = primary)
                 ) {
                     Column(
                         modifier = Modifier
