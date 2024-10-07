@@ -1,6 +1,7 @@
 package com.ronit.liftlog.log_feature.ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,11 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.foreverrafs.datepicker.DatePickerTimeline
-import com.foreverrafs.datepicker.Orientation
-import com.foreverrafs.datepicker.state.rememberDatePickerState
+import com.ronit.liftlog.core.domain.titlecase
 import com.ronit.liftlog.core.navigation.Screen.Screens
 import com.ronit.liftlog.core.presentation.component.BottomBar
+import com.ronit.liftlog.core.presentation.component.SwipeToDeleteContainer
 import com.ronit.liftlog.log_feature.ui.components.DatePickerTimeLine
 import com.ronit.liftlog.log_feature.ui.components.RoutineLogCard
 import com.ronit.liftlog.log_feature.ui.state.LogScreenUiState
@@ -50,11 +52,12 @@ fun LogScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     onCreateRoutineClicked:() ->Unit,
-    onDateClicked:(LocalDate)->Unit
+    onDateClicked:(LocalDate)->Unit,
+    onGoToTodaysLog:()->Unit
 ) {
 
 
-    val datePickerState = rememberDatePickerState()
+
 
     val scrollState = rememberScrollState()
     Scaffold(
@@ -69,7 +72,7 @@ fun LogScreen(
         Column(
             modifier = modifier
                 .padding(paddingValues)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp , vertical = 16.dp)
         ) {
 
 
@@ -80,21 +83,23 @@ fun LogScreen(
             ) {
 
                 Column(
+                    modifier = Modifier.clickable { onGoToTodaysLog() },
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
 
                     Text(
-                        text = state.currentDate.dayOfWeek.name.lowercase(),
-                        style = MaterialTheme.typography.titleLarge,
+                        text = state.currentDate.dayOfWeek.name.titlecase(),
+                        style = MaterialTheme.typography.headlineSmall,
                         color = primaryText,
                         fontWeight = FontWeight.ExtraBold
                     )
 
                     Text(
-                        text = "${state.currentDate.month.name.lowercase()} ${state.currentDate.dayOfMonth}",
+                        text = "${state.currentDate.month.name.titlecase()} ${state.currentDate.dayOfMonth} ${state.currentDate.year.toString()}",
                         color = primaryText,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                     )
+
                 }
 
 
@@ -115,34 +120,41 @@ fun LogScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+
             DatePickerTimeLine(
                 modifier = Modifier
                     .padding(vertical = 8.dp),
                 currentDate = state.currentDate,
                 localDateList = state.dateList,
+                selectedDate = state.selectedDate,
                 onDateClick = onDateClicked
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Column(
+            LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .scrollable(
-                        scrollState,
-                        orientation = androidx.compose.foundation.gestures.Orientation.Vertical
-                    )
+                    .fillMaxWidth(),
+
             ) {
 
-                for (log in state.logs){
 
-                    RoutineLogCard(
-                        log = log,
-                        onClick = {}
+                items(items = state.logs ){
+                    SwipeToDeleteContainer(
+
+                        onDelete = { },
+                        dialogTitleText = "This action cannot be undone",
+                        dialogTextText = "Are you sure you want to delete this Log?",
+                        content = {
+                            RoutineLogCard(
+                                log = it,
+                                onClick = {}
+                            )
+                        }
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
                 }
+
 
             }
 
@@ -158,6 +170,7 @@ private fun LogScreenPreview() {
         LogScreenUiState(),
         navController = rememberNavController(),
         onCreateRoutineClicked = {},
-        onDateClicked = {}
+        onDateClicked = {},
+        onGoToTodaysLog = {}
     )
 }

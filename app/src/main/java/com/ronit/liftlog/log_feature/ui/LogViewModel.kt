@@ -61,18 +61,32 @@ class LogViewModel@Inject constructor(
 
 
                 viewModelScope.launch {
-                    val logs = logRepo.getLog(event.date)
-                    state = state.copy(
-                        selectedDate = event.date,
-                        logs = logs
-                    )
+
+                    changeDate(event.date)
 
                 }
 
 
             }
             is LogScreenUiEvent.OnRoutineLogCardClicked -> TODO()
+            is LogScreenUiEvent.OnGoToTodaysLog -> {
+
+
+                viewModelScope.launch {
+
+                    changeDate(state.currentDate)
+                }
+
+            }
         }
+    }
+
+    private suspend fun changeDate(date: LocalDate){
+        val logs = logRepo.getLog(date)
+        state = state.copy(
+            selectedDate = date,
+            logs = logs
+        )
     }
 
 

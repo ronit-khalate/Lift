@@ -6,7 +6,7 @@ import java.time.LocalDate
 data class LogScreenUiState(
     val dateList:List<LocalDate> = emptyList(),
     val logs:List<Log> = emptyList(),
-    val selectedDate:LocalDate?=null,
+    val selectedDate:LocalDate=LocalDate.now(),
 ){
 
     val currentDate = LocalDate.now()

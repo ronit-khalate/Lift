@@ -16,9 +16,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -39,6 +44,7 @@ import java.time.format.*
 fun DatePickerTimeLine(
     modifier: Modifier = Modifier,
     currentDate: LocalDate,
+    selectedDate:LocalDate,
     localDateList:List<LocalDate>,
     onDateClick:(LocalDate)->Unit
 
@@ -49,10 +55,13 @@ fun DatePickerTimeLine(
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val dateCardWidth = screenWidth/7
 
+
+    HorizontalDivider()
+
     LazyRow(
         modifier = modifier
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+
 
     ) {
 
@@ -68,8 +77,7 @@ fun DatePickerTimeLine(
                 modifier = Modifier
                     .width(dateCardWidth.dp),
                 dateTime = dateTime,
-
-                currentDateTime =currentDate,
+                selectedDate =selectedDate,
                 onClick ={ onDateClick(dateTime)}
             )
 
@@ -79,6 +87,8 @@ fun DatePickerTimeLine(
 
 
     }
+
+    HorizontalDivider()
 }
 
 
@@ -87,15 +97,20 @@ fun DatePickerTimeLine(
 fun DateCard(
     modifier: Modifier = Modifier,
     dateTime:LocalDate,
-    currentDateTime: LocalDate,
-    isSelected:Boolean = false,
+    selectedDate: LocalDate,
     onClick:()->Unit
 ) {
 
 
+    var isSelected by remember {
+        mutableStateOf(false)
+    }
     Column(
         modifier = modifier
-            .clickable { onClick() },
+            .clickable {
+                isSelected = true
+                onClick()
+           },
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -112,7 +127,7 @@ fun DateCard(
 
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = if(currentDateTime.isEqual(dateTime)) primary else backgroundDark
+                containerColor = if(selectedDate.isEqual(dateTime)) primary else backgroundDark
                 ),
             shape = RoundedCornerShape(size = 4.dp)
         ){
@@ -127,7 +142,7 @@ fun DateCard(
                 Text(
                     text = dateTime.dayOfMonth.toString(),
                     style = androidx.compose.ui.text.TextStyle(
-                        color = if(currentDateTime.isEqual(dateTime)) backgroundDark else primaryText,
+                        color = if(selectedDate.isEqual(dateTime)) backgroundDark else primaryText,
                         fontStyle = MaterialTheme.typography.labelSmall.fontStyle,
                         fontSize = MaterialTheme.typography.labelSmall.fontSize,
                         fontWeight = FontWeight.Bold
@@ -150,7 +165,7 @@ private fun DateCardPreview() {
 
     DateCard(
         dateTime = LocalDate.now(),
-        currentDateTime = LocalDate.now(),
+        selectedDate = LocalDate.now(),
         onClick = {}
     )
 }
@@ -173,6 +188,7 @@ private fun DatePickerTimeLinePreview() {
             LocalDate.of(2024, 10, 8),
             LocalDate.of(2024, 10, 9),
         ),
+        selectedDate = LocalDate.now(),
         onDateClick = {}
     )
 }
