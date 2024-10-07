@@ -96,8 +96,6 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(kotlin("reflect"))
 
-    implementation (libs.datepickertimeline)
-
 
 
 }

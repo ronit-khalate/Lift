@@ -8,9 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.ronit.liftlog.core.data.MuscleGroup
 import com.ronit.liftlog.core.data.mappers.toExercise
 import com.ronit.liftlog.core.data.model.Exercise
-import com.ronit.liftlog.core.domain.TitleCaseStringFormatter
 import com.ronit.liftlog.core.domain.repository.ExerciseRepositoryImpl
 import com.ronit.liftlog.core.domain.dto.ExerciseDto
+import com.ronit.liftlog.core.domain.titlecase
 import com.ronit.liftlog.core.presentation.exercise.event.ExerciseScreenEvent
 
 import com.ronit.liftlog.core.presentation.component.DialogContent
@@ -130,9 +130,7 @@ class ExerciseViewModel @AssistedInject constructor(
                         val ex = ExerciseDto(
                             _id = exerciseId,
                             name = exercise.name,
-                            muscleGroup = MuscleGroup.entries[exercise.muscleGroupIdx].name.format(
-                                TitleCaseStringFormatter()
-                            ),
+                            muscleGroup = MuscleGroup.entries[exercise.muscleGroupIdx].name.titlecase(),
                             Note = exercise.note
 
                         )

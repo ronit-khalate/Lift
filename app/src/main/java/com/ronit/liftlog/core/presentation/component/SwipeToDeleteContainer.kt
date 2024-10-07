@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -85,33 +84,33 @@ fun SwipeToDeleteContainer(
 
 
 
-        AnimatedVisibility(
-            visible = showDialog,
-            enter = slideInVertically(),
-            exit = scaleOut(),
+    AnimatedVisibility(
+        visible = showDialog,
+        enter = slideInVertically(),
+        exit = scaleOut(),
 
-        ) {
-            BasicDialog(
-
-
-                onConfirm = {
-                    isRemoved = false
-                    showDialog = false
-                    onDelete()
+    ) {
+        BasicDialog(
 
 
-                },
-                confirmBtnColor = Color.Red,
-                onDismiss = {
-                    showDialog = false
-                },
-                dismissBtnColor = primary,
-                dismissBtnText = "Cancel",
-                confirmBtnText = "Delete",
-                titleText = dialogTitleText,
-                textString = dialogTextText
-            )
-        }
+            onConfirm = {
+                isRemoved = false
+                showDialog = false
+                onDelete()
+
+
+            },
+            confirmBtnColor = Color.Red,
+            onDismiss = {
+                showDialog = false
+            },
+            dismissBtnColor = primary,
+            dismissBtnText = "Cancel",
+            confirmBtnText = "Delete",
+            titleText = dialogTitleText,
+            textString = dialogTextText
+        )
+    }
 
 
 

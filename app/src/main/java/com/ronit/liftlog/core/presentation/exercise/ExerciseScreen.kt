@@ -5,10 +5,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ContextualFlowRow
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
@@ -30,12 +33,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ronit.liftlog.core.data.MuscleGroup
-import com.ronit.liftlog.core.domain.TitleCaseStringFormatter
+import com.ronit.liftlog.core.domain.titlecase
 import com.ronit.liftlog.core.presentation.component.BasicDialog
 import com.ronit.liftlog.core.presentation.component.ThreeSectionTopBar
 import com.ronit.liftlog.core.presentation.exercise.event.ExerciseScreenEvent
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.body
+import com.ronit.liftlog.ui.theme.primary
 import com.ronit.liftlog.ui.theme.primaryText
 
 
@@ -70,7 +74,7 @@ fun ExerciseScreen(
 
     Scaffold(
         modifier = modifier
-
+            .windowInsetsPadding(WindowInsets.statusBars)
             .fillMaxSize(),
 
         topBar = {
@@ -168,13 +172,13 @@ fun ExerciseScreen(
                         onClick = { viewModel.onEvent(ExerciseScreenEvent.OnMuscleGroupChange(group.ordinal)) },
                         colors = FilterChipDefaults.filterChipColors(
                             containerColor = black,
-                            selectedContainerColor = primaryText,
+                            selectedContainerColor = primary,
                             labelColor = primaryText,
                             selectedLabelColor = black
                         ),
                         label = {
                             Text(
-                                text = group.toString().format(TitleCaseStringFormatter()),
+                                text = group.toString().titlecase(),
                                 style = MaterialTheme.typography.labelSmall
                             )
                         }

@@ -233,7 +233,6 @@ fun ExerciseListScreen(
                         ) {
                             SelectedIdentifier(color = primary)
 
-
                         }
 
                         if(selected){
@@ -241,8 +240,7 @@ fun ExerciseListScreen(
                         }
 
 
-                        Exe
-                        rciseCard(
+                        ExerciseCard(
                             onClick = { viewModel.onExerciseSelected(exercise) },
                             exerciseName = exercise.name.replaceFirstChar { char -> char.titlecase() },
                             muscleGroup = exercise.muscleGroup ?: "",
