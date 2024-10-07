@@ -1,3 +1,5 @@
+import java.net.URI
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -7,12 +9,12 @@ plugins {
 }
 
 android {
-    namespace = "com.example.liftlog"
+    namespace = "com.ronit.liftlog"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.liftlog"
-        minSdk = 24
+        applicationId = "com.ronit.liftlog"
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -50,7 +52,11 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+
 }
+
+
 
 dependencies {
 
@@ -88,6 +94,10 @@ dependencies {
 
     //Data Store
     implementation(libs.datastore.preferences)
+    implementation(kotlin("reflect"))
+
+
+
 }
 
 
