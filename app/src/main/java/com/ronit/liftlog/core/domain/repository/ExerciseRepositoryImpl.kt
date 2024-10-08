@@ -1,7 +1,7 @@
 package com.ronit.liftlog.core.domain.repository
 
-import com.ronit.liftlog.core.data.model.Exercise
-import com.ronit.liftlog.core.data.model.Routine
+import com.ronit.liftlog.core.data.model.entity.Exercise
+import com.ronit.liftlog.core.data.model.entity.Routine
 import com.ronit.liftlog.core.data.repository.ExerciseRepository
 import io.realm.kotlin.Realm
 import io.realm.kotlin.UpdatePolicy

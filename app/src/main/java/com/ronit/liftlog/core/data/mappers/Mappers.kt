@@ -1,7 +1,7 @@
 package com.ronit.liftlog.core.data.mappers
 
-import com.ronit.liftlog.core.data.model.Exercise
-import com.ronit.liftlog.core.data.model.Routine
+import com.ronit.liftlog.core.data.model.entity.Exercise
+import com.ronit.liftlog.core.data.model.entity.Routine
 import com.ronit.liftlog.core.domain.dto.ExerciseDto
 import com.ronit.liftlog.routine_feature.domain.model.RoutineDto
 import io.realm.kotlin.ext.realmListOf
@@ -20,7 +20,7 @@ fun Exercise.toExerciseDto(): ExerciseDto {
 }
 
 
-fun ExerciseDto.toExercise():Exercise{
+fun ExerciseDto.toExercise(): Exercise {
     return Exercise().apply {
 
         if(this@toExercise._id != null){

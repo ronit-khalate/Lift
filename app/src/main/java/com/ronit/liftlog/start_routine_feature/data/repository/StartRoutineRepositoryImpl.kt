@@ -2,11 +2,11 @@ package com.ronit.liftlog.start_routine_feature.data.repository
 
 //import com.example.liftlog.core.data.mappers.toLog
 import com.ronit.liftlog.core.data.mappers.toRealmList
-import com.ronit.liftlog.core.data.model.Exercise
-import com.ronit.liftlog.core.data.model.ExerciseLog
-import com.ronit.liftlog.core.data.model.Log
-import com.ronit.liftlog.core.data.model.Routine
-import com.ronit.liftlog.core.data.model.Set
+import com.ronit.liftlog.core.data.model.entity.Exercise
+import com.ronit.liftlog.core.data.model.entity.ExerciseLog
+import com.ronit.liftlog.core.data.model.entity.Log
+import com.ronit.liftlog.core.data.model.entity.Routine
+import com.ronit.liftlog.core.data.model.entity.Set
 import com.ronit.liftlog.core.domain.RealmResponse
 import com.ronit.liftlog.start_routine_feature.domain.repository.StartRoutineRepository
 import com.ronit.liftlog.start_routine_feature.presentation.state.StartRoutineScreenState

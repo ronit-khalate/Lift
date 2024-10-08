@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ronit.liftlog.core.data.model.Exercise
-import com.ronit.liftlog.core.data.model.Routine
+import com.ronit.liftlog.core.data.model.entity.Exercise
+import com.ronit.liftlog.core.data.model.entity.Routine
 import com.ronit.liftlog.core.domain.repository.ExerciseRepositoryImpl
 import com.ronit.liftlog.core.presentation.component.DialogContent
 import com.ronit.liftlog.routine_feature.data.RoutineDetailRepositoryImpl

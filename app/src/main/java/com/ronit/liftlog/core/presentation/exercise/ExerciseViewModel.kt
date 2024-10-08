@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ronit.liftlog.core.data.MuscleGroup
 import com.ronit.liftlog.core.data.mappers.toExercise
-import com.ronit.liftlog.core.data.model.Exercise
+import com.ronit.liftlog.core.data.model.entity.Exercise
 import com.ronit.liftlog.core.domain.repository.ExerciseRepositoryImpl
 import com.ronit.liftlog.core.domain.dto.ExerciseDto
 import com.ronit.liftlog.core.domain.titlecase
@@ -155,7 +155,7 @@ class ExerciseViewModel @AssistedInject constructor(
         }
     }
 
-    private fun onDoneBtnClicked(exercise:Exercise,onComplete:()->Unit){
+    private fun onDoneBtnClicked(exercise: Exercise, onComplete:()->Unit){
 
 
 

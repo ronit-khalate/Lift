@@ -1,4 +1,4 @@
-package com.ronit.liftlog.core.data.model
+package com.ronit.liftlog.core.data.model.entity
 
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmInstant

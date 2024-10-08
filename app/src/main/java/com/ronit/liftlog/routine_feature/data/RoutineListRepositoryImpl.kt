@@ -1,9 +1,8 @@
 package com.ronit.liftlog.routine_feature.data
 
-import com.ronit.liftlog.core.data.model.Routine
+import com.ronit.liftlog.core.data.model.entity.Routine
 import com.ronit.liftlog.routine_feature.domain.repository.RoutineListRepository
 import io.realm.kotlin.Realm
-import io.realm.kotlin.delete
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

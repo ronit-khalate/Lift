@@ -8,7 +8,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ronit.liftlog.core.data.MuscleGroup
-import com.ronit.liftlog.core.data.model.Exercise
+import com.ronit.liftlog.core.data.model.entity.Exercise
 import com.ronit.liftlog.core.domain.repository.ExerciseRepositoryImpl
 import com.ronit.liftlog.core.domain.rabinKarpSimilarity
 import com.ronit.liftlog.routine_feature.presntation.routine.event.ExerciseListUiEvent
@@ -64,7 +64,7 @@ class ExerciseListScreenViewModel @AssistedInject constructor(
     }
 
 
-    fun onExerciseSelected(exercise:Exercise){
+    fun onExerciseSelected(exercise: Exercise){
 
         if(selectedExercises.any { it._id.toHexString()== exercise._id.toHexString() }){
 

@@ -1,7 +1,7 @@
 package com.ronit.liftlog.start_routine_feature.domain.repository
 
-import com.ronit.liftlog.core.data.model.Log
-import com.ronit.liftlog.core.data.model.Routine
+import com.ronit.liftlog.core.data.model.entity.Log
+import com.ronit.liftlog.core.data.model.entity.Routine
 import com.ronit.liftlog.core.domain.RealmResponse
 import com.ronit.liftlog.start_routine_feature.presentation.state.StartRoutineScreenState
 import org.mongodb.kbson.ObjectId

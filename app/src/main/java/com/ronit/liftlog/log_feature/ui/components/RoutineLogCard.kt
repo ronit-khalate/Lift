@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,12 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ronit.liftlog.core.data.model.Exercise
-import com.ronit.liftlog.core.data.model.ExerciseLog
-import com.ronit.liftlog.core.data.model.Log
-import com.ronit.liftlog.core.data.model.Routine
-import com.ronit.liftlog.core.data.model.Set
-import com.ronit.liftlog.ui.theme.body
+import com.ronit.liftlog.core.data.model.entity.Exercise
+import com.ronit.liftlog.core.data.model.entity.ExerciseLog
+import com.ronit.liftlog.core.data.model.entity.Log
+import com.ronit.liftlog.core.data.model.entity.Set
 import com.ronit.liftlog.ui.theme.neutral
 import com.ronit.liftlog.ui.theme.primaryText
 import io.realm.kotlin.ext.realmListOf
@@ -103,7 +100,7 @@ private fun RoutineLogCardPreview() {
                             this.name ="Bench Press"
                         }
 
-                    this.setList = realmListOf(Set(),Set())
+                    this.setList = realmListOf(Set(), Set())
                 },
                 ExerciseLog().apply {
                     this.exercise = Exercise()
@@ -111,7 +108,7 @@ private fun RoutineLogCardPreview() {
                             this.name ="Bench Press"
                         }
 
-                    this.setList = realmListOf(Set(),Set())
+                    this.setList = realmListOf(Set(), Set())
                 },
                 ExerciseLog().apply {
                     this.exercise = Exercise()
@@ -119,7 +116,7 @@ private fun RoutineLogCardPreview() {
                             this.name ="Bench Press"
                         }
 
-                    this.setList = realmListOf(Set(),Set())
+                    this.setList = realmListOf(Set(), Set())
                 },
                 ExerciseLog().apply {
                     this.exercise = Exercise()
@@ -127,7 +124,7 @@ private fun RoutineLogCardPreview() {
                             this.name ="Bench Press"
                         }
 
-                    this.setList = realmListOf(Set(),Set())
+                    this.setList = realmListOf(Set(), Set())
                 },
             )
         },

@@ -1,6 +1,6 @@
 package com.ronit.liftlog.core.data.repository
 
-import com.ronit.liftlog.core.data.model.Exercise
+import com.ronit.liftlog.core.data.model.entity.Exercise
 import kotlinx.coroutines.flow.Flow
 
 interface ExerciseRepository {

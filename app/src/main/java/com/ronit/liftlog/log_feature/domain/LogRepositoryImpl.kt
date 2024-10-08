@@ -1,6 +1,6 @@
 package com.ronit.liftlog.log_feature.domain
 
-import com.ronit.liftlog.core.data.model.Log
+import com.ronit.liftlog.core.data.model.entity.Log
 import com.ronit.liftlog.core.domain.toEpochMillis
 import com.ronit.liftlog.log_feature.data.repository.LogRepository
 import io.realm.kotlin.Realm

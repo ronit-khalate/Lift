@@ -1,10 +1,10 @@
 package com.ronit.liftlog.core.di
 
-import com.ronit.liftlog.core.data.model.Exercise
-import com.ronit.liftlog.core.data.model.Log
-import com.ronit.liftlog.core.data.model.Routine
-import com.ronit.liftlog.core.data.model.ExerciseLog
-import com.ronit.liftlog.core.data.model.Set
+import com.ronit.liftlog.core.data.model.entity.Exercise
+import com.ronit.liftlog.core.data.model.entity.Log
+import com.ronit.liftlog.core.data.model.entity.Routine
+import com.ronit.liftlog.core.data.model.entity.ExerciseLog
+import com.ronit.liftlog.core.data.model.entity.Set
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,7 +22,7 @@ object DbModule {
     @Singleton
     fun provideRealm():Realm {
         val config = RealmConfiguration.create(
-            schema = setOf(Set::class, Exercise::class, Routine::class, Log::class,ExerciseLog::class)
+            schema = setOf(Set::class, Exercise::class, Routine::class, Log::class, ExerciseLog::class)
         )
 
         return Realm.open(config)

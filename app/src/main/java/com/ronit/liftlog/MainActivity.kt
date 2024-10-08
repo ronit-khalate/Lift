@@ -21,6 +21,7 @@ import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,6 +34,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.ronit.liftlog.core.data.remote.ExerciseListService
 import com.ronit.liftlog.core.navigation.Screen.Screens
 import com.ronit.liftlog.core.presentation.component.BottomBar
 import com.ronit.liftlog.core.presentation.component.StickyBottomCard
@@ -46,11 +48,17 @@ import com.ronit.liftlog.start_routine_feature.domain.StartRoutineServiceManager
 import com.ronit.liftlog.start_routine_feature.presentation.StartRoutineScreen
 import com.ronit.liftlog.ui.theme.LiftLogTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var exerciseListService: ExerciseListService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         enableEdgeToEdge()
         setContent {
             LiftLogTheme {
@@ -64,6 +72,13 @@ class MainActivity : ComponentActivity() {
 
 
 
+                LaunchedEffect(Unit) {
+
+                    val res = exerciseListService.getExerciseList()
+
+                    Log.d("api","${res.size}")
+
+                }
 
 
 

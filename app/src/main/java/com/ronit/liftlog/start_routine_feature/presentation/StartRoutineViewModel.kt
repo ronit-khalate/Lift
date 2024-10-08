@@ -7,8 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ronit.liftlog.core.data.model.ExerciseLog
-import com.ronit.liftlog.core.data.model.Set
+import com.ronit.liftlog.core.data.model.entity.ExerciseLog
+import com.ronit.liftlog.core.data.model.entity.Set
 import com.ronit.liftlog.core.domain.RealmResponse
 import com.ronit.liftlog.core.domain.toEpochMillis
 import com.ronit.liftlog.start_routine_feature.data.model.ExerciseLogDto
@@ -24,7 +24,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
 import java.time.LocalDate
-import java.util.Date
 
 @HiltViewModel(assistedFactory = StartRoutineViewModel.StartRoutineViewModelFactory::class)
 class StartRoutineViewModel @AssistedInject constructor(

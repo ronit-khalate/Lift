@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ronit.liftlog.core.data.MuscleGroup
-import com.ronit.liftlog.core.data.model.Exercise
+import com.ronit.liftlog.core.data.model.entity.Exercise
 import com.ronit.liftlog.core.presentation.component.MaxWidthButton
 import com.ronit.liftlog.core.presentation.component.SearchBar
 import com.ronit.liftlog.core.presentation.component.ThreeSectionTopBar
@@ -51,7 +51,6 @@ import com.ronit.liftlog.routine_feature.presntation.routine.components.Exercise
 import com.ronit.liftlog.routine_feature.presntation.routine.components.SelectedIdentifier
 import com.ronit.liftlog.routine_feature.presntation.routine.event.ExerciseListUiEvent
 import com.ronit.liftlog.ui.theme.black
-import com.ronit.liftlog.ui.theme.blue
 import com.ronit.liftlog.ui.theme.primary
 import com.ronit.liftlog.ui.theme.primaryText
 import kotlinx.coroutines.FlowPreview
