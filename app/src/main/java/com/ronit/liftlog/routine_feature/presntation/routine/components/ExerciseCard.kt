@@ -40,7 +40,7 @@ fun ExerciseCard(
     modifier: Modifier = Modifier,
     onClick:()->Unit,
     exerciseName:String,
-    muscleGroup:String
+    muscleGroup:List<String>
 ) {
 
     Card(
@@ -71,11 +71,18 @@ fun ExerciseCard(
                     fontWeight = FontWeight.Bold,
                     color = primaryText
                 )
-                Text(
-                    text = muscleGroup,
-                    fontSize = MaterialTheme.typography.labelSmall.fontSize,
-                    color = body
-                )
+
+                Row {
+
+                    muscleGroup.forEach {
+                        Text(
+                            text = it,
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize,
+                            color = body
+                        )
+                    }
+                }
+
             }
         }
     }
@@ -85,5 +92,5 @@ fun ExerciseCard(
 @Composable
 private fun ExerciseCardPreview() {
 
-    ExerciseCard(muscleGroup = "Chest", exerciseName = "Bench Press", onClick = {})
+    ExerciseCard(muscleGroup = listOf("chest"), exerciseName = "Bench Press", onClick = {})
 }

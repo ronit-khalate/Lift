@@ -224,7 +224,7 @@ fun RoutineScreen(
                             content = {
                                 ExerciseCard(
                                     exerciseName = it.name,
-                                    muscleGroup = it.muscleGroup ?: "",
+                                    muscleGroup = it.primaryMuscles,
                                     onClick = { onExerciseClick(it._id.toHexString()) },
                                 )
                             }

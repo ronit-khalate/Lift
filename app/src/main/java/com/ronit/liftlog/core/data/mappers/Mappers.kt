@@ -1,7 +1,10 @@
 package com.ronit.liftlog.core.data.mappers
 
+import android.util.Log
 import com.ronit.liftlog.core.data.model.entity.Exercise
 import com.ronit.liftlog.core.data.model.entity.Routine
+import com.ronit.liftlog.core.data.model.response.ExerciseItemResponse
+import com.ronit.liftlog.core.data.model.response.ExerciseListResponse
 import com.ronit.liftlog.core.domain.dto.ExerciseDto
 import com.ronit.liftlog.routine_feature.domain.model.RoutineDto
 import io.realm.kotlin.ext.realmListOf
@@ -49,24 +52,30 @@ fun Routine.toRoutineDto():RoutineDto{
     )
 }
 
+fun ExerciseItemResponse.toExercise():Exercise{
 
-//fun StartRoutineScreenState.toLog(): Log {
-//    return Log().apply {
-//        val l = realmListOf<ExerciseLog>()
-//        l.addAll(this@toLog.exercisesLog)
-//        this.exercisesLog = l
-//
-//        this.routineId = this@toLog.routine?._id
-//        this.routineName = this@toLog.routine?.name ?: ""
-//        this.bodyWeight = try {
-//            this@toLog.bodyWeight.toFloat()
-//        } catch (e: Exception) {
-//            0.0F
-//        }
-//
-//        this.endTime = RealmInstant.now()
-//    }
-//}
+    Log.d("exerciseApi", this.toString())
+    return  Exercise().apply {
+        this._id=ObjectId()
+        this.name=this@toExercise.name
+        this.category=this@toExercise.category
+        this.equipment=this@toExercise.equipment?:""
+        this.force=this@toExercise.force?:""
+        this.remoteId=this@toExercise.id
+        this.images=this@toExercise.images.toRealmList()
+        this.instructions = this@toExercise.instructions.toRealmList()
+        this.level=this@toExercise.level
+        this.mechanic = this@toExercise.mechanic?:""
+        this.primaryMuscles = this@toExercise.primaryMuscles.toRealmList()
+        this.secondaryMuscles=this@toExercise.secondaryMuscles.toRealmList()
+    }
+}
+
+
+fun ExerciseListResponse.toExerciseList():RealmList<Exercise> {
+
+    return  this.map { it.toExercise() }.toRealmList()
+}
 
 
 fun <T>List<T>.toRealmList(): RealmList<T> {

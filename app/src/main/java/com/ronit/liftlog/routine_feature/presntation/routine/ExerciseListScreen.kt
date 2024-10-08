@@ -242,7 +242,7 @@ fun ExerciseListScreen(
                         ExerciseCard(
                             onClick = { viewModel.onExerciseSelected(exercise) },
                             exerciseName = exercise.name.replaceFirstChar { char -> char.titlecase() },
-                            muscleGroup = exercise.muscleGroup ?: "",
+                            muscleGroup = exercise.primaryMuscles,
                         )
                     }
                     

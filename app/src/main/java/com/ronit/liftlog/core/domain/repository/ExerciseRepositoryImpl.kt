@@ -6,6 +6,7 @@ import com.ronit.liftlog.core.data.repository.ExerciseRepository
 import io.realm.kotlin.Realm
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.types.RealmList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.mongodb.kbson.ObjectId
@@ -55,6 +56,21 @@ class ExerciseRepositoryImpl @Inject constructor(private val realm: Realm): Exer
 
 
         }
+    }
+
+    override suspend fun upsertAllExercises(exercises: RealmList<Exercise>) {
+
+        realm.write {
+
+            exercises.forEach {
+
+                copyToRealm(it,UpdatePolicy.ALL)
+            }
+        }
+    }
+
+    override suspend fun getAllExerciseCount(): Int {
+        return  realm.query<Exercise>().find().count()
     }
 
     override suspend fun getAllRoutinesExercises(routineId: String): Array<Exercise> {
