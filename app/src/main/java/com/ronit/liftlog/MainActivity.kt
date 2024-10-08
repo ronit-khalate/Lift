@@ -72,13 +72,8 @@ class MainActivity : ComponentActivity() {
 
 
 
-                LaunchedEffect(Unit) {
 
-                    val res = exerciseListService.getExerciseList()
 
-                    Log.d("api","${res.size}")
-
-                }
 
 
 
