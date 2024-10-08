@@ -17,6 +17,7 @@ ksp="1.9.10-1.0.13"
 navigationCompose="2.8.2"
 datastorePreferences ="1.1.1"
 hiltNavigationCompose="1.2.0"
+retrofit = "2.11.0"
 uiTextGoogleFonts = "1.7.3"
 
 [libraries]
@@ -44,6 +45,8 @@ navigation-compose ={group ="androidx.navigation" , name ="navigation-compose", 
 datastore-preferences ={group ="androidx.datastore", name="datastore-preferences" , version.ref="datastorePreferences"}
 hilt-navigation-compose ={group="androidx.hilt",name ="hilt-navigation-compose",version.ref ="hiltNavigationCompose"}
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+gson = {module ="com.squareup.retrofit2:converter-gson", version.ref = "retrofit"}
 
 
 

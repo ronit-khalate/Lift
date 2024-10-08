@@ -96,7 +96,12 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(kotlin("reflect"))
 
+    // coil
     implementation(libs.coil.compose)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.gson)
 
 
 
