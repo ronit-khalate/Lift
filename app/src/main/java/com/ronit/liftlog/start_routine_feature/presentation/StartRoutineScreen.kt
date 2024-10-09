@@ -1,5 +1,6 @@
 package com.ronit.liftlog.start_routine_feature.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,15 +15,20 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +39,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ronit.liftlog.core.presentation.component.BottomBar
 import com.ronit.liftlog.core.presentation.component.SwipeToDeleteContainer
+import com.ronit.liftlog.core.presentation.component.ThreeSectionTopBar
 import com.ronit.liftlog.start_routine_feature.presentation.components.ExerciseSetLogCard
 import com.ronit.liftlog.start_routine_feature.presentation.components.StartRoutineScreenTopBar
 import com.ronit.liftlog.start_routine_feature.presentation.event.StartRoutineScreenEvent
@@ -63,11 +70,39 @@ fun StartRoutineScreen(
         modifier=modifier
             .windowInsetsPadding(WindowInsets.statusBars),
         topBar =  {
-            StartRoutineScreenTopBar(
-                onBackNavigate = { navController.navigateUp() },
 
+            ThreeSectionTopBar(
+                leftContent = {
+                    IconButton(onClick = { navController.navigateUp() }) {
+
+                        Image(
+                            colorFilter = ColorFilter.tint(color = primaryText),
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Navigate Back"
+                        )
+
+                    }
+                },
+
+                rightContent = {
+
+                    TextButton(
+                        onClick = {
+                            viewmodel.onEvent(StartRoutineScreenEvent.OnRoutineFinish)
+                            navController.popBackStack()
+
+                        },
+                    ) {
+                        Text(
+                            text = "Stop",
+                            style = MaterialTheme.typography.titleSmall.copy(color = primary, fontWeight = FontWeight.Bold)
+                        )
+                    }
+                }
             )
+
         },
+
 
     ) {paddingValues->
 
@@ -99,18 +134,6 @@ fun StartRoutineScreen(
                     fontWeight = FontWeight.Bold
                 )
 
-                Button(
-                    onClick = {
-                        viewmodel.onEvent(StartRoutineScreenEvent.OnRoutineFinish)
-                    navController.popBackStack()
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = primary)
-                ) {
-                    Text(
-                        text = "Stop 00:00:00",
-                        style = MaterialTheme.typography.labelSmall.copy(color = black, fontWeight = FontWeight.Bold)
-                    )
-                }
             }
 
 
