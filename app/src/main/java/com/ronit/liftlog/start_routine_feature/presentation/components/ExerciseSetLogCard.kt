@@ -68,9 +68,9 @@ fun ExerciseSetLogCard(
 ) {
 
 
-        var setTextWidth = remember { mutableStateOf(0) }
-        var kgTextWidth = remember { mutableStateOf(0) }
-        var repsTextWidth = remember { mutableStateOf(0) }
+
+
+
 
         Column(
             modifier = Modifier
@@ -129,11 +129,7 @@ fun ExerciseSetLogCard(
 
                 /// Header
 
-                ExerciseSetLogCardHeader(
-                    setTextWidth = setTextWidth,
-                    kgTextWidth = kgTextWidth,
-                    repsTextWidth = repsTextWidth
-                )
+                ExerciseSetLogCardHeader()
 
 
                 // Header End
@@ -234,9 +230,6 @@ fun ExerciseSetLogCard(
 @Composable
 private fun ExerciseSetLogCardHeader(
     modifier: Modifier = Modifier,
-    setTextWidth:MutableState<Int>,
-    kgTextWidth:MutableState<Int>,
-    repsTextWidth:MutableState<Int>
 
 ) {
     Row(
@@ -259,10 +252,7 @@ private fun ExerciseSetLogCardHeader(
                 Text(
                     modifier = Modifier
 
-                        .padding(8.dp)
-                        .onGloballyPositioned {
-                            setTextWidth.value = it.size.width
-                        },
+                        .padding(8.dp),
                     text = "SET",
                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText)
                 )
@@ -289,10 +279,7 @@ private fun ExerciseSetLogCardHeader(
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(8.dp)
-                        .onGloballyPositioned {
-                            kgTextWidth.value = it.size.width
-                        },
+                        .padding(8.dp),
                     text = "KG", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText)
                 )
             }
@@ -311,9 +298,6 @@ private fun ExerciseSetLogCardHeader(
             Column(
                 modifier = Modifier
                     .wrapContentWidth()
-                    .onGloballyPositioned {
-                        repsTextWidth.value = it.size.width
-                    }
                 ,
                 horizontalAlignment = Alignment.CenterHorizontally
 
