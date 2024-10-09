@@ -108,12 +108,10 @@ fun ExerciseListScreen(
     LaunchedEffect(key1 = viewModel.searchQuery) {
         snapshotFlow { viewModel.searchQuery }
             .distinctUntilChanged()
-            .debounce(100L)
+            .debounce(300L)
             .collectLatest {
 
-                if(exerciseListState.firstVisibleItemIndex>1){
-                    exerciseListState.animateScrollToItem(0)
-                }
+                exerciseListState.animateScrollToItem(0)
 
                 viewModel.onSearchQueryEntered(query = it)
             }
@@ -181,8 +179,6 @@ fun ExerciseListScreen(
                 SearchBar(
                     query = viewModel.searchQuery,
                     onQueryEntered = {
-
-
                         viewModel.onUiEvent(ExerciseListUiEvent.OnSearchQueryEntered(it))
                     },
                     onSearch = {},
@@ -192,7 +188,8 @@ fun ExerciseListScreen(
 
            LazyRow(
                modifier = Modifier
-                   .fillMaxWidth(),
+                   .fillMaxWidth()
+               ,
 
 
            ) {
@@ -210,17 +207,18 @@ fun ExerciseListScreen(
                        selected = viewModel.selectedMuscleGroup == it,
                        onClick = {
 
-                           if(exerciseListState.firstVisibleItemIndex>0){
-                               coroutineScope.launch {
-                                   exerciseListState.animateScrollToItem(0)
-                               }
-                           }
+
+
+
 
                            if(viewModel.selectedMuscleGroup == it){
                                viewModel.onUiEvent(ExerciseListUiEvent.MuscleGroupSelected(null))
                            }
                            else{
                                viewModel.onUiEvent(ExerciseListUiEvent.MuscleGroupSelected(it))
+                           }
+                           coroutineScope.launch {
+                               exerciseListState.animateScrollToItem(0)
                            }
                        },
                        colors = FilterChipDefaults.filterChipColors(

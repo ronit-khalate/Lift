@@ -145,9 +145,6 @@ fun ExerciseSetLogCard(
 
 
                     ExerciseSetLogData(
-                        setTextWidth = setTextWidth,
-                        kgTextWidth = kgTextWidth,
-                        repsTextWidth = repsTextWidth,
                         set = set,
                         exId = exerciseLog.id.toHexString(),
                         index = index + 1,
@@ -360,9 +357,6 @@ private fun ExerciseSetLogCardHeader(
 @Composable
 private fun ExerciseSetLogData(
     modifier: Modifier = Modifier,
-    setTextWidth: MutableState<Int>,
-    kgTextWidth: MutableState<Int>,
-    repsTextWidth: MutableState<Int>,
     updateWeight: (id: String,exLogId:String, data: String) -> Unit,
     updateReps: (id: String, exLogId: String, data: String) -> Unit,
     updateNotes: (id: String, exLogId: String, data: String) -> Unit,

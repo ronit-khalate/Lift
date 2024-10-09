@@ -1,6 +1,7 @@
 package com.ronit.liftlog.start_routine_feature.data.repository
 
 //import com.example.liftlog.core.data.mappers.toLog
+import androidx.core.util.Predicate
 import com.ronit.liftlog.core.data.mappers.toRealmList
 import com.ronit.liftlog.core.data.model.entity.Exercise
 import com.ronit.liftlog.core.data.model.entity.ExerciseLog
@@ -47,7 +48,7 @@ class StartRoutineRepositoryImpl @Inject constructor(
             val t = realm.query<Log>()
             val result = realm.query<Log>("routineId == $0" , routineId).find().sortedByDescending {  it.date}
 
-            val log = result.first()
+            val log = result.last()
 
             val _result = realm.copyFromRealm(obj = log)
 
@@ -68,19 +69,27 @@ class StartRoutineRepositoryImpl @Inject constructor(
 
                 val log = Log().apply {
 
-                    val exLogList :List<ExerciseLog> = state.exercisesLog.map { exercisesLogDto->
+                    val exLogList :List<ExerciseLog> = state.exercisesLog.map{ exercisesLogDto->
 
                        ExerciseLog().apply {
 
                            this.exercise = query<Exercise>("_id == $0" , ObjectId(exercisesLogDto.exerciseID)).find().firstOrNull()
-                           this.setList = exercisesLogDto.setList.map {
-                               Set().apply {
-                                   this.exercise =  query<Exercise>("_id == $0" , ObjectId(it.exerciseId)).find().firstOrNull()
-                                   this.weight=it.weight
-                                   this.setNo = it.setNo
-                                   this.repetitions= it.repetitions
-                                   this.notes=it.notes
-                               }
+                           this.setList = exercisesLogDto.setList.mapIf(
+                               predicate = {it.weight.isNotBlank() && it.repetitions.isNotBlank()}
+                           ) {
+
+                                   Set().apply {
+                                       this.exercise = query<Exercise>(
+                                           "_id == $0",
+                                           ObjectId(it.exerciseId)
+                                       ).find().firstOrNull()
+                                       this.weight = it.weight
+                                       this.setNo = it.setNo
+                                       this.repetitions = it.repetitions
+                                       this.notes = it.notes
+                                   }
+
+
                            }.toRealmList()
                        }
 
@@ -112,4 +121,20 @@ class StartRoutineRepositoryImpl @Inject constructor(
             RealmResponse.Error(e)
         }
     }
+}
+
+
+inline fun <T, R> Iterable<T>.mapIf(predicate: (T)->Boolean,transform: (T) -> R): List<R> {
+
+    val list = mutableListOf<R>()
+
+    for( element in this){
+
+        if(predicate(element)){
+
+            list.add(transform(element))
+        }
+    }
+
+    return list.toList()
 }

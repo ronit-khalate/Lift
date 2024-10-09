@@ -118,7 +118,7 @@ class StartRoutineViewModel @AssistedInject constructor(
                         if(previousExerciseLog != null) {
 
 
-                            currentExerciseLog.zip(previousExerciseLog).forEach {pair: Pair<ExerciseLogDto, ExerciseLog> ->
+                            currentExerciseLog.zip(previousExerciseLog).forEach { pair: Pair<ExerciseLogDto, ExerciseLog> ->
 
 
                                 pair.second.setList.sortedBy { it.setNo }.forEach {preSet: Set ->
