@@ -25,31 +25,33 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ronit.liftlog.core.data.model.entity.Exercise
-import com.ronit.liftlog.core.domain.titlecase
 import com.ronit.liftlog.core.presentation.component.BasicDialog
 import com.ronit.liftlog.core.presentation.component.SwipeToDeleteContainer
 import com.ronit.liftlog.core.presentation.component.ThreeSectionTopBar
 import com.ronit.liftlog.routine_feature.presntation.routine.components.ExerciseCard
-import com.ronit.liftlog.routine_feature.presntation.routine.event.RoutineScreenEvent
 import com.ronit.liftlog.routine_feature.presntation.routine.state.RoutineScreenState
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.body
@@ -91,6 +93,13 @@ fun RoutineScreen(
 
 
     var showExerciseListBottomSheet by rememberSaveable { mutableStateOf(false) }
+
+    val routineNameFocusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        routineNameFocusRequester.captureFocus()
+    }
+
 
     if(state.dialogContent != null){
 
@@ -172,11 +181,11 @@ fun RoutineScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
-                    RoutineNameField(state.routineName) {
-
-                        routineNameEntered(it)
-
-                    }
+                    RoutineNameField(
+                        state.routineName,
+                        focusRequester = routineNameFocusRequester,
+                        onRoutineNameChange = { routineNameEntered(it) }
+                    )
                 }
 
 
@@ -261,16 +270,24 @@ fun RoutineScreen(
 @Composable
 fun RoutineNameField(
     routineName: String,
+    focusRequester: FocusRequester,
     onRoutineNameChange: (String) -> Unit
 ) {
+
+    val focusManager= LocalFocusManager.current
+
+
     BasicTextField(
         modifier = Modifier
             .fillMaxWidth()
+            .focusRequester(focusRequester = focusRequester)
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+
         textStyle = MaterialTheme.typography.headlineSmall.copy(color = primaryText),
         singleLine = true,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         value = routineName,
+        cursorBrush = SolidColor(primaryText),
         onValueChange = onRoutineNameChange,
         decorationBox = {
             if (routineName.isEmpty() || routineName.isBlank()) {

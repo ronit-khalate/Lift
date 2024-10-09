@@ -24,9 +24,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,6 +75,13 @@ fun ExerciseScreen(
             titleText = viewModel.exercise.dialogContent!!.title ,
             textString = viewModel.exercise.dialogContent!!.text
         )
+    }
+
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+
+        focusRequester.requestFocus()
     }
 
 
@@ -130,9 +142,10 @@ fun ExerciseScreen(
                 BasicTextField(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .focusRequester(focusRequester)
                         .padding(16.dp),
                     textStyle = MaterialTheme.typography.headlineSmall.copy(color = primaryText),
-
+                    cursorBrush = SolidColor(primaryText),
                     value = viewModel.exercise.name.replaceFirstChar { char -> char.titlecase() },
                     onValueChange = { viewModel.onEvent(ExerciseScreenEvent.OnNameChange(it)) },
                     decorationBox = {
