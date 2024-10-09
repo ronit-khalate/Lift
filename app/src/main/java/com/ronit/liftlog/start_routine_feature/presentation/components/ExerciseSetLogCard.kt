@@ -1,6 +1,7 @@
 package com.ronit.liftlog.start_routine_feature.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,10 +20,12 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
@@ -89,6 +92,8 @@ fun ExerciseSetLogCard(
                 Row(
                     modifier = Modifier
                         .background(black)
+                        .clip(RoundedCornerShape(topStart = 10.dp))
+
                         .height(intrinsicSize = IntrinsicSize.Min)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -98,36 +103,25 @@ fun ExerciseSetLogCard(
 
                     Row (
                         modifier = Modifier,
-
                         verticalAlignment = Alignment.CenterVertically
 
                     ){
 
                         SelectedIdentifier(
                             color = primary,
-                            shape = RectangleShape
+                            shape = RoundedCornerShape(topStart = 10.dp)
                         )
 
                         Spacer(Modifier.width(8.dp))
                         Text(
                             text = "${exerciseLog.name}",
                             color = primaryText,
-                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
+                            style = MaterialTheme.typography.titleMedium
                         )
                     }
 
 
-                    IconButton(onClick = {})
-                    {
 
-                        Icon(
-                            modifier = Modifier,
-                            tint = primary,
-                            painter = painterResource(id = R.drawable.stat_icon),
-                            contentDescription =""
-                        )
-
-                    }
                 }
 
 
@@ -171,22 +165,64 @@ fun ExerciseSetLogCard(
 
 
 
-            Button(
+            HorizontalDivider(color = neutral)
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(32.dp),
+                    .clip(RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp))
+                    .background(tertiary)
+                    .fillMaxWidth(),
 
-                shape = RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = tertiary),
-                onClick = { onAddSetBtnClick(exerciseLog.id.toHexString()) }
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                Text(
-                    text = "Add Set",
-                    fontSize = 12.sp,
-                    color = primaryText
-                )
+
+                TextButton(
+                    onClick ={onAddSetBtnClick(exerciseLog.id.toHexString())}
+                ) {
+                    Text(
+                        text = "Add Set",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = primary
+                    )
+                }
+
+
+
+
+                Row {
+
+
+
+                    IconButton(onClick = {})
+                    {
+
+                        Icon(
+                            modifier = Modifier,
+                            tint = primary,
+                            painter = painterResource(id = R.drawable.vector),
+                            contentDescription =""
+                        )
+
+                    }
+
+                    IconButton(onClick = {})
+                    {
+
+                        Icon(
+                            modifier = Modifier,
+                            tint = primary,
+                            painter = painterResource(id = R.drawable.stat_icon),
+                            contentDescription =""
+                        )
+
+                    }
+                }
+
             }
+
+
 
 
 
@@ -357,7 +393,7 @@ private fun ExerciseSetLogData(
 
                 Column(
                     modifier = Modifier
-                        .padding(vertical = 8.dp, horizontal = 8.dp)
+                        .padding(vertical = 12.dp, horizontal = 12.dp)
                         .wrapContentHeight(),
                     horizontalAlignment = Alignment.CenterHorizontally
 
@@ -387,7 +423,7 @@ private fun ExerciseSetLogData(
                 Column(
                     modifier = Modifier
 
-                        .padding(vertical = 8.dp, horizontal = 8.dp),
+                        .padding(vertical = 12.dp, horizontal = 12.dp),
 
 
                     ) {
@@ -439,7 +475,7 @@ private fun ExerciseSetLogData(
                 Column(
                     modifier = Modifier
                         .wrapContentSize()
-                        .padding(vertical = 8.dp, horizontal = 8.dp),
+                        .padding(vertical = 12.dp, horizontal = 12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
@@ -492,7 +528,7 @@ private fun ExerciseSetLogData(
                 BasicTextField(
                     modifier = Modifier
                         .wrapContentWidth()
-                        .padding(vertical = 8.dp, horizontal = 8.dp),
+                        .padding(vertical = 12.dp, horizontal = 12.dp),
                     textStyle = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText),
 
                     value = set.notes,

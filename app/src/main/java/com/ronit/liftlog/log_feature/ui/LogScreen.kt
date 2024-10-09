@@ -1,5 +1,6 @@
 package com.ronit.liftlog.log_feature.ui
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
@@ -138,7 +139,6 @@ fun LogScreen(
 
             ) {
 
-
                 items(items = state.logs ){
                     SwipeToDeleteContainer(
 
@@ -152,7 +152,7 @@ fun LogScreen(
                             )
                         }
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
 
 

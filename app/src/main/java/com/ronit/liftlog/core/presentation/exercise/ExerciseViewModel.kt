@@ -49,7 +49,7 @@ class ExerciseViewModel @AssistedInject constructor(
                         name = it.name,
                         note = it.note?:"",
                         setCount = it.setCount,
-                        muscleGroupIdx = MuscleGroup.entries.find { mg->mg.name.lowercase()== it.muscleGroup?.lowercase() }?.ordinal?:-1
+                        muscleGroupIdx = MuscleGroup.entries.find { mg->mg.name.lowercase()== it.primaryMuscles.first().lowercase() }?.ordinal?:-1
 
 
                     )

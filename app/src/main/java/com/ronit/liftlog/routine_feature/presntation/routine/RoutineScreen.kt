@@ -50,6 +50,7 @@ import com.ronit.liftlog.core.presentation.component.SwipeToDeleteContainer
 import com.ronit.liftlog.core.presentation.component.ThreeSectionTopBar
 import com.ronit.liftlog.routine_feature.presntation.routine.components.ExerciseCard
 import com.ronit.liftlog.routine_feature.presntation.routine.event.RoutineScreenEvent
+import com.ronit.liftlog.routine_feature.presntation.routine.state.RoutineScreenState
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.body
 import com.ronit.liftlog.ui.theme.primary
@@ -71,35 +72,35 @@ import com.ronit.liftlog.ui.theme.primaryText
 *
 * */
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun RoutineScreen(
     modifier: Modifier = Modifier,
+    state:RoutineScreenState,
     routineId:String?=null,
     onNavigateToExerciseScreen:()->Unit,
     onBackBtnClicked:()->Unit,
     onExerciseClick:(exerciseId:String)->Unit,
     onDoneSavingRoutine:()->Unit,
+    routineNameEntered:(String)->Unit,
+    onRemoveExercise:(id:String) ->Unit,
+    onExerciseAdded:(list:List<Exercise>)->Unit
 
 ) {
 
-    val viewModel =
-        hiltViewModel<RoutineScreenViewModel, RoutineScreenViewModel.RoutineScreenViewModelFactory> { factory ->
-            factory.create(routineId)
 
-        }
 
     var showExerciseListBottomSheet by rememberSaveable { mutableStateOf(false) }
 
-    if(viewModel.state.dialogContent != null){
+    if(state.dialogContent != null){
 
         BasicDialog(
-            onDismiss = {viewModel.state.dialogContent!!.onDismiss?.invoke()},
-            onConfirm = { viewModel.state.dialogContent!!.onConfirm?.invoke()},
-            dismissBtnText = viewModel.state.dialogContent!!.dismissBtnText ,
-            confirmBtnText = viewModel.state.dialogContent!!.confirmBtnText,
-            titleText = viewModel.state.dialogContent!!.title,
-            textString = viewModel.state.dialogContent!!.text
+            onDismiss = { state.dialogContent.onDismiss?.invoke()},
+            onConfirm = { state.dialogContent!!.onConfirm?.invoke()},
+            dismissBtnText = state.dialogContent!!.dismissBtnText ,
+            confirmBtnText = state.dialogContent!!.confirmBtnText,
+            titleText = state.dialogContent!!.title,
+            textString = state.dialogContent!!.text
         )
     }
 
@@ -125,10 +126,7 @@ fun RoutineScreen(
                 },
 
                 rightContent = {
-                    IconButton(onClick = {
-
-                        viewModel.onEvent(RoutineScreenEvent.OnDoneBtnClicked(onDoneSavingRoutine))
-                    }) {
+                    IconButton(onClick = onDoneSavingRoutine) {
                         Icon(imageVector = Icons.Default.Done, contentDescription = "")
                     }
                 }
@@ -165,46 +163,20 @@ fun RoutineScreen(
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-
-                ,
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
-            )
-            {
+            ){
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
-                    BasicTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                        textStyle = MaterialTheme.typography.headlineSmall.copy(color = primaryText),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                        value = viewModel.state.routineName.titlecase(),
-                        onValueChange = {
-                            viewModel.onEvent(
-                                RoutineScreenEvent.OnRoutineNameEntered(
-                                    it
-                                )
-                            )
-                        },
-                        decorationBox = {
+                    RoutineNameField(state.routineName) {
 
-                            if (viewModel.state.routineName.isEmpty() || viewModel.state.routineName.isBlank()) {
+                        routineNameEntered(it)
 
-                                Text(
-                                    text = "Routine Name",
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    color = body
-                                )
-                            }
-                            it()
-                        }
-                    )
+                    }
                 }
 
 
@@ -215,15 +187,15 @@ fun RoutineScreen(
                         .weight(1f)
                 ) {
 
-                    items(items = viewModel.state.exerciseList, key = { it._id.toHexString() }) {
+                    items(items = state.exerciseList, key = { it._id.toHexString() }) {
 
                         SwipeToDeleteContainer(
-                            onDelete = { viewModel.onEvent(RoutineScreenEvent.OnRemoveExercise(it._id.toHexString()))},
+                            onDelete = { onRemoveExercise(it._id.toHexString())},
                             dialogTextText = "Are you sure you want to delete this exercise?",
                             dialogTitleText = "This action cannot be undone",
                             content = {
                                 ExerciseCard(
-                                    exerciseName = it.name,
+                                    exercise = it,
                                     muscleGroup = it.primaryMuscles,
                                     onClick = { onExerciseClick(it._id.toHexString()) },
                                 )
@@ -272,9 +244,7 @@ fun RoutineScreen(
                 onDoneAddingExercises = { exerciseList:List<Exercise> ->
 
 
-                    viewModel.onEvent(
-                        RoutineScreenEvent.OnExerciseAdded(exerciseList)
-                    )
+                    onExerciseAdded(exerciseList)
 
                     showExerciseListBottomSheet = !showExerciseListBottomSheet
 
@@ -287,6 +257,33 @@ fun RoutineScreen(
     }
 
 
+
+@Composable
+fun RoutineNameField(
+    routineName: String,
+    onRoutineNameChange: (String) -> Unit
+) {
+    BasicTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+        textStyle = MaterialTheme.typography.headlineSmall.copy(color = primaryText),
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        value = routineName,
+        onValueChange = onRoutineNameChange,
+        decorationBox = {
+            if (routineName.isEmpty() || routineName.isBlank()) {
+                Text(
+                    text = "Routine Name",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = body
+                )
+            }
+            it()
+        }
+    )
+}
 
 
 

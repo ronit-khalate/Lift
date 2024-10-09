@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -161,15 +162,14 @@ fun ExerciseScreen(
             ) {
 
 
-                val group = MuscleGroup.entries[it]
 
 
                     FilterChip(
                         modifier = Modifier
                             .padding(bottom = 6.dp, end = 6.dp)
                             .height(32.dp),
-                        selected = viewModel.exercise.muscleGroupIdx== group.ordinal,
-                        onClick = { viewModel.onEvent(ExerciseScreenEvent.OnMuscleGroupChange(group.ordinal)) },
+                        selected = viewModel.exercise.muscleGroupIdx== MuscleGroup.entries[it].ordinal,
+                        onClick = { viewModel.onEvent(ExerciseScreenEvent.OnMuscleGroupChange(MuscleGroup.entries[it].ordinal)) },
                         colors = FilterChipDefaults.filterChipColors(
                             containerColor = black,
                             selectedContainerColor = primary,
@@ -178,7 +178,7 @@ fun ExerciseScreen(
                         ),
                         label = {
                             Text(
-                                text = group.toString().titlecase().replace('_',' '),
+                                text = MuscleGroup.entries[it].toString().titlecase().replace('_',' '),
                                 style = MaterialTheme.typography.labelSmall
                             )
                         }

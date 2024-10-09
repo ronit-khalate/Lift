@@ -32,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ronit.liftlog.core.presentation.component.BottomBar
+import com.ronit.liftlog.core.presentation.component.SwipeToDeleteContainer
 import com.ronit.liftlog.start_routine_feature.presentation.components.ExerciseSetLogCard
 import com.ronit.liftlog.start_routine_feature.presentation.components.StartRoutineScreenTopBar
 import com.ronit.liftlog.start_routine_feature.presentation.event.StartRoutineScreenEvent
@@ -49,7 +50,6 @@ fun StartRoutineScreen(
 ) {
 
 
-    val context = LocalContext.current
 
     val viewmodel:StartRoutineViewModel = hiltViewModel<StartRoutineViewModel,StartRoutineViewModel.StartRoutineViewModelFactory>() {
 
@@ -125,26 +125,55 @@ fun StartRoutineScreen(
 
                 items(items = viewmodel.state.exercisesLog, key = {it.id.toHexString()}) {exerciseLog->
 
-                    ExerciseSetLogCard(
-                        exerciseLog = exerciseLog,
-                        onAddSetBtnClick = {viewmodel.onEvent(StartRoutineScreenEvent.OnAddSetInExerciseLog(it))},
-                        updateWeight = {id:String , exLogId,data:String ->
-
-                            viewmodel.onEvent(StartRoutineScreenEvent.OnUpdateWeight(id = id, data = data,exLogId =exLogId))
-                        },
-                        updateReps = { id:String , exLogId,data:String ->
-
-                            viewmodel.onEvent(StartRoutineScreenEvent.OnUpdateReps(id=id,data=data,exLogId=exLogId))
-
-                        },
-                        updateNotes = {id:String , exLogId,data:String ->
-                            viewmodel.onEvent(StartRoutineScreenEvent.OnUpdateNotes(id=id,data=data,exLogId=exLogId))
-                        }
-                    )
 
 
 
-                    Spacer(modifier = Modifier.height(16.dp))
+
+                        ExerciseSetLogCard(
+                            exerciseLog = exerciseLog,
+                            onAddSetBtnClick = {
+                                viewmodel.onEvent(
+                                    StartRoutineScreenEvent.OnAddSetInExerciseLog(
+                                        it
+                                    )
+                                )
+                            },
+                            updateWeight = { id: String, exLogId, data: String ->
+
+                                viewmodel.onEvent(
+                                    StartRoutineScreenEvent.OnUpdateWeight(
+                                        id = id,
+                                        data = data,
+                                        exLogId = exLogId
+                                    )
+                                )
+                            },
+                            updateReps = { id: String, exLogId, data: String ->
+
+                                viewmodel.onEvent(
+                                    StartRoutineScreenEvent.OnUpdateReps(
+                                        id = id,
+                                        data = data,
+                                        exLogId = exLogId
+                                    )
+                                )
+
+                            },
+                            updateNotes = { id: String, exLogId, data: String ->
+                                viewmodel.onEvent(
+                                    StartRoutineScreenEvent.OnUpdateNotes(
+                                        id = id,
+                                        data = data,
+                                        exLogId = exLogId
+                                    )
+                                )
+                            }
+                        )
+                    
+
+
+
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
             }
 

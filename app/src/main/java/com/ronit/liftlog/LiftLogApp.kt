@@ -33,10 +33,10 @@ class LiftLogApp:Application(){
         CoroutineScope(Dispatchers.IO).launch {
 
 
-            val shouldFetchExercises= exerciseRepository.getAllExerciseCount() >0
+            val shouldFetchExercises= exerciseRepository.getAllExerciseCount()
 
 
-            if(!shouldFetchExercises) {
+            if(shouldFetchExercises <= 0) {
 
 
                 val exercises = exerciseListService.getExerciseList().toExerciseList()

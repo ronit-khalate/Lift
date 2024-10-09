@@ -43,6 +43,8 @@ import com.ronit.liftlog.log_feature.ui.LogScreen
 import com.ronit.liftlog.log_feature.ui.LogViewModel
 import com.ronit.liftlog.log_feature.ui.event.LogScreenUiEvent
 import com.ronit.liftlog.routine_feature.presntation.routine.RoutineScreen
+import com.ronit.liftlog.routine_feature.presntation.routine.RoutineScreenViewModel
+import com.ronit.liftlog.routine_feature.presntation.routine.event.RoutineScreenEvent
 import com.ronit.liftlog.routine_feature.presntation.routine_list.RoutineListScreen
 import com.ronit.liftlog.start_routine_feature.domain.StartRoutineServiceManager
 import com.ronit.liftlog.start_routine_feature.presentation.StartRoutineScreen
@@ -67,13 +69,6 @@ class MainActivity : ComponentActivity() {
 
                 val currentBackStackEntry = navController.currentBackStackEntryAsState()
                 val currentDestination = currentBackStackEntry.value?.destination?.route
-
-
-
-
-
-
-
 
 
 
@@ -149,8 +144,15 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 val routineId =
                                     it.arguments?.getString(Screens.RoutineScreen.ROUTINE_ID_ARGUMENT)
+
+                                val viewModel =
+                                    hiltViewModel<RoutineScreenViewModel, RoutineScreenViewModel.RoutineScreenViewModelFactory> { factory ->
+                                        factory.create(routineId)
+
+                                    }
                                 RoutineScreen(
                                     routineId = routineId,
+                                    state = viewModel.state,
                                     onNavigateToExerciseScreen = {
                                         navController.navigate(Screens.ExerciseScreen()) {
                                             launchSingleTop = true
@@ -162,7 +164,16 @@ class MainActivity : ComponentActivity() {
                                     onExerciseClick = { exerciseId ->
                                         navController.navigate(Screens.ExerciseScreen(exerciseId))
                                     },
-                                    onDoneSavingRoutine = { navController.navigateUp() },
+                                    onDoneSavingRoutine = {
+
+                                        viewModel.onEvent(RoutineScreenEvent.OnDoneBtnClicked{
+                                            navController.navigateUp()
+                                        })
+
+                                    },
+                                    routineNameEntered = {viewModel.onEvent(RoutineScreenEvent.OnRoutineNameEntered(it))},
+                                    onRemoveExercise = {viewModel.onEvent(RoutineScreenEvent.OnRemoveExercise(it))},
+                                    onExerciseAdded = {viewModel.onEvent(RoutineScreenEvent.OnExerciseAdded(it))}
                                 )
                             }
 
