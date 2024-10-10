@@ -39,6 +39,8 @@ import com.ronit.liftlog.core.navigation.Screen.Screens
 import com.ronit.liftlog.core.presentation.component.BottomBar
 import com.ronit.liftlog.core.presentation.component.StickyBottomCard
 import com.ronit.liftlog.core.presentation.exercise.ExerciseScreen
+import com.ronit.liftlog.core.presentation.exercise.ExerciseViewModel
+import com.ronit.liftlog.core.presentation.exercise.event.ExerciseScreenEvent
 import com.ronit.liftlog.log_feature.ui.LogScreen
 import com.ronit.liftlog.log_feature.ui.LogViewModel
 import com.ronit.liftlog.log_feature.ui.event.LogScreenUiEvent
@@ -131,9 +133,17 @@ class MainActivity : ComponentActivity() {
                                 val exerciseId =
                                     it.arguments?.getString(Screens.ExerciseScreen.EXERCISE_ID_ARGUMENT)
 
+                                val viewModel = hiltViewModel <ExerciseViewModel, ExerciseViewModel.ExerciseViewModelFactory>{ factory->
+
+                                    factory.create(exerciseId)
+
+                                }
+
                                 ExerciseScreen(
-                                    exerciseId = exerciseId,
-                                    navController = navController
+                                    uiState = viewModel.exercise,
+                                    navController = navController,
+                                    muscleGroupIdx = viewModel.muscleGroupIdx,
+                                    onEvent = {event-> viewModel.onEvent(event)}
                                 )
 
                             }

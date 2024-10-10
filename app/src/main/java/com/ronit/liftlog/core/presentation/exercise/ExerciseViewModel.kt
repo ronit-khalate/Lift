@@ -1,6 +1,7 @@
 package com.ronit.liftlog.core.presentation.exercise
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -32,8 +33,9 @@ class ExerciseViewModel @AssistedInject constructor(
     var exercise by mutableStateOf(ExerciseScreenState())
         private set
 
-    var version =0
-        private set
+
+
+    var muscleGroupIdx by mutableIntStateOf(-1)
 
 
 
@@ -49,10 +51,11 @@ class ExerciseViewModel @AssistedInject constructor(
                         name = it.name,
                         note = it.note?:"",
                         setCount = it.setCount,
-                        muscleGroupIdx = MuscleGroup.entries.find { mg->mg.name.lowercase()== it.primaryMuscles.first().lowercase() }?.ordinal?:-1
 
 
                     )
+
+                    muscleGroupIdx = MuscleGroup.entries.find { mg->mg.name.lowercase()== it.primaryMuscles.first().lowercase() }?.ordinal?:-1
                 }
             }
 
@@ -65,22 +68,20 @@ class ExerciseViewModel @AssistedInject constructor(
             is ExerciseScreenEvent.OnNoteChange -> {
 
                 exercise = exercise.copy(note = event.note)
-                version++
             }
             is ExerciseScreenEvent.OnMuscleGroupChange -> {
-                exercise = exercise.copy(muscleGroupIdx = event.idx)
-                version++
+                muscleGroupIdx = event.idx
+
             }
             is ExerciseScreenEvent.OnNameChange -> {
-                exercise = exercise.copy(name = event.name)
-                version++
+                exercise = exercise.copy(name = event.name.replaceFirstChar { char -> char.titlecase() })
             }
 
             is ExerciseScreenEvent.OnDoneBtnClicked -> {
 
 
 
-                    if(exercise.muscleGroupIdx == -1 && exercise.name.isBlank()){
+                    if(muscleGroupIdx == -1 && exercise.name.isBlank()){
 
                         exercise = exercise.copy(
                             showDialog = true,
@@ -109,7 +110,7 @@ class ExerciseViewModel @AssistedInject constructor(
 
                             )
                     }
-                    else if(exercise.muscleGroupIdx == -1){
+                    else if(muscleGroupIdx == -1){
 
                         exercise = exercise.copy(
                             showDialog = true,
@@ -130,7 +131,7 @@ class ExerciseViewModel @AssistedInject constructor(
                         val ex = ExerciseDto(
                             _id = exerciseId,
                             name = exercise.name,
-                            muscleGroup = MuscleGroup.entries[exercise.muscleGroupIdx].name.titlecase(),
+                            muscleGroup = MuscleGroup.entries[muscleGroupIdx].name.titlecase(),
                             Note = exercise.note
 
                         )
@@ -146,13 +147,18 @@ class ExerciseViewModel @AssistedInject constructor(
 
             }
 
-            ExerciseScreenEvent.OnDialogConfirmBtnClicked -> {
+            is ExerciseScreenEvent.OnDialogConfirmBtnClicked -> {
                 exercise.dialogContent?.onConfirm?.invoke()
             }
-            ExerciseScreenEvent.OnDialogDismissBtnClicked -> {
+            is ExerciseScreenEvent.OnDialogDismissBtnClicked -> {
                 exercise.dialogContent?.onDismiss?.invoke()
             }
         }
+    }
+
+
+    fun isMuscleGroupSelected(idx: Int):Boolean{
+        return  muscleGroupIdx==MuscleGroup.entries[idx].ordinal
     }
 
     private fun onDoneBtnClicked(exercise: Exercise, onComplete:()->Unit){
@@ -162,13 +168,9 @@ class ExerciseViewModel @AssistedInject constructor(
 
         if(exerciseId != null){
 
-
-
-
             viewModelScope.launch {
 
                 repositoryImpl.upsertExercise(exercise)
-            }.invokeOnCompletion {
                 onComplete()
             }
         }

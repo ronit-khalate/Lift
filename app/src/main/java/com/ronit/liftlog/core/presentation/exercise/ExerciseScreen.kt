@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,46 +46,44 @@ import com.ronit.liftlog.core.domain.titlecase
 import com.ronit.liftlog.core.presentation.component.BasicDialog
 import com.ronit.liftlog.core.presentation.component.ThreeSectionTopBar
 import com.ronit.liftlog.core.presentation.exercise.event.ExerciseScreenEvent
+import com.ronit.liftlog.core.presentation.exercise.state.ExerciseScreenState
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.body
 import com.ronit.liftlog.ui.theme.primary
 import com.ronit.liftlog.ui.theme.primaryText
 
 
-@OptIn(ExperimentalLayoutApi::class)
+
 @Composable
 fun ExerciseScreen(
     modifier: Modifier = Modifier,
-    exerciseId:String?=null,
-    navController: NavController
+    uiState:ExerciseScreenState,
+    navController: NavController,
+    muscleGroupIdx: Int,
+    onEvent:(ExerciseScreenEvent)->Unit
 ) {
 
 
-    val viewModel = hiltViewModel <ExerciseViewModel,ExerciseViewModel.ExerciseViewModelFactory>{ factory->
-
-        factory.create(exerciseId)
-
-    }
 
 
-    if(viewModel.exercise.showDialog && viewModel.exercise.dialogContent != null){
+
+    if(uiState.showDialog && uiState.dialogContent != null){
 
         BasicDialog(
-            onDismiss = {viewModel.exercise.dialogContent!!.onDismiss?.invoke()},
-            onConfirm = { viewModel.exercise.dialogContent!!.onConfirm?.invoke()},
-            dismissBtnText = viewModel.exercise.dialogContent!!.dismissBtnText ,
-            confirmBtnText = viewModel.exercise.dialogContent!!.confirmBtnText,
-            titleText = viewModel.exercise.dialogContent!!.title ,
-            textString = viewModel.exercise.dialogContent!!.text
+            onDismiss = {uiState.dialogContent.onDismiss?.invoke()},
+            onConfirm = { uiState.dialogContent.onConfirm?.invoke()},
+            dismissBtnText = uiState.dialogContent.dismissBtnText ,
+            confirmBtnText = uiState.dialogContent.confirmBtnText,
+            titleText = uiState.dialogContent.title ,
+            textString = uiState.dialogContent.text
         )
     }
 
-    val focusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(Unit) {
 
-        focusRequester.requestFocus()
-    }
+
+
+
 
 
     Scaffold(
@@ -111,11 +110,10 @@ fun ExerciseScreen(
 
                 rightContent = {
                     IconButton(onClick = {
-                        viewModel.onEvent(
-                            ExerciseScreenEvent.OnDoneBtnClicked{
-                                navController.popBackStack()
-                            }
-                        )
+
+
+                        onEvent( ExerciseScreenEvent.OnDoneBtnClicked{ navController.popBackStack() })
+
                     }) {
                         Icon(imageVector = Icons.Default.Done, contentDescription = "")
                     }
@@ -139,31 +137,12 @@ fun ExerciseScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
-            ) {
+            ){
 
-                BasicTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester)
-                        .padding(16.dp),
-                    textStyle = MaterialTheme.typography.headlineSmall.copy(color = primaryText),
-                    cursorBrush = SolidColor(primaryText),
-                    singleLine = false,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    value = viewModel.exercise.name.replaceFirstChar { char -> char.titlecase() },
-                    onValueChange = { viewModel.onEvent(ExerciseScreenEvent.OnNameChange(it)) },
-                    decorationBox = {
-
-                        if (viewModel.exercise.name.isBlank()) {
-
-                            Text(
-                                text = "Exercise Name",
-                                style = MaterialTheme.typography.headlineSmall,
-                                color = body
-                            )
-                        }
-                        it()
-                    }
+                ExerciseNameTextField(
+                    modifier = Modifier,
+                    name = uiState.name,
+                    onNameEntered = {onEvent(ExerciseScreenEvent.OnNameChange(it))}
                 )
             }
 
@@ -171,42 +150,10 @@ fun ExerciseScreen(
 
 
 
-            ContextualFlowRow(
-                modifier = Modifier
-                    .padding(start = 16.dp , end = 16.dp ),
-                itemCount = MuscleGroup.entries.size,
-
-            ) {
-
-
-
-
-                    FilterChip(
-                        modifier = Modifier
-                            .padding(bottom = 6.dp, end = 6.dp)
-                            .height(32.dp),
-                        selected = viewModel.exercise.muscleGroupIdx== MuscleGroup.entries[it].ordinal,
-                        onClick = { viewModel.onEvent(ExerciseScreenEvent.OnMuscleGroupChange(MuscleGroup.entries[it].ordinal)) },
-                        colors = FilterChipDefaults.filterChipColors(
-                            containerColor = black,
-                            selectedContainerColor = primary,
-                            labelColor = primaryText,
-                            selectedLabelColor = black
-                        ),
-                        label = {
-                            Text(
-                                text = MuscleGroup.entries[it].toString().titlecase().replace('_',' '),
-                                style = MaterialTheme.typography.labelSmall
-                            )
-                        }
-                    )
-
-
-
-                
-
-
+            MuscleGroupChips(muscleGroupIdx) {
+                onEvent(ExerciseScreenEvent.OnMuscleGroupChange(it))
             }
+
 
 
 
@@ -220,10 +167,88 @@ fun ExerciseScreen(
 
 }
 
+
+@Composable
+internal fun ExerciseNameTextField(
+    modifier: Modifier = Modifier,
+    name:String,
+    onNameEntered:(String)->Unit
+) {
+
+//    val focusRequester = remember { FocusRequester() }
+//
+//    LaunchedEffect(Unit) {
+//
+//        focusRequester.requestFocus()
+//    }
+
+    BasicTextField(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        textStyle = MaterialTheme.typography.headlineSmall.copy(color = primaryText),
+        cursorBrush = SolidColor(primaryText),
+        singleLine = false,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        value = name,
+        onValueChange = { onNameEntered(it) },
+        decorationBox = {
+
+            if (name.isBlank()) {
+
+                Text(
+                    text = "Exercise Name",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = body
+                )
+            }
+            it()
+        }
+    )
+
+}
+
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun MuscleGroupChips(
+    selectedMuscleGroups: Int,
+    onMuscleGroupSelected: (Int) -> Unit
+) {
+    ContextualFlowRow(
+        modifier = Modifier
+            .padding(start = 16.dp, end = 16.dp),
+
+        itemCount = MuscleGroup.entries.size
+    ) {
+            FilterChip(
+                modifier = Modifier
+                    .padding(bottom = 6.dp, end = 6.dp)
+                    .height(32.dp),
+                selected = it==selectedMuscleGroups,
+                onClick = { onMuscleGroupSelected(it) },
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = black,
+                    selectedContainerColor = primary,
+                    labelColor = primaryText,
+                    selectedLabelColor = black
+                ),
+                label = {
+                    Text(
+                        text = MuscleGroup.entries[it].name,
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+            )
+
+    }
+}
+
+
 @Preview
 @Composable
 fun ExerciseScreenPreview() {
 
-    ExerciseScreen(navController = rememberNavController())
+    ExerciseScreen(uiState = ExerciseScreenState(), navController = rememberNavController(), onEvent = { it->}, muscleGroupIdx = 1)
 
 }
