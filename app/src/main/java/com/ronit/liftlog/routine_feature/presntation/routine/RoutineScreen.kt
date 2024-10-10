@@ -1,10 +1,26 @@
 package com.ronit.liftlog.routine_feature.presntation.routine
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.Easing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.OverscrollEffect
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.FlingBehavior
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.ScrollableDefaults
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,10 +30,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.overscroll
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -25,6 +44,8 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,16 +53,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -77,6 +104,7 @@ import com.ronit.liftlog.ui.theme.primaryText
 * */
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RoutineScreen(
     modifier: Modifier = Modifier,
@@ -90,16 +118,7 @@ fun RoutineScreen(
 
 ) {
 
-
-
     var showExerciseListBottomSheet by rememberSaveable { mutableStateOf(false) }
-
-    val routineNameFocusRequester = remember { FocusRequester() }
-
-    LaunchedEffect(Unit) {
-        routineNameFocusRequester.captureFocus()
-    }
-
 
     if(state.dialogContent != null){
 
@@ -113,12 +132,23 @@ fun RoutineScreen(
         )
     }
 
+
+    val lazyListState = rememberLazyListState()
+
+    var canShowRoutineNameInTopBar = remember {
+
+        derivedStateOf {
+            lazyListState.firstVisibleItemIndex > 0
+        }
+    }
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.statusBars),
         topBar = {
             ThreeSectionTopBar(
+                modifier = Modifier,
                 leftContent = {
                     IconButton(onClick = onBackBtnClicked) {
                         Icon(imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft, contentDescription = "")
@@ -127,11 +157,19 @@ fun RoutineScreen(
 
                 middleContent = {
 
-                    Text(
-                        text = if(routineId != null)"Edit Routine" else "Create Routine",
-                        fontSize = 16.sp,
-                        style = MaterialTheme.typography.bodySmall
-                    )
+                    AnimatedVisibility(
+                        visible = canShowRoutineNameInTopBar.value,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+
+
+                        Text(
+                            text = state.routineName,
+                            fontSize = 16.sp,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
                 },
 
                 rightContent = {
@@ -157,14 +195,17 @@ fun RoutineScreen(
                     fontWeight = FontWeight.Bold
                 )
             }
-        }
+        },
+        floatingActionButtonPosition = FabPosition.End
     ) {paddingValues->
+
 
 
 
         Box(
             modifier = modifier
                 .padding(paddingValues)
+                .padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
                 .fillMaxSize()
 
                 ,
@@ -181,40 +222,65 @@ fun RoutineScreen(
                     color = body
                 )
             }
+
+
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+
+
+
+                LazyColumn(
+                    modifier = modifier
+                        .overscroll(ScrollableDefaults.overscrollEffect()),
+                    state = lazyListState,
                 ) {
 
-                    RoutineNameField(
-                        state.routineName,
-                        focusRequester = routineNameFocusRequester,
-                        onRoutineNameChange = { onEvent(RoutineScreenEvent.OnRoutineNameEntered(it)) }
-                    )
+
+                    item {
+                        RoutineNameField(
+                            modifier = Modifier
+                                .padding(bottom = 16.dp),
+                            routineName = state.routineName,
+                            onRoutineNameChange = {
+                                onEvent(
+                                    RoutineScreenEvent.OnRoutineNameEntered(
+                                        it
+                                    )
+                                )
+                            },
+                        )
+                    }
+
+                    items(items = state.exerciseList, key = { it._id.toHexString() }) {
+
+
+
+                        SwipeToDeleteContainer(
+                            onDelete = {onEvent(RoutineScreenEvent.OnRemoveExercise(it._id.toHexString()))},
+                            dialogTextText = "This can't be undone",
+                            dialogTitleText = "Delete Exercise?",
+                            content = {
+                                ExerciseCard(
+                                    exercise = it,
+                                    muscleGroup = it.primaryMuscles,
+                                    onClick = { onExerciseClick(it._id.toHexString()) },
+                                )
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+
+                    item {
+                        Spacer(Modifier.height(32.dp))
+                    }
                 }
 
 
 
-
-                ExerciseList(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                        .weight(1f),
-                    list = state.exerciseList,
-                    onExerciseClick=onExerciseClick,
-                    onDelete = {onEvent(RoutineScreenEvent.OnRemoveExercise(it))}
-                )
-
-
-
-                Spacer(modifier = Modifier.height(16.dp))
 
 
 
@@ -262,17 +328,22 @@ fun RoutineScreen(
 
 
 @Composable
-internal fun RoutineNameField(
+private fun RoutineNameField(
+    modifier: Modifier=Modifier,
     routineName: String,
-    focusRequester: FocusRequester,
     onRoutineNameChange: (String) -> Unit
 ) {
 
+    val routineNameFocusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        routineNameFocusRequester.captureFocus()
+    }
+
     BasicTextField(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .focusRequester(focusRequester = focusRequester)
-            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            .focusRequester(focusRequester = routineNameFocusRequester),
 
         textStyle = MaterialTheme.typography.headlineSmall.copy(color = primaryText),
         singleLine = true,
@@ -292,38 +363,5 @@ internal fun RoutineNameField(
         }
     )
 }
-
-@Composable
-internal fun ExerciseList(
-    modifier: Modifier = Modifier,
-    list: List<Exercise>,
-    onDelete:(String)->Unit,
-    onExerciseClick:(String)->Unit
-) {
-
-    LazyColumn(
-        modifier = modifier
-    ) {
-
-        items(items = list, key = { it._id.toHexString() }) {
-
-            SwipeToDeleteContainer(
-                onDelete = {onDelete(it._id.toHexString())},
-                dialogTextText = "Are you sure you want to delete this exercise?",
-                dialogTitleText = "This action cannot be undone",
-                content = {
-                    ExerciseCard(
-                        exercise = it,
-                        muscleGroup = it.primaryMuscles,
-                        onClick = { onExerciseClick(it._id.toHexString()) },
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-}
-
 
 

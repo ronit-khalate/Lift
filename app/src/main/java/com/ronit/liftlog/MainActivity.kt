@@ -150,16 +150,15 @@ class MainActivity : ComponentActivity() {
 
                             composable(
                                 route = Screens.RoutineScreen.route,
-                                arguments = Screens.RoutineScreen.arguments
+                                arguments = Screens.RoutineScreen.arguments,
+
                             ) {
                                 val routineId =
                                     it.arguments?.getString(Screens.RoutineScreen.ROUTINE_ID_ARGUMENT)
 
-                                val viewModel =
-                                    hiltViewModel<RoutineScreenViewModel, RoutineScreenViewModel.RoutineScreenViewModelFactory> { factory ->
+                                val viewModel= hiltViewModel<RoutineScreenViewModel, RoutineScreenViewModel.RoutineScreenViewModelFactory> { factory ->
                                         factory.create(routineId)
-
-                                    }
+                                }
                                 RoutineScreen(
                                     routineId = routineId,
                                     state = viewModel.state,
@@ -205,7 +204,7 @@ class MainActivity : ComponentActivity() {
 
 
                             composable(
-                                route = Screens.LogScreen.route
+                                route = Screens.LogScreen.route,
                             ) {
                                 val viewModel = hiltViewModel<LogViewModel>()
 

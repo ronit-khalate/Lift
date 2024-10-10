@@ -29,8 +29,7 @@ fun ThreeSectionTopBar(
 
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .height(64.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ){

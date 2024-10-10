@@ -169,7 +169,7 @@ fun ExerciseScreen(
 
 
 @Composable
-internal fun ExerciseNameTextField(
+private fun ExerciseNameTextField(
     modifier: Modifier = Modifier,
     name:String,
     onNameEntered:(String)->Unit
