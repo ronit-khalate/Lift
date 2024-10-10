@@ -106,15 +106,13 @@ class ExerciseListScreenViewModel @AssistedInject constructor(
                 selectedMuscleGroup=event.group
 
 
-
-
-
               val list =  if(event.group != null){
 
-                  val muscleGroupName = event.group.name.replace("_"," ").lowercase()
+                    val muscleGroupName = event.group.name.replace("_"," ").lowercase()
+
                     exerciseListFlow.value.filter {
-//                        Log.d("filter" ,"${it.primaryMuscles.first().lowercase()} ${event.group.name.replace("_"," ").lowercase()}")
-                        it.primaryMuscles.first().lowercase() == muscleGroupName
+    //                        Log.d("filter" ,"${it.primaryMuscles.first().lowercase()} ${event.group.name.replace("_"," ").lowercase()}")
+                        it.primaryMuscles.firstOrNull()?.lowercase() == muscleGroupName
                     }
                 } else{
                     exerciseListFlow.value

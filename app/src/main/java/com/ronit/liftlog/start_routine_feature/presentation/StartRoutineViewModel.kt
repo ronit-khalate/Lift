@@ -82,6 +82,7 @@ class StartRoutineViewModel @AssistedInject constructor(
                                 )
                             }.toMutableStateList()
                         )
+                        StartRoutineServiceManager.setState(state)
                     }
                 }
             }
@@ -260,13 +261,7 @@ class StartRoutineViewModel @AssistedInject constructor(
     // TODO Save state in service
     override fun onCleared() {
         super.onCleared()
-
         StartRoutineServiceManager.setState(state)
-
-
-
-
-
     }
 
 
