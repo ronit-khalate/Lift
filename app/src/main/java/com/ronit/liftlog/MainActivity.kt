@@ -169,7 +169,7 @@ class MainActivity : ComponentActivity() {
                                         }
                                     },
                                     onBackBtnClicked = {
-                                        navController.popBackStack()
+                                        navController.navigateUp()
                                     },
                                     onExerciseClick = { exerciseId ->
                                         navController.navigate(Screens.ExerciseScreen(exerciseId))
@@ -181,9 +181,7 @@ class MainActivity : ComponentActivity() {
                                         })
 
                                     },
-                                    routineNameEntered = {viewModel.onEvent(RoutineScreenEvent.OnRoutineNameEntered(it))},
-                                    onRemoveExercise = {viewModel.onEvent(RoutineScreenEvent.OnRemoveExercise(it))},
-                                    onExerciseAdded = {viewModel.onEvent(RoutineScreenEvent.OnExerciseAdded(it))}
+                                    onEvent = {uiEvent -> viewModel.onEvent(uiEvent)},
                                 )
                             }
 

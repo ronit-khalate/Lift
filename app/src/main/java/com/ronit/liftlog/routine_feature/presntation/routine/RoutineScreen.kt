@@ -48,10 +48,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ronit.liftlog.core.data.model.entity.Exercise
+import com.ronit.liftlog.core.data.remote.ExerciseListService
 import com.ronit.liftlog.core.presentation.component.BasicDialog
 import com.ronit.liftlog.core.presentation.component.SwipeToDeleteContainer
 import com.ronit.liftlog.core.presentation.component.ThreeSectionTopBar
 import com.ronit.liftlog.routine_feature.presntation.routine.components.ExerciseCard
+import com.ronit.liftlog.routine_feature.presntation.routine.event.RoutineScreenEvent
 import com.ronit.liftlog.routine_feature.presntation.routine.state.RoutineScreenState
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.body
@@ -80,13 +82,11 @@ fun RoutineScreen(
     modifier: Modifier = Modifier,
     state:RoutineScreenState,
     routineId:String?=null,
+    onEvent:(RoutineScreenEvent)->Unit,
     onNavigateToExerciseScreen:()->Unit,
     onBackBtnClicked:()->Unit,
     onExerciseClick:(exerciseId:String)->Unit,
     onDoneSavingRoutine:()->Unit,
-    routineNameEntered:(String)->Unit,
-    onRemoveExercise:(id:String) ->Unit,
-    onExerciseAdded:(list:List<Exercise>)->Unit
 
 ) {
 
@@ -105,11 +105,11 @@ fun RoutineScreen(
 
         BasicDialog(
             onDismiss = { state.dialogContent.onDismiss?.invoke()},
-            onConfirm = { state.dialogContent!!.onConfirm?.invoke()},
-            dismissBtnText = state.dialogContent!!.dismissBtnText ,
-            confirmBtnText = state.dialogContent!!.confirmBtnText,
-            titleText = state.dialogContent!!.title,
-            textString = state.dialogContent!!.text
+            onConfirm = { state.dialogContent.onConfirm?.invoke()},
+            dismissBtnText = state.dialogContent.dismissBtnText ,
+            confirmBtnText = state.dialogContent.confirmBtnText,
+            titleText = state.dialogContent.title,
+            textString = state.dialogContent.text
         )
     }
 
@@ -170,6 +170,17 @@ fun RoutineScreen(
                 ,
             contentAlignment = Alignment.BottomCenter
         ) {
+            if(state.exerciseList.isEmpty()){
+
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(bottom = 200.dp),
+                    text = "Add some Exercises here",
+                    style = MaterialTheme.typography.labelLarge.copy(fontSize = 22.sp),
+                    color = body
+                )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -184,36 +195,23 @@ fun RoutineScreen(
                     RoutineNameField(
                         state.routineName,
                         focusRequester = routineNameFocusRequester,
-                        onRoutineNameChange = { routineNameEntered(it) }
+                        onRoutineNameChange = { onEvent(RoutineScreenEvent.OnRoutineNameEntered(it)) }
                     )
                 }
 
 
-                LazyColumn(
+
+
+                ExerciseList(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                        .weight(1f)
-                ) {
+                        .weight(1f),
+                    list = state.exerciseList,
+                    onExerciseClick=onExerciseClick,
+                    onDelete = {onEvent(RoutineScreenEvent.OnRemoveExercise(it))}
+                )
 
-                    items(items = state.exerciseList, key = { it._id.toHexString() }) {
-
-                        SwipeToDeleteContainer(
-                            onDelete = { onRemoveExercise(it._id.toHexString())},
-                            dialogTextText = "Are you sure you want to delete this exercise?",
-                            dialogTitleText = "This action cannot be undone",
-                            content = {
-                                ExerciseCard(
-                                    exercise = it,
-                                    muscleGroup = it.primaryMuscles,
-                                    onClick = { onExerciseClick(it._id.toHexString()) },
-                                )
-                            }
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
-                }
 
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -252,12 +250,8 @@ fun RoutineScreen(
                 },
                 onDoneAddingExercises = { exerciseList:List<Exercise> ->
 
-
-                    onExerciseAdded(exerciseList)
-
+                    onEvent(RoutineScreenEvent.OnExerciseAdded(exerciseList))
                     showExerciseListBottomSheet = !showExerciseListBottomSheet
-
-
                 },
                 onCreateNewExercise = onNavigateToExerciseScreen
             )
@@ -268,14 +262,11 @@ fun RoutineScreen(
 
 
 @Composable
-fun RoutineNameField(
+internal fun RoutineNameField(
     routineName: String,
     focusRequester: FocusRequester,
     onRoutineNameChange: (String) -> Unit
 ) {
-
-    val focusManager= LocalFocusManager.current
-
 
     BasicTextField(
         modifier = Modifier
@@ -300,6 +291,38 @@ fun RoutineNameField(
             it()
         }
     )
+}
+
+@Composable
+internal fun ExerciseList(
+    modifier: Modifier = Modifier,
+    list: List<Exercise>,
+    onDelete:(String)->Unit,
+    onExerciseClick:(String)->Unit
+) {
+
+    LazyColumn(
+        modifier = modifier
+    ) {
+
+        items(items = list, key = { it._id.toHexString() }) {
+
+            SwipeToDeleteContainer(
+                onDelete = {onDelete(it._id.toHexString())},
+                dialogTextText = "Are you sure you want to delete this exercise?",
+                dialogTitleText = "This action cannot be undone",
+                content = {
+                    ExerciseCard(
+                        exercise = it,
+                        muscleGroup = it.primaryMuscles,
+                        onClick = { onExerciseClick(it._id.toHexString()) },
+                    )
+                }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
 }
 
 

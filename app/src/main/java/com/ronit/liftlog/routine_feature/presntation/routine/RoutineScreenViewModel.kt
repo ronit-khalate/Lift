@@ -128,8 +128,6 @@ class RoutineScreenViewModel @AssistedInject constructor(
 
          is RoutineScreenEvent.OnRemoveExercise -> {
 
-
-
             viewModelScope.launch {
                state=state.copy(
                   exerciseList = state.exerciseList.filter {
