@@ -1,36 +1,23 @@
 package com.ronit.liftlog.routine_feature.presntation.routine
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.EaseOut
-import androidx.compose.animation.core.Easing
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.SpringSpec
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.OverscrollEffect
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.FlingBehavior
-import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.gestures.ScrollableDefaults
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -45,7 +32,6 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -55,27 +41,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ronit.liftlog.core.data.model.entity.Exercise
-import com.ronit.liftlog.core.data.remote.ExerciseListService
 import com.ronit.liftlog.core.presentation.component.BasicDialog
 import com.ronit.liftlog.core.presentation.component.SwipeToDeleteContainer
 import com.ronit.liftlog.core.presentation.component.ThreeSectionTopBar
@@ -150,7 +129,10 @@ fun RoutineScreen(
             ThreeSectionTopBar(
                 modifier = Modifier,
                 leftContent = {
-                    IconButton(onClick = onBackBtnClicked) {
+                    IconButton(
+                        modifier = Modifier.weight(0.2f,false),
+                        onClick = onBackBtnClicked
+                    ) {
                         Icon(imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft, contentDescription = "")
                     }
                 },
@@ -158,6 +140,7 @@ fun RoutineScreen(
                 middleContent = {
 
                     AnimatedVisibility(
+                        modifier = Modifier.weight(0.8f,false),
                         visible = canShowRoutineNameInTopBar.value,
                         enter = fadeIn(),
                         exit = fadeOut()
@@ -165,6 +148,8 @@ fun RoutineScreen(
 
 
                         Text(
+                            modifier = Modifier
+                                .basicMarquee(),
                             text = state.routineName,
                             fontSize = 16.sp,
                             style = MaterialTheme.typography.bodySmall
@@ -173,7 +158,10 @@ fun RoutineScreen(
                 },
 
                 rightContent = {
-                    IconButton(onClick = onDoneSavingRoutine) {
+                    IconButton(
+                        modifier = Modifier.weight(0.2f,false),
+                        onClick = onDoneSavingRoutine
+                    ) {
                         Icon(imageVector = Icons.Default.Done, contentDescription = "")
                     }
                 }
