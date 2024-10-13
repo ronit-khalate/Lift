@@ -1,9 +1,11 @@
 package com.ronit.liftlog.routine_feature.presntation.routine.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
@@ -25,17 +27,16 @@ fun SelectedIdentifier(
     shape: Shape = MaterialTheme.shapes.extraLarge
 ) {
 
-    Card(
+    Box(
 
-        modifier = Modifier
-            .fillMaxHeight()
-            .width(8.dp),
-        colors = CardDefaults.cardColors(containerColor = color),
-        shape = shape
+        modifier = modifier
+            .fillMaxHeight(1f)
+            .width(8.dp)
+            .background(color)
+            .clip(shape)
 
-    ) {
 
-    }
+    )
 }
 
 

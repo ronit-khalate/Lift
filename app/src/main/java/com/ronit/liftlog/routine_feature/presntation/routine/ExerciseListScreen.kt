@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -250,12 +251,9 @@ fun ExerciseListScreen(
 
                     Row(
                         modifier = Modifier
-
-                            .fillMaxWidth()
                             .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
                             .clip(MaterialTheme.shapes.large)
-                            .height(IntrinsicSize.Max)
-                            .animateItem()
+
                             ,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -270,32 +268,15 @@ fun ExerciseListScreen(
 
 
                         }
-                        AnimatedVisibility(
-                            visible = selected,
-                            enter = slideInHorizontally(
-                                animationSpec = tween(
-                                    easing = FastOutLinearInEasing
-                                )
-                            ),
-                            exit = slideOutHorizontally(
-                                animationSpec = tween(
-                                    easing = EaseOut
-                                )
-                            ),
-                        ) {
-                            SelectedIdentifier(
-                                color = primary
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-
-                        }
 
 
                         ExerciseCard(
+                            modifier = Modifier,
                             onClick = { viewModel.onExerciseSelected(exercise) },
+                            selected = selected,
                             exercise = exercise,
                             muscleGroup = exercise.primaryMuscles,
-                            shape = if(selected) {MaterialTheme.shapes.large.copy(topStart = CornerSize(0.dp), bottomStart = CornerSize(0.dp))}else{MaterialTheme.shapes.large}
+                            shape = MaterialTheme.shapes.large
                         )
                     }
                     
