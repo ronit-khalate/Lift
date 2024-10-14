@@ -39,7 +39,7 @@ class LogViewModel@Inject constructor(
 
             val startDate = logRepo.getFirstLog()?.date?.toLocalDate()
 
-            val logs = logRepo.getLog(state.currentDate)
+            val logs = logRepo.getLog(state.currentDate).sortedByDescending { it.startTime.epochSeconds }
 
             startDate?.let {
                 state=state.copy(
