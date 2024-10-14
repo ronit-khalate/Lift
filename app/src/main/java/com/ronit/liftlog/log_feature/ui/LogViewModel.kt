@@ -59,13 +59,13 @@ class LogViewModel@Inject constructor(
 
 
 
-                if(state.currentDate != state.selectedDate){
+
                     viewModelScope.launch {
 
                         changeDate(event.date)
 
                     }
-                }
+
 
 
 
@@ -96,7 +96,7 @@ class LogViewModel@Inject constructor(
     }
 
     private fun changeDate(date: LocalDate){
-        val logs = state.allLogs.sortedByDescending { it.startTime.epochSeconds }
+        val logs = state.allLogs.filter { it.date == date.toEpochMillis() }.sortedByDescending { it.startTime.epochSeconds }
         state = state.copy(
             selectedDate = date,
             specificDateLog = logs

@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,6 +34,8 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ronit.liftlog.ui.theme.backgroundDark
+import com.ronit.liftlog.ui.theme.body
+import com.ronit.liftlog.ui.theme.neutral
 import com.ronit.liftlog.ui.theme.primary
 import com.ronit.liftlog.ui.theme.primaryText
 import com.ronit.liftlog.ui.theme.secondaryContainerLight
@@ -55,8 +59,6 @@ fun DatePickerTimeLine(
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val dateCardWidth = screenWidth/7
 
-
-    HorizontalDivider()
 
     LazyRow(
         modifier = modifier
@@ -88,7 +90,7 @@ fun DatePickerTimeLine(
 
     }
 
-    HorizontalDivider()
+
 }
 
 
@@ -105,55 +107,69 @@ fun DateCard(
     var isSelected by remember {
         mutableStateOf(false)
     }
-    Column(
-        modifier = modifier
-            .clickable {
-                isSelected = true
-                onClick()
-           },
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
+
+
+    Card(
+        modifier = Modifier
+            .padding(end=8.dp),
+        onClick = {
+            isSelected = true
+            onClick()
+        },
+        shape = MaterialTheme.shapes.small
     ) {
 
-        Text(
-            text = dateTime.dayOfWeek.getDisplayName(TextStyle.SHORT,Locale.current.platformLocale).uppercase(),
-            style = androidx.compose.ui.text.TextStyle(
-                color = primaryText,
-                fontStyle = MaterialTheme.typography.labelSmall.fontStyle
+
+        Column(
+            modifier = modifier
+                .padding(top = 8.dp, bottom = 8.dp, start = 8.dp, end = 8.dp)
+                .wrapContentWidth()
+
+                ,
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Text(
+
+                text = dateTime.dayOfWeek.getDisplayName(
+                    TextStyle.SHORT,
+                    Locale.current.platformLocale
+                ).uppercase(),
+                style = MaterialTheme.typography.titleSmall
             )
-        )
 
-        Spacer(modifier = Modifier.height(8.dp))
 
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = if(selectedDate.isEqual(dateTime)) primary else backgroundDark
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = if (selectedDate.isEqual(dateTime)) primary else body
                 ),
-            shape = RoundedCornerShape(size = 4.dp)
-        ){
-
-            Column(
-                modifier = Modifier
-                    .padding(vertical = 3.dp, horizontal = 3.dp)
-                    .wrapContentSize()
+                
+                shape = MaterialTheme.shapes.small
             ) {
 
+                Column(
+                    modifier = Modifier
+                        .padding(vertical = 4.dp, horizontal = 8.dp)
+                        .wrapContentSize()
+                ) {
 
-                Text(
-                    text = dateTime.dayOfMonth.toString(),
-                    style = androidx.compose.ui.text.TextStyle(
-                        color = if(selectedDate.isEqual(dateTime)) backgroundDark else primaryText,
-                        fontStyle = MaterialTheme.typography.labelSmall.fontStyle,
-                        fontSize = MaterialTheme.typography.labelSmall.fontSize,
-                        fontWeight = FontWeight.Bold
+
+                    Text(
+                        text = dateTime.dayOfMonth.toString(),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = if (selectedDate.isEqual(dateTime)) backgroundDark else primaryText,
+                            fontWeight = FontWeight.Bold
+
+                        )
                     )
-                )
 
 
+                }
             }
+
+
         }
-        
-        
     }
 }
 

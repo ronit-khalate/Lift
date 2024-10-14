@@ -117,7 +117,7 @@ fun RoutineListScreen(
 
                 LazyColumn(
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(start = 16.dp , end = 16.dp)
                         .fillMaxSize()
                 ) {
 
@@ -146,7 +146,7 @@ fun RoutineListScreen(
                         )
 
 
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
 
                 }

@@ -41,21 +41,20 @@ fun RoutineLogCard(
 
             Column(
                 modifier = Modifier
-                    .padding(vertical = 8.dp)
+                    .padding(16.dp)
                     .fillMaxWidth()
             ) {
 
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp, horizontal = 8.dp),
+                        .padding(bottom = 16.dp)
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start
                 ) {
                     Text(
 
                         text = log.routineName,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.headlineSmall,
                         color = primaryText
                     )
 
@@ -64,7 +63,6 @@ fun RoutineLogCard(
 
                 Column(
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
                         .fillMaxWidth()
                 ) {
 

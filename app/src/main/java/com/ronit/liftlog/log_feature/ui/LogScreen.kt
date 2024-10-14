@@ -77,7 +77,7 @@ fun LogScreen(
 
                     Text(
                         text = state.currentDate.dayOfWeek.name.titlecase(),
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = MaterialTheme.typography.displaySmall,
                         color = primaryText,
                         fontWeight = FontWeight.ExtraBold
                     )
