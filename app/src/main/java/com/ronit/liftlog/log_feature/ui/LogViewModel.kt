@@ -41,7 +41,7 @@ class LogViewModel@Inject constructor(
             logRepo.getAllLog().collect{
                 state=state.copy(
                     allLogs = it,
-                    speceficDateLog = it.filter {  it.date == state.selectedDate.toEpochMillis() }.sortedByDescending { it.startTime.epochSeconds }
+                    specificDateLog = it.filter {  it.date == state.selectedDate.toEpochMillis() }.sortedByDescending { it.startTime.epochSeconds }
                 )
             }
 
@@ -99,7 +99,7 @@ class LogViewModel@Inject constructor(
         val logs = state.allLogs.sortedByDescending { it.startTime.epochSeconds }
         state = state.copy(
             selectedDate = date,
-            speceficDateLog = logs
+            specificDateLog = logs
         )
     }
 
