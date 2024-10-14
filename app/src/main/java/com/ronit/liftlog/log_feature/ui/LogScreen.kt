@@ -112,7 +112,7 @@ fun LogScreen(
 
             ) {
 
-                items(items = state.speceficDateLog ){
+                items(items = state.specificDateLog ){
                     SwipeToDeleteContainer(
 
                         onDelete = { onEvent(LogScreenUiEvent.OnDeleteLog(it)) },
