@@ -112,6 +112,10 @@ fun RoutineScreen(
     }
 
 
+
+
+
+
     val lazyListState = rememberLazyListState()
 
     val canShowRoutineNameInTopBar = remember {
@@ -232,6 +236,7 @@ fun RoutineScreen(
                             modifier = Modifier
                                 .padding(bottom = 16.dp),
                             routineName = state.routineName,
+                            routineId =routineId,
                             onRoutineNameChange = {
                                 onEvent(
                                     RoutineScreenEvent.OnRoutineNameEntered(
@@ -319,14 +324,22 @@ fun RoutineScreen(
 private fun RoutineNameField(
     modifier: Modifier=Modifier,
     routineName: String,
+    routineId: String?,
     onRoutineNameChange: (String) -> Unit
 ) {
 
     val routineNameFocusRequester = remember { FocusRequester() }
 
     LaunchedEffect(Unit) {
-        routineNameFocusRequester.captureFocus()
+
+       if(routineId==null){
+           routineNameFocusRequester.requestFocus()
+       }
+
+
+
     }
+
 
     BasicTextField(
         modifier = modifier
