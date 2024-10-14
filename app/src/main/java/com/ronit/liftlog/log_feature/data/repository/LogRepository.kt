@@ -11,4 +11,6 @@ interface LogRepository {
     suspend fun getFirstLog(): Log?
 
     suspend fun getLog(date: LocalDate):List<Log>
+
+    suspend fun removeLog(log:Log)
 }

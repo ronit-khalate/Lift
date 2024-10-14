@@ -1,9 +1,6 @@
 package com.ronit.liftlog.log_feature.ui
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,35 +12,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ronit.liftlog.core.domain.titlecase
-import com.ronit.liftlog.core.navigation.Screen.Screens
 import com.ronit.liftlog.core.presentation.component.BottomBar
 import com.ronit.liftlog.core.presentation.component.SwipeToDeleteContainer
 import com.ronit.liftlog.log_feature.ui.components.DatePickerTimeLine
 import com.ronit.liftlog.log_feature.ui.components.RoutineLogCard
+import com.ronit.liftlog.log_feature.ui.event.LogScreenUiEvent
 import com.ronit.liftlog.log_feature.ui.state.LogScreenUiState
 import com.ronit.liftlog.ui.theme.black
-import com.ronit.liftlog.ui.theme.primary
 import com.ronit.liftlog.ui.theme.primaryText
-import java.time.LocalDate
 
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -52,9 +41,7 @@ fun LogScreen(
     state:LogScreenUiState,
     modifier: Modifier = Modifier,
     navController: NavController,
-    onCreateRoutineClicked:() ->Unit,
-    onDateClicked:(LocalDate)->Unit,
-    onGoToTodaysLog:()->Unit
+    onEvent:(LogScreenUiEvent)->Unit,
 ) {
 
 
@@ -84,7 +71,7 @@ fun LogScreen(
             ) {
 
                 Column(
-                    modifier = Modifier.clickable { onGoToTodaysLog() },
+                    modifier = Modifier.clickable { onEvent(LogScreenUiEvent.OnGoToTodaysLog) },
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
 
@@ -114,7 +101,7 @@ fun LogScreen(
                 currentDate = state.currentDate,
                 localDateList = state.dateList,
                 selectedDate = state.selectedDate,
-                onDateClick = onDateClicked
+                onDateClick = {onEvent(LogScreenUiEvent.OnDateClicked(it))}
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -125,10 +112,10 @@ fun LogScreen(
 
             ) {
 
-                items(items = state.logs ){
+                items(items = state.speceficDateLog ){
                     SwipeToDeleteContainer(
 
-                        onDelete = { },
+                        onDelete = { onEvent(LogScreenUiEvent.OnDeleteLog(it)) },
                         dialogTitleText = "This action cannot be undone",
                         dialogTextText = "Are you sure you want to delete this Log?",
                         content = {
@@ -155,8 +142,7 @@ private fun LogScreenPreview() {
     LogScreen(
         LogScreenUiState(),
         navController = rememberNavController(),
-        onCreateRoutineClicked = {},
-        onDateClicked = {},
-        onGoToTodaysLog = {}
+        onEvent = {},
+
     )
 }

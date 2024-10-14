@@ -230,21 +230,7 @@ class MainActivity : ComponentActivity() {
                             LogScreen(
                                 state = viewModel.state,
                                 navController = navController,
-                                onCreateRoutineClicked = { navController.navigate(Screens.RoutineScreen.invoke()) },
-                                onDateClicked = {
-                                    viewModel.onEvent(
-                                        LogScreenUiEvent.OnDateClicked(
-                                            it
-                                        )
-                                    )
-                                },
-                                onGoToTodaysLog = {
-
-                                    if (viewModel.state.currentDate != viewModel.state.selectedDate) {
-                                        viewModel.onEvent(LogScreenUiEvent.OnGoToTodaysLog)
-                                    }
-
-                                }
+                                onEvent = { event:LogScreenUiEvent -> viewModel.onEvent(event)},
 
                             )
                         }

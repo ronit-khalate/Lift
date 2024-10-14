@@ -5,7 +5,8 @@ import java.time.LocalDate
 
 data class LogScreenUiState(
     val dateList:List<LocalDate> = emptyList(),
-    val logs:List<Log> = emptyList(),
+    val speceficDateLog:List<Log> = emptyList(),
+    val allLogs:List<Log> = emptyList(),
     val selectedDate:LocalDate=LocalDate.now(),
 ){
 
