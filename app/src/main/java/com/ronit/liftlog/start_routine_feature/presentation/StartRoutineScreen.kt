@@ -1,5 +1,6 @@
 package com.ronit.liftlog.start_routine_feature.presentation
 
+import android.graphics.Color
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -58,6 +59,7 @@ import com.ronit.liftlog.core.presentation.component.ThreeSectionTopBar
 import com.ronit.liftlog.start_routine_feature.presentation.components.ExerciseSetLogCard
 import com.ronit.liftlog.start_routine_feature.presentation.components.StartRoutineScreenTopBar
 import com.ronit.liftlog.start_routine_feature.presentation.event.StartRoutineScreenEvent
+import com.ronit.liftlog.start_routine_feature.presentation.state.StartRoutineScreenState
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.body
 import com.ronit.liftlog.ui.theme.primary
@@ -68,17 +70,14 @@ fun StartRoutineScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     routineId:String,
-    routineName:String
+    routineName:String,
+    uiState:StartRoutineScreenState,
+    onEvent:(StartRoutineScreenEvent)->Unit
 
 ) {
 
 
 
-    val viewmodel:StartRoutineViewModel = hiltViewModel<StartRoutineViewModel,StartRoutineViewModel.StartRoutineViewModelFactory>() {
-
-        it.create(routineId,routineName)
-
-    }
 
     val lazyListState = rememberLazyListState()
 
@@ -127,7 +126,7 @@ fun StartRoutineScreen(
                         Text(
                             modifier = Modifier
                                 .basicMarquee(),
-                            text =viewmodel.routineName,
+                            text =routineName,
                             fontSize = 16.sp,
                             style = MaterialTheme.typography.bodySmall
                         )
@@ -139,7 +138,7 @@ fun StartRoutineScreen(
                     TextButton(
                         modifier = Modifier.weight(0.2f,false),
                         onClick = {
-                            viewmodel.onEvent(StartRoutineScreenEvent.OnRoutineFinish)
+                            onEvent(StartRoutineScreenEvent.OnRoutineFinish)
                             navController.popBackStack()
 
                         },
@@ -192,7 +191,7 @@ fun StartRoutineScreen(
                     ) {
 
                         Text(
-                            text = viewmodel.routineName,
+                            text = routineName,
                             color = primaryText,
                             style = MaterialTheme.typography.headlineSmall
                         )
@@ -205,14 +204,14 @@ fun StartRoutineScreen(
 
                     Spacer(Modifier.height(8.dp))
                     BodyWeightTextField(
-                        bodyWeight = viewmodel.state.bodyWeight,
-                        onBodyWeightChange = {viewmodel.onEvent(StartRoutineScreenEvent.OnBodyWeightEntered(it))}
+                        bodyWeight = uiState.bodyWeight,
+                        onBodyWeightChange = {onEvent(StartRoutineScreenEvent.OnBodyWeightEntered(it))}
                     )
                     Spacer(Modifier.height(8.dp))
                 }
 
 
-                items(items = viewmodel.state.exercisesLog, key = {it.id.toHexString()}) {exerciseLog->
+                items(items = uiState.exercisesLog, key = {it.id.toHexString()}) {exerciseLog->
 
 
 
@@ -221,7 +220,7 @@ fun StartRoutineScreen(
                         ExerciseSetLogCard(
                             exerciseLog = exerciseLog,
                             onAddSetBtnClick = {
-                                viewmodel.onEvent(
+                                onEvent(
                                     StartRoutineScreenEvent.OnAddSetInExerciseLog(
                                         it
                                     )
@@ -229,7 +228,7 @@ fun StartRoutineScreen(
                             },
                             updateWeight = { id: String, exLogId, data: String ->
 
-                                viewmodel.onEvent(
+                                onEvent(
                                     StartRoutineScreenEvent.OnUpdateWeight(
                                         id = id,
                                         data = data,
@@ -239,7 +238,7 @@ fun StartRoutineScreen(
                             },
                             updateReps = { id: String, exLogId, data: String ->
 
-                                viewmodel.onEvent(
+                                onEvent(
                                     StartRoutineScreenEvent.OnUpdateReps(
                                         id = id,
                                         data = data,
@@ -249,7 +248,7 @@ fun StartRoutineScreen(
 
                             },
                             updateNotes = { id: String, exLogId, data: String ->
-                                viewmodel.onEvent(
+                                onEvent(
                                     StartRoutineScreenEvent.OnUpdateNotes(
                                         id = id,
                                         data = data,
@@ -304,9 +303,16 @@ private fun BodyWeightTextField(
 }
 
 @Preview(
-    showBackground = true
+    showBackground = true,
 )
 @Composable
 private fun StartRoutineScreenPreview() {
-    StartRoutineScreen(routineId = "r",  navController = rememberNavController() , routineName = "")
+    StartRoutineScreen(
+        routineId = "r",
+        navController = rememberNavController() ,
+        routineName = "",
+        uiState = StartRoutineScreenState(),
+        onEvent = {}
+
+        )
 }

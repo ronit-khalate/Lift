@@ -55,6 +55,8 @@ import com.ronit.liftlog.routine_feature.presntation.routine.event.RoutineScreen
 import com.ronit.liftlog.routine_feature.presntation.routine_list.RoutineListScreen
 import com.ronit.liftlog.start_routine_feature.domain.StartRoutineServiceManager
 import com.ronit.liftlog.start_routine_feature.presentation.StartRoutineScreen
+import com.ronit.liftlog.start_routine_feature.presentation.StartRoutineViewModel
+import com.ronit.liftlog.start_routine_feature.presentation.event.StartRoutineScreenEvent
 import com.ronit.liftlog.ui.theme.LiftLogTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -204,10 +206,18 @@ class MainActivity : ComponentActivity() {
 
                             val routineName =
                                 it.arguments?.getString(Screens.StartRoutineScreen.ROUTINE_NAME_ARGUMENT)
+
+                            val viewmodel: StartRoutineViewModel = hiltViewModel<StartRoutineViewModel, StartRoutineViewModel.StartRoutineViewModelFactory>() {
+
+                                it.create(routineID!!,routineName?:"")
+
+                            }
                             StartRoutineScreen(
                                 routineId = routineID!!,
                                 routineName = routineName ?: "",
-                                navController = navController
+                                uiState = viewmodel.state,
+                                navController = navController,
+                                onEvent = {event: StartRoutineScreenEvent -> viewmodel.onEvent(event)}
                             )
                         }
 
