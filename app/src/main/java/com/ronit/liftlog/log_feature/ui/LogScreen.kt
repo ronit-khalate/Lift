@@ -103,20 +103,6 @@ fun LogScreen(
 
                 }
 
-
-
-                OutlinedButton(
-                    border = BorderStroke(width = 1.dp, color = primary),
-                    onClick = onCreateRoutineClicked
-                ) {
-
-                    Text(
-                        text = "Create Routine +",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = primaryText
-                    )
-                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))

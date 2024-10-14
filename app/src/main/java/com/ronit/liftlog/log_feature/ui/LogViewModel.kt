@@ -56,7 +56,6 @@ class LogViewModel@Inject constructor(
     fun onEvent(event:LogScreenUiEvent){
 
         when(event){
-            is LogScreenUiEvent.CreateRoutine -> TODO()
             is LogScreenUiEvent.OnDateClicked -> {
 
 

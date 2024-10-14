@@ -4,7 +4,6 @@ import java.time.LocalDate
 
 sealed interface LogScreenUiEvent {
 
-    data object CreateRoutine:LogScreenUiEvent
     data class OnDateClicked(val date:LocalDate):LogScreenUiEvent
     data class OnRoutineLogCardClicked(val routineId:String):LogScreenUiEvent
     data object OnGoToTodaysLog:LogScreenUiEvent
