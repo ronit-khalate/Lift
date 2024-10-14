@@ -8,5 +8,6 @@ sealed interface StartRoutineScreenEvent {
     data class OnUpdateReps(val id: String, val data: String, val exLogId: String) :StartRoutineScreenEvent
     data class OnUpdateNotes(val id: String, val data: String, val exLogId: String) : StartRoutineScreenEvent
     data object OnRoutineFinish:StartRoutineScreenEvent
+    data class OnBodyWeightEntered(val weight:String):StartRoutineScreenEvent
 
 }

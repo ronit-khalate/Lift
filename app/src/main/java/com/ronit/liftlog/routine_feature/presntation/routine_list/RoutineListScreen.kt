@@ -68,7 +68,7 @@ fun RoutineListScreen(
 
 
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .padding(paddingValues)
                 .fillMaxSize()
 
@@ -89,8 +89,7 @@ fun RoutineListScreen(
                 Text(
                     modifier = Modifier,
                     text = "Routines",
-                    style = MaterialTheme.typography.displaySmall,
-                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold),
                     color = primaryText
                 )
 

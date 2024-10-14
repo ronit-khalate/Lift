@@ -206,6 +206,11 @@ class StartRoutineViewModel @AssistedInject constructor(
                 StartRoutineServiceManager.setState(state)
                 StartRoutineServiceManager.stopService()
             }
+
+            is StartRoutineScreenEvent.OnBodyWeightEntered -> {
+
+                state= state.copy(bodyWeight = event.weight)
+            }
         }
     }
 
