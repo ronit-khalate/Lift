@@ -1,7 +1,11 @@
 package com.ronit.liftlog.start_routine_feature.presentation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +19,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -26,6 +31,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -64,16 +71,30 @@ fun StartRoutineScreen(
 
     }
 
+    val lazyListState = rememberLazyListState()
+
+    val canShowRoutineNameInTopBar = remember {
+
+        derivedStateOf {
+
+            lazyListState.firstVisibleItemIndex>0
+        }
+    }
+
 
 
     Scaffold(
         modifier=modifier
+            .fillMaxSize()
             .windowInsetsPadding(WindowInsets.statusBars),
         topBar =  {
 
             ThreeSectionTopBar(
                 leftContent = {
-                    IconButton(onClick = { navController.navigateUp() }) {
+                    IconButton(
+                        modifier = Modifier.weight(0.2f,false),
+                        onClick = { navController.navigateUp() }
+                    ) {
 
                         Image(
                             colorFilter = ColorFilter.tint(color = primaryText),
@@ -84,9 +105,30 @@ fun StartRoutineScreen(
                     }
                 },
 
+                middleContent = {
+
+                    AnimatedVisibility(
+                        modifier = Modifier.weight(0.8f,false),
+                        visible = canShowRoutineNameInTopBar.value,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+
+
+                        Text(
+                            modifier = Modifier
+                                .basicMarquee(),
+                            text =viewmodel.routineName,
+                            fontSize = 16.sp,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                },
+
                 rightContent = {
 
                     TextButton(
+                        modifier = Modifier.weight(0.2f,false),
                         onClick = {
                             viewmodel.onEvent(StartRoutineScreenEvent.OnRoutineFinish)
                             navController.popBackStack()
@@ -120,30 +162,35 @@ fun StartRoutineScreen(
 
 
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-
-                Text(
-                    text = viewmodel.routineName,
-                    color = primaryText,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-            }
 
 
             Spacer(modifier = Modifier.height(16.dp))
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                state = lazyListState
             ) {
 
 
+
+                item {
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+
+                        Text(
+                            text = viewmodel.routineName,
+                            color = primaryText,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                    }
+                }
 
 
                 items(items = viewmodel.state.exercisesLog, key = {it.id.toHexString()}) {exerciseLog->

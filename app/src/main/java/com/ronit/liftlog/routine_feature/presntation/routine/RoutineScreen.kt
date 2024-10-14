@@ -114,7 +114,7 @@ fun RoutineScreen(
 
     val lazyListState = rememberLazyListState()
 
-    var canShowRoutineNameInTopBar = remember {
+    val canShowRoutineNameInTopBar = remember {
 
         derivedStateOf {
             lazyListState.firstVisibleItemIndex > 0
