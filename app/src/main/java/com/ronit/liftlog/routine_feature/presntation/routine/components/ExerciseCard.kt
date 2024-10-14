@@ -3,6 +3,7 @@ package com.ronit.liftlog.routine_feature.presntation.routine.components
 
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ronit.liftlog.core.data.model.entity.Exercise
 import com.ronit.liftlog.core.di.RetrofitModule
+import com.ronit.liftlog.routine_feature.presntation.components.ImageSlider
 import com.ronit.liftlog.ui.theme.body
 import com.ronit.liftlog.ui.theme.neutral
 import com.ronit.liftlog.ui.theme.primary
@@ -62,7 +64,7 @@ fun ExerciseCard(
         modifier = modifier
             .border(width = 2.dp , color = if(!selected) Color.Transparent else primary, shape = shape)
             .fillMaxWidth()
-
+            .animateContentSize()
             .combinedClickable (
                 onClick = {onClick()},
                 onLongClick = {
@@ -95,30 +97,9 @@ fun ExerciseCard(
             ) {
 
 
-                AsyncImage(
-                    modifier = Modifier,
-                    alignment = Alignment.Center,
+                ImageSlider(uriList = exercise.images)
 
-                    contentScale = ContentScale.Crop,
-                    model = "${RetrofitModule.provideBaseUrl()}exercises/${
-                        exercise.images.first().trim()
-                    }",
-                    contentDescription = null,
 
-                    )
-
-                AsyncImage(
-                    modifier = Modifier
-                        .fillMaxHeight(),
-                    alignment = Alignment.Center,
-
-                    contentScale = ContentScale.Crop,
-                    model = "${RetrofitModule.provideBaseUrl()}exercises/${
-                        exercise.images[1].trim()
-                    }",
-                    contentDescription = null,
-
-                    )
 
             }
 
