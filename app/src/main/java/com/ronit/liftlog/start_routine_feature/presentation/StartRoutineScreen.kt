@@ -1,6 +1,5 @@
 package com.ronit.liftlog.start_routine_feature.presentation
 
-import android.graphics.Color
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -15,6 +14,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -25,8 +25,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -34,30 +32,23 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.ronit.liftlog.core.presentation.component.BottomBar
-import com.ronit.liftlog.core.presentation.component.SwipeToDeleteContainer
+import com.ronit.liftlog.core.domain.rememberImeState
 import com.ronit.liftlog.core.presentation.component.ThreeSectionTopBar
 import com.ronit.liftlog.start_routine_feature.presentation.components.ExerciseSetLogCard
-import com.ronit.liftlog.start_routine_feature.presentation.components.StartRoutineScreenTopBar
 import com.ronit.liftlog.start_routine_feature.presentation.event.StartRoutineScreenEvent
 import com.ronit.liftlog.start_routine_feature.presentation.state.StartRoutineScreenState
 import com.ronit.liftlog.ui.theme.black
@@ -89,12 +80,22 @@ fun StartRoutineScreen(
         }
     }
 
+    val imeState = rememberImeState()
+
+    LaunchedEffect(imeState.value) {
+
+        if(imeState.value){
+            lazyListState.animateScrollToItem(uiState.exercisesLog.size+3)
+        }
+
+    }
 
 
     Scaffold(
         modifier=modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars),
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .imePadding(),
         topBar =  {
 
             ThreeSectionTopBar(
