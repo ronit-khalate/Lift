@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ronit.liftlog.core.data.model.Exercise
-import com.ronit.liftlog.core.data.model.Routine
+import com.ronit.liftlog.core.data.model.entity.Exercise
+import com.ronit.liftlog.core.data.model.entity.Routine
 import com.ronit.liftlog.core.domain.repository.ExerciseRepositoryImpl
 import com.ronit.liftlog.core.presentation.component.DialogContent
 import com.ronit.liftlog.routine_feature.data.RoutineDetailRepositoryImpl
@@ -60,7 +60,7 @@ class RoutineScreenViewModel @AssistedInject constructor(
                         routineId = changes.obj._id,
                         routineName = changes.obj.name,
                         note = changes.obj.note,
-                        exerciseList = listOf(*changes.obj.exercise.toTypedArray())
+                        exerciseList = exerciseRepositoryImpl.getExercises(changes.obj.exerciseIds.toList())
                      )
                   }
                   is DeletedObject -> TODO()
@@ -70,7 +70,7 @@ class RoutineScreenViewModel @AssistedInject constructor(
                         routineId = changes.obj._id,
                         routineName = changes.obj.name,
                         note = changes.obj.note,
-                        exerciseList = listOf(*changes.obj.exercise.toTypedArray())
+                        exerciseList = exerciseRepositoryImpl.getExercises(changes.obj.exerciseIds.toList())
                      )
                   }
                   is PendingObject -> TODO()
@@ -82,18 +82,18 @@ class RoutineScreenViewModel @AssistedInject constructor(
          }
          viewModelScope.launch {
 
-            routineDetailRepositoryImpl.getExerciseChangeNotification(ObjectId(id)).collect{changes->
-
-               when(changes){
-                  is DeletedList -> TODO()
-                  is InitialList -> {}
-                  is UpdatedList -> {
-                     state=state.copy(
-                        exerciseList = changes.list
-                     )
-                  }
-               }
-            }
+//            routineDetailRepositoryImpl.getExerciseChangeNotification(ObjectId(id)).collect{changes->
+//
+//               when(changes){
+//                  is DeletedList -> TODO()
+//                  is InitialList -> {}
+//                  is UpdatedList -> {
+//                     state=state.copy(
+//                        exerciseList = changes.list
+//                     )
+//                  }
+//               }
+//            }
 
          }
       }
@@ -127,8 +127,6 @@ class RoutineScreenViewModel @AssistedInject constructor(
          }
 
          is RoutineScreenEvent.OnRemoveExercise -> {
-
-
 
             viewModelScope.launch {
                state=state.copy(

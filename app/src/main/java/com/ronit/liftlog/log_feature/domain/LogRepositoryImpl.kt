@@ -1,9 +1,10 @@
 package com.ronit.liftlog.log_feature.domain
 
-import com.ronit.liftlog.core.data.model.Log
+import com.ronit.liftlog.core.data.model.entity.Log
 import com.ronit.liftlog.core.domain.toEpochMillis
 import com.ronit.liftlog.log_feature.data.repository.LogRepository
 import io.realm.kotlin.Realm
+import io.realm.kotlin.delete
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -15,7 +16,7 @@ class LogRepositoryImpl @Inject constructor(
 ):LogRepository {
     override suspend fun getAllLog(): Flow<List<Log>> {
 
-     return realm.query<Log>().asFlow()
+        return realm.query<Log>().asFlow()
             .map {
                 it.list
             }
@@ -33,6 +34,16 @@ class LogRepositoryImpl @Inject constructor(
 
         return realm.query<Log>().find().filter {
             it.date == date.toEpochMillis()
+        }
+    }
+
+    override suspend fun removeLog(log: Log){
+
+        realm.write {
+
+            findLatest(log)?.also {
+                delete(it)
+            }
         }
     }
 }

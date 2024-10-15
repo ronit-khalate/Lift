@@ -2,6 +2,7 @@ package com.ronit.liftlog.routine_feature.presntation.routine_list.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,8 +38,7 @@ fun RoutineCard(
         onClick = onCardClick,
         shape = MaterialTheme.shapes.large,
         modifier = Modifier
-            .fillMaxWidth()
-            .height(116.dp),
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = neutral)
     ) {
 
@@ -58,19 +58,17 @@ fun RoutineCard(
 
                 Text(
                     text = routineName,
-                    fontStyle = MaterialTheme.typography.titleSmall.fontStyle,
+                    style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = primaryText,
-                    fontSize = MaterialTheme.typography.titleSmall.fontSize
 
                 )
                 
                 Text(
                     text = "$exerciseCount exercises",
-                    fontStyle = MaterialTheme.typography.labelSmall.fontStyle,
+                    style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Normal,
                     color = body,
-                    fontSize = MaterialTheme.typography.labelSmall.fontSize
 
                 )
 
@@ -79,6 +77,8 @@ fun RoutineCard(
 
             }
 
+
+            Spacer(Modifier.height(8.dp))
 
            MaxWidthButton(onClick = onStartNowClick, text = "Start Now")
         }

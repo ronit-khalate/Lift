@@ -1,6 +1,6 @@
 package com.ronit.liftlog.routine_feature.presntation.routine.event
 
-import com.ronit.liftlog.core.data.model.Exercise
+import com.ronit.liftlog.core.data.model.entity.Exercise
 
 sealed interface RoutineScreenEvent {
 

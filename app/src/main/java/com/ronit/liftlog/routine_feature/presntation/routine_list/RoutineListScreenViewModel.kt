@@ -3,7 +3,7 @@ package com.ronit.liftlog.routine_feature.presntation.routine_list
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ronit.liftlog.core.data.model.Routine
+import com.ronit.liftlog.core.data.model.entity.Routine
 import com.ronit.liftlog.routine_feature.data.RoutineListRepositoryImpl
 import com.ronit.liftlog.routine_feature.presntation.routine_list.event.RoutineListScreenEvent
 import dagger.hilt.android.lifecycle.HiltViewModel

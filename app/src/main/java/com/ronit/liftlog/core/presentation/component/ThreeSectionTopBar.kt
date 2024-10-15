@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
@@ -22,15 +23,14 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ThreeSectionTopBar(
     modifier: Modifier = Modifier,
-    leftContent:(@Composable ()->Unit)={},
-    middleContent:(@Composable ()->Unit)={},
-    rightContent:(@Composable ()->Unit)={},
+    leftContent:@Composable RowScope.()->Unit={},
+    middleContent:@Composable RowScope.()->Unit={},
+    rightContent:@Composable RowScope.()->Unit={},
 ) {
 
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .height(64.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ){

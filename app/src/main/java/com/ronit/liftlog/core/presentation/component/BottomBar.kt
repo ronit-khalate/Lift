@@ -88,7 +88,7 @@ fun BottomBar(
             icon = {
                 Icon(
                     modifier = Modifier,
-                    tint = if(currentRoute == Screens.StartScreen.route) primary else tertiary,
+                    tint = if(currentRoute == Screens.StatScreen.route) primary else tertiary,
                     painter = painterResource(id = R.drawable.stat_icon),
                     contentDescription =""
                 )

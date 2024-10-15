@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +30,7 @@ object StartRoutineServiceManager {
 
         override fun onServiceDisconnected(p0: ComponentName?) {
 
+            routineName=""
             serviceBinder=null
             isBound = false
         }
@@ -64,9 +66,12 @@ object StartRoutineServiceManager {
     fun unbind(){
 
 
+
         if(isBound){
 
             LiftLogApp.contex.unbindService(serviceConnection)
+            routineName=""
+            totalExercises=0
             serviceBinder=null
             service=null
             isBound=false
@@ -74,10 +79,11 @@ object StartRoutineServiceManager {
     }
 
     fun setState(state:StartRoutineScreenState){
-        service?.let {
-            it.setLog(state)
-            routineName = state.routine?.name?:""
-            totalExercises=state.exercisesLog.size
+
+        this@StartRoutineServiceManager.routineName = state.routine?.name?:""
+        this@StartRoutineServiceManager.totalExercises=state.workouts.size
+        service?.apply {
+            setLog(state)
         }
     }
 
@@ -111,7 +117,6 @@ object StartRoutineServiceManager {
     }
 
     fun stopService(){
-
 
         unbind()
         LiftLogApp.contex.stopService(Intent(LiftLogApp.contex, StartRoutineService::class.java))

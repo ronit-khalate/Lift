@@ -1,7 +1,7 @@
 package com.ronit.liftlog.routine_feature.domain.repository
 
-import com.ronit.liftlog.core.data.model.Exercise
-import com.ronit.liftlog.core.data.model.Routine
+import com.ronit.liftlog.core.data.model.entity.Exercise
+import com.ronit.liftlog.core.data.model.entity.Routine
 import com.ronit.liftlog.routine_feature.presntation.routine.state.RoutineScreenState
 import io.realm.kotlin.notifications.ListChange
 import io.realm.kotlin.notifications.SingleQueryChange

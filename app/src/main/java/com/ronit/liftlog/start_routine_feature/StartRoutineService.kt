@@ -60,10 +60,6 @@ class StartRoutineService:Service() {
         return binder
     }
 
-    var num=0;
-
-
-
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
@@ -90,8 +86,6 @@ class StartRoutineService:Service() {
         super.onDestroy()
 
         coroutineScope.cancel()
-
-       stopSelf()
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
@@ -107,9 +101,6 @@ class StartRoutineService:Service() {
         return super.onUnbind(intent)
 
     }
-
-
-
 
 
     inner class LocalBinder: Binder(){

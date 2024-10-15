@@ -1,6 +1,6 @@
 package com.ronit.liftlog.routine_feature.domain.repository
 
-import com.ronit.liftlog.core.data.model.Routine
+import com.ronit.liftlog.core.data.model.entity.Routine
 import kotlinx.coroutines.flow.Flow
 
 interface RoutineListRepository {

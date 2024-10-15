@@ -68,7 +68,7 @@ fun RoutineListScreen(
 
 
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .padding(paddingValues)
                 .fillMaxSize()
 
@@ -89,8 +89,7 @@ fun RoutineListScreen(
                 Text(
                     modifier = Modifier,
                     text = "Routines",
-                    style = MaterialTheme.typography.displaySmall,
-                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold),
                     color = primaryText
                 )
 
@@ -118,7 +117,7 @@ fun RoutineListScreen(
 
                 LazyColumn(
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(start = 16.dp , end = 16.dp)
                         .fillMaxSize()
                 ) {
 
@@ -134,7 +133,7 @@ fun RoutineListScreen(
                                 RoutineCard(
 
                                     routineName = it.name,
-                                    exerciseCount = it.exercise.size,
+                                    exerciseCount = it.exerciseIds.size,
                                     onCardClick = { onCardClicked(it._id.toHexString()) },
                                     onStartNowClick = {
                                         onStartRoutineClicked(
@@ -147,7 +146,7 @@ fun RoutineListScreen(
                         )
 
 
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
 
                 }

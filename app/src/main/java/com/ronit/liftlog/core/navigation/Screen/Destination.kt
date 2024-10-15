@@ -8,7 +8,7 @@ sealed class Screens(val route:String ){
 
     data object ProfileScreen:Screens("profileScreen")
     data object LogScreen:Screens("LogScreen")
-    data object StartScreen:Screens("startScreen")
+    data object StatScreen:Screens("statScreen")
     data object RoutineListScreen:Screens("routineListScreen")
 
      data object RoutineScreen:Screens("routineScreen/{routineID}"){
@@ -64,4 +64,8 @@ sealed class Screens(val route:String ){
 
 
 }
+
+
+
+val highLevelDestinations = listOf(Screens.ProfileScreen,Screens.LogScreen,Screens.RoutineListScreen,Screens.StatScreen)
 
