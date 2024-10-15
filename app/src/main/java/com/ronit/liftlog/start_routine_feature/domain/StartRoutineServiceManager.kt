@@ -81,7 +81,7 @@ object StartRoutineServiceManager {
     fun setState(state:StartRoutineScreenState){
 
         this@StartRoutineServiceManager.routineName = state.routine?.name?:""
-        this@StartRoutineServiceManager.totalExercises=state.exercisesLog.size
+        this@StartRoutineServiceManager.totalExercises=state.workouts.size
         service?.apply {
             setLog(state)
         }

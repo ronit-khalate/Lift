@@ -133,7 +133,7 @@ fun RoutineListScreen(
                                 RoutineCard(
 
                                     routineName = it.name,
-                                    exerciseCount = it.exercise.size,
+                                    exerciseCount = it.exerciseIds.size,
                                     onCardClick = { onCardClicked(it._id.toHexString()) },
                                     onStartNowClick = {
                                         onStartRoutineClicked(

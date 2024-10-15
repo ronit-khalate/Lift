@@ -112,15 +112,15 @@ fun LogScreen(
 
             ) {
 
-                items(items = state.specificDateLog ){
+                items(items = state.specificDateLog ){log->
                     SwipeToDeleteContainer(
 
-                        onDelete = { onEvent(LogScreenUiEvent.OnDeleteLog(it)) },
+                        onDelete = { onEvent(LogScreenUiEvent.OnDeleteLog(log)) },
                         dialogTitleText = "This action cannot be undone",
                         dialogTextText = "Are you sure you want to delete this Log?",
                         content = {
                             RoutineLogCard(
-                                log = it,
+                                log = log,
                                 onClick = {}
                             )
                         }

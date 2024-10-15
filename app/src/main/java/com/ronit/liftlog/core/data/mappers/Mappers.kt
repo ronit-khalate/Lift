@@ -40,17 +40,6 @@ fun ExerciseDto.toExercise(): Exercise {
 }
 
 
-fun Routine.toRoutineDto():RoutineDto{
-
-    return  RoutineDto(
-        _id = this._id.toHexString(),
-        name = this.name,
-        exercise = this.exercise.map {
-            it.toExerciseDto()
-        },
-        date = this.date.toString()
-    )
-}
 
 fun ExerciseItemResponse.toExercise():Exercise{
 

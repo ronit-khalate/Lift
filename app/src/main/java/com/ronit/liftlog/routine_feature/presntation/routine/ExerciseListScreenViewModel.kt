@@ -67,7 +67,7 @@ class ExerciseListScreenViewModel @AssistedInject constructor(
                 launch {
 
                     selectedExercises = mutableStateListOf(
-                        *exerciseListScreenRepository.getAllRoutinesExercises(routineId)
+                       * exerciseListScreenRepository.getAllRoutinesExercises(routineId).toTypedArray()
                     )
                 }
             }

@@ -10,13 +10,10 @@ class Log: RealmObject {
 
 
     var _id:ObjectId = ObjectId()
-    var routineName: String =""
-    var routineId:ObjectId?=null
+    var routine:Routine?=null
     var startTime:RealmInstant = RealmInstant.now()
     var endTime:RealmInstant?=null
     var date:Long = 0L
-    var bodyWeight:Float=0.0f
-
-    var exercisesLog:RealmList<ExerciseLog> = realmListOf()
+    var workouts:RealmList<Workout> = realmListOf()
 
 }

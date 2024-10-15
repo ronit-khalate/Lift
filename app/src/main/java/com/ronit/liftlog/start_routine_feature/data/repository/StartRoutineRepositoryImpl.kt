@@ -9,12 +9,14 @@ import com.ronit.liftlog.core.data.model.entity.Log
 import com.ronit.liftlog.core.data.model.entity.Routine
 import com.ronit.liftlog.core.data.model.entity.Set
 import com.ronit.liftlog.core.domain.RealmResponse
+import com.ronit.liftlog.core.domain.toEpochMillis
 import com.ronit.liftlog.start_routine_feature.domain.repository.StartRoutineRepository
 import com.ronit.liftlog.start_routine_feature.presentation.state.StartRoutineScreenState
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.types.RealmInstant
 import org.mongodb.kbson.ObjectId
+import java.time.LocalDate
 import javax.inject.Inject
 
 
@@ -69,48 +71,59 @@ class StartRoutineRepositoryImpl @Inject constructor(
 
                 val log = Log().apply {
 
-                    val exLogList :List<ExerciseLog> = state.exercisesLog.map{ exercisesLogDto->
-
-                       ExerciseLog().apply {
-
-                           this.exercise = query<Exercise>("_id == $0" , ObjectId(exercisesLogDto.exerciseID)).find().firstOrNull()
-                           this.setList = exercisesLogDto.setList.mapIf(
-                               predicate = {it.weight.isNotBlank() && it.repetitions.isNotBlank()}
-                           ) {
-
-                                   Set().apply {
-                                       this.exercise = query<Exercise>(
-                                           "_id == $0",
-                                           ObjectId(it.exerciseId)
-                                       ).find().firstOrNull()
-                                       this.weight = it.weight
-                                       this.setNo = it.setNo
-                                       this.repetitions = it.repetitions
-                                       this.notes = it.notes
-                                   }
-
-
-                           }.toRealmList()
-                       }
-
-                    }
-
-                    this.exercisesLog.addAll(exLogList)
-
-
-
-                    this.routineId = state.routine?._id
-                    this.routineName = state.routine?.name ?: ""
-                    this.bodyWeight = try {
-                        state.bodyWeight.toFloat()
-                    } catch (e: Exception) {
-                        0.0F
-                    }
-
-                    this.date = state.date
+                    this.routine = state.routine?.let { findLatest(state.routine)}
+                    this.workouts = state.workouts.toRealmList()
                     this.endTime = RealmInstant.now()
+                    this.date = LocalDate.now().toEpochMillis()
+
+
+//                    val exLogList :List<ExerciseLog> = state.exercisesLog.map{ exercisesLogDto->
+//
+//                       ExerciseLog().apply {
+//
+//                           this.exercise = query<Exercise>("_id == $0" , ObjectId(exercisesLogDto.exerciseID)).find().firstOrNull()
+//                           this.setList = exercisesLogDto.setList.mapIf(
+//                               predicate = {it.weight.isNotBlank() && it.repetitions.isNotBlank()}
+//                           ) {
+//
+//                                   Set().apply {
+//                                       this.exercise = query<Exercise>(
+//                                           "_id == $0",
+//                                           ObjectId(it.exerciseId)
+//                                       ).find().firstOrNull()
+//                                       this.weight = it.weight
+//                                       this.setNo = it.setNo
+//                                       this.repetitions = it.repetitions
+//                                       this.notes = it.notes
+//                                   }
+//
+//
+//                           }.toRealmList()
+//                       }
+//
+//                    }
+//
+//                    this.exercisesLog.addAll(exLogList)
+
+
+
+//                    this.routineId = state.routine?._id
+//                    this.routineName = state.routine?.name ?: ""
+//                    this.bodyWeight = try {
+//                        state.bodyWeight.toFloat()
+//                    } catch (e: Exception) {
+//                        0.0F
+//                    }
+//
+//                    this.date = state.date
+//                    this.endTime = RealmInstant.now()
                 }
 
+
+                state.workouts.forEach {
+
+                    copyToRealm(it)
+                }
 
                 copyToRealm(log)
             }

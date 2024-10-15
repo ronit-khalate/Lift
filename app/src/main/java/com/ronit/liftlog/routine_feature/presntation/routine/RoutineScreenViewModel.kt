@@ -60,7 +60,7 @@ class RoutineScreenViewModel @AssistedInject constructor(
                         routineId = changes.obj._id,
                         routineName = changes.obj.name,
                         note = changes.obj.note,
-                        exerciseList = listOf(*changes.obj.exercise.toTypedArray())
+                        exerciseList = exerciseRepositoryImpl.getExercises(changes.obj.exerciseIds.toList())
                      )
                   }
                   is DeletedObject -> TODO()
@@ -70,7 +70,7 @@ class RoutineScreenViewModel @AssistedInject constructor(
                         routineId = changes.obj._id,
                         routineName = changes.obj.name,
                         note = changes.obj.note,
-                        exerciseList = listOf(*changes.obj.exercise.toTypedArray())
+                        exerciseList = exerciseRepositoryImpl.getExercises(changes.obj.exerciseIds.toList())
                      )
                   }
                   is PendingObject -> TODO()
@@ -82,18 +82,18 @@ class RoutineScreenViewModel @AssistedInject constructor(
          }
          viewModelScope.launch {
 
-            routineDetailRepositoryImpl.getExerciseChangeNotification(ObjectId(id)).collect{changes->
-
-               when(changes){
-                  is DeletedList -> TODO()
-                  is InitialList -> {}
-                  is UpdatedList -> {
-                     state=state.copy(
-                        exerciseList = changes.list
-                     )
-                  }
-               }
-            }
+//            routineDetailRepositoryImpl.getExerciseChangeNotification(ObjectId(id)).collect{changes->
+//
+//               when(changes){
+//                  is DeletedList -> TODO()
+//                  is InitialList -> {}
+//                  is UpdatedList -> {
+//                     state=state.copy(
+//                        exerciseList = changes.list
+//                     )
+//                  }
+//               }
+//            }
 
          }
       }
