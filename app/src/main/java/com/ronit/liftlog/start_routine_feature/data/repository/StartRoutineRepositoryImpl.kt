@@ -68,6 +68,9 @@ class StartRoutineRepositoryImpl @Inject constructor(
         return try {
 
 
+            /**
+             * remove empty sets
+             * */
             for(workoutIdx in state.workouts.indices){
 
 

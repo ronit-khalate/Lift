@@ -92,6 +92,7 @@ class StartRoutineViewModel @AssistedInject constructor(
                                                         this.setNo= it.setNo
                                                         this.previousWeight = it.weight
                                                         this.previousRepetitions =it.repetitions
+                                                        this.previousNote = it.notes
                                                     }
                                                 }.toTypedArray()
                                         )
