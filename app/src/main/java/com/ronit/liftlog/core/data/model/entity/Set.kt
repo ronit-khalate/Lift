@@ -17,6 +17,10 @@ class Set:EmbeddedRealmObject {
     var repetitions:String =""
     var notes:String=""
 
+    var previousWeight:String=""
+    var previousRepetitions:String=""
+    var previousNote:String =""
+
 
 
     fun copyData(
@@ -33,7 +37,17 @@ class Set:EmbeddedRealmObject {
             this.weight =weight
             this.repetitions = repetitions
             this.notes = notes
+            this.previousWeight = this@Set.previousWeight
+            this.previousRepetitions = this@Set.previousRepetitions
+            this.previousNote = this@Set.notes
         }
+    }
+
+
+    fun isEmpty():Boolean{
+
+
+        return this.repetitions.isNotBlank() || this.weight.isNotBlank() || this.notes.isNotBlank()
     }
 
 

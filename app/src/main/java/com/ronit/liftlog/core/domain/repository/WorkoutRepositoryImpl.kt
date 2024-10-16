@@ -31,7 +31,8 @@ class WorkoutRepositoryImpl @Inject constructor(
 
     override suspend fun getLatestWorkoutOfExercise(exerciseId: ObjectId): Workout? {
 
-        return realm.query<Workout>("exerciseId == $0", exerciseId).find().maxByOrNull { it.startDateTime }
+        val workout =realm.query<Workout>("exerciseId == $0", exerciseId).find().maxByOrNull { it.startDateTime }
+        return workout
     }
 
     override suspend fun getLatestWorkoutsOfExercises(exerciseIds: List<ObjectId>): List<Workout> {

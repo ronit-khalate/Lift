@@ -70,7 +70,7 @@ fun ExerciseSetLogCard(
 
 
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .clip(RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp))
@@ -134,13 +134,12 @@ fun ExerciseSetLogCard(
 
                 // Data
 
-                workout.sets.forEachIndexed { index, setPair ->
+                workout.sets.forEachIndexed { index, set ->
 
 
                     ExerciseSetLogData(
-                        set = setPair,
-//                        previousSet = setPair.second,
-                        index = index + 1,
+                        set = set,
+                        index = set.setNo,
                         workoutId = workout._id,
                         updateWeight = updateWeight,
                         updateReps = updateReps,
@@ -344,7 +343,6 @@ private fun ExerciseSetLogData(
     updateReps: (id: ObjectId, workoutId: ObjectId, data: String) -> Unit,
     updateNotes: (id: ObjectId, workoutId: ObjectId, data: String) -> Unit,
     set: Set,
-//    previousSet:Set,
     index: Int
 ) {
 
@@ -382,7 +380,7 @@ private fun ExerciseSetLogData(
 
                     Text(
                         modifier = Modifier,
-                        text = index.toString(),
+                        text = set.setNo.toString(),
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText),
                     )
 
@@ -427,7 +425,7 @@ private fun ExerciseSetLogData(
                                 if(set.weight.isBlank()){
 
                                     Text(
-                                        text = "0",
+                                        text = set.previousWeight.ifBlank { "0" },
                                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = body),
 
                                     )
@@ -467,7 +465,7 @@ private fun ExerciseSetLogData(
                         textStyle = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true,
-                        value = set.repetitions.toString(),
+                        value = set.repetitions,
                         onValueChange = {updateReps(set._id,workoutId,it)},
                         cursorBrush = SolidColor(primaryText),
 
@@ -481,7 +479,7 @@ private fun ExerciseSetLogData(
                                 if(set.repetitions.isBlank()){
 
                                     Text(
-                                        text =  "0" ,
+                                        text =  set.previousRepetitions.ifBlank { "0" } ,
                                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = body),
 
                                         )
@@ -525,7 +523,7 @@ private fun ExerciseSetLogData(
                             if(set.notes.isBlank()){
 
                                 Text(
-                                    text = "",
+                                    text = set.previousNote,
                                     style = TextStyle(color = body , fontSize = 10.sp)
                                 )
                             }

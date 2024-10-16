@@ -25,6 +25,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.realm.kotlin.ext.realmListOf
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
 import java.time.LocalDate
@@ -78,24 +79,29 @@ class StartRoutineViewModel @AssistedInject constructor(
                             date = LocalDate.now().toEpochMillis(),
                             workouts = exerciseRepo.getExercises(response.data.exerciseIds)
                                 .map {exercise ->
+
+                                    val prevSet =workoutRepo.getLatestWorkoutOfExercise(exercise._id)?.sets?: emptyList()
                                     Workout().apply {
+                                        this.exerciseId = exercise._id
+
+//                                        this.previousSets =
+                                        this.sets =  realmListOf(
+
+                                                *prevSet.map {
+                                                    Set().apply {
+                                                        this.setNo= it.setNo
+                                                        this.previousWeight = it.weight
+                                                        this.previousRepetitions =it.repetitions
+                                                    }
+                                                }.toTypedArray()
+                                        )
                                         this.exerciseName = exercise.name
-                                        this.previousSets = workoutRepo.getLatestWorkoutOfExercise(exercise._id)?.sets?: emptyList()
+
+
                                     }
                                 }
                                 .toMutableStateList()
 
-
-//                                .map {
-//
-//                                ExerciseLogDto(
-//                                    exerciseID = it._id.toHexString(),
-//                                    name = it.name,
-//                                    muscleGroup = it.muscleGroup?:"",
-//                                    note = ""
-//
-//
-//                                )
 
                         )
                         StartRoutineServiceManager.setState(state)
@@ -112,61 +118,6 @@ class StartRoutineViewModel @AssistedInject constructor(
 
     }
 
-//    init {
-//
-//        if (!StartRoutineServiceManager.isRunning) {
-//
-//
-//            viewModelScope.launch {
-//
-//                when (val response = startRoutineRepo.getLastLogOfRoutineOrNull(
-//                    routineId = ObjectId(routineID)
-//                )) {
-//                    is RealmResponse.Error -> {
-//
-//                        Log.d(TAG,response.error.message.toString())
-//                    }
-//                    is RealmResponse.Success -> {
-//
-//
-//                        val previousExerciseLog = response.data?.exercisesLog
-//                        val currentExerciseLog = state.exercisesLog
-//
-//                        if(previousExerciseLog != null) {
-//
-//
-//                            currentExerciseLog.zip(previousExerciseLog).forEach { pair: Pair<ExerciseLogDto, ExerciseLog> ->
-//
-//
-//                                pair.second.setList.sortedBy { it.setNo }.forEach {preSet: Set ->
-//
-//                                    pair.first.setList.add(
-//                                        SetDto(
-//                                            setNo = preSet.setNo,
-//                                            exerciseId = pair.first.exerciseID,
-//                                            prevWeight = preSet.weight,
-//                                            prevRepetitions = preSet.repetitions,
-//                                            prevNotes = preSet.notes
-//                                        )
-//                                    )
-//                                }
-//
-//
-//                            }
-//                        }
-//
-//                        response.data?.let {
-//                            state = state.copy(
-//                                lastLog = it.exercisesLog
-//                            )
-//                        }
-//
-//                    }
-//                }
-//            }
-//        }
-//    }
-
     // Service Binding
     init {
 
@@ -179,14 +130,6 @@ class StartRoutineViewModel @AssistedInject constructor(
 
 
     }
-
-    // get last Routine Log
-
-
-
-
-
-
 
 
     fun onEvent(event:StartRoutineScreenEvent){
@@ -261,27 +204,6 @@ class StartRoutineViewModel @AssistedInject constructor(
         }
 
 
-
-//        val exLogIndex = state.exercisesLog.indexOfFirst { it.id.toHexString()== exLogId }
-//
-//        if (exLogIndex != -1){
-//
-//            val exLog = state.exercisesLog[exLogIndex]
-//
-//            val setToBeUpdatedIndex = exLog.setList.indexOfFirst { it.id.toHexString() == setId }
-//
-//
-//            if(setToBeUpdatedIndex != -1){
-//
-//                var setToBeUpdated = exLog.setList[setToBeUpdatedIndex]
-//                setToBeUpdated = setToBeUpdated.update(data)
-//
-//                exLog.setList[setToBeUpdatedIndex] = setToBeUpdated
-//            }
-//
-//            state.exercisesLog[exLogIndex] =exLog.copy()
-//        }
-
     }
 
 
@@ -295,23 +217,6 @@ class StartRoutineViewModel @AssistedInject constructor(
             state.workouts[indexOfWorkout]=state.workouts[indexOfWorkout].addSet()
         }
 
-//        val exLogIndex = state.exercisesLog.indexOfFirst { it.id.toHexString()== id }
-//
-//
-//        if(exLogIndex != -1) {
-//
-//
-//            val exLogToUpdate = state.exercisesLog[exLogIndex]
-//
-//            exLogToUpdate.setList.add(
-//                SetDto(
-//                    exerciseId = exLogToUpdate.exerciseID,
-//                )
-//            )
-//            state.exercisesLog[exLogIndex] = exLogToUpdate.copy(setList = exLogToUpdate.setList)
-//
-//
-//            state = state.copy(exercisesLog = state.exercisesLog)
 
 
     }
