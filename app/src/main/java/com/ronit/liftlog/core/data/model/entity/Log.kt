@@ -11,6 +11,7 @@ class Log: RealmObject {
 
     var _id:ObjectId = ObjectId()
     var routine:Routine?=null
+    var routineName:String=""
     var startTime:RealmInstant = RealmInstant.now()
     var endTime:RealmInstant?=null
     var date:Long = 0L

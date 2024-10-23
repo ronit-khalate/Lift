@@ -46,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.ronit.liftlog.core.domain.rememberImeState
 import com.ronit.liftlog.core.presentation.component.ThreeSectionTopBar
 import com.ronit.liftlog.start_routine_feature.presentation.components.ExerciseSetLogCard
 import com.ronit.liftlog.start_routine_feature.presentation.event.StartRoutineScreenEvent
@@ -81,15 +80,15 @@ fun StartRoutineScreen(
         }
     }
 
-    val imeState = rememberImeState()
+//    val imeState = rememberImeState()
 
-    LaunchedEffect(imeState.value) {
-
-        if(imeState.value){
-            lazyListState.animateScrollToItem(uiState.exercisesLog.size+3)
-        }
-
-    }
+//    LaunchedEffect(imeState.value) {
+//
+//        if(imeState.value){
+////            lazyListState.animateScrollToItem(uiState.workouts.size)
+//        }
+//
+//    }
 
 
     Scaffold(
@@ -173,7 +172,9 @@ fun StartRoutineScreen(
 
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .imePadding(),
+
                 state = lazyListState
             ) {
 

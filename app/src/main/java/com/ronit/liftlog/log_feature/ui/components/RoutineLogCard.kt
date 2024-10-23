@@ -51,7 +51,7 @@ fun RoutineLogCard(
                 ) {
                     Text(
 
-                        text = log.routine?.name?:"",
+                        text = log.routineName,
                         style = MaterialTheme.typography.headlineSmall,
                         color = primaryText
                     )

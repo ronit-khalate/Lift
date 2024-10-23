@@ -88,6 +88,7 @@ class StartRoutineRepositoryImpl @Inject constructor(
                 val log = Log().apply {
 
                     this.routine = state.routine?.let { findLatest(state.routine)}
+                    this.routineName = state.routine?.name?:""
                     this.workouts =filteredWorkouts.toRealmList()
                     this.endTime = RealmInstant.now()
                     this.date = LocalDate.now().toEpochMillis()
