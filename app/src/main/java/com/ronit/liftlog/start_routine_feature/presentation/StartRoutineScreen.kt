@@ -55,6 +55,7 @@ import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.body
 import com.ronit.liftlog.ui.theme.primary
 import com.ronit.liftlog.ui.theme.primaryText
+import org.mongodb.kbson.ObjectId
 
 @Composable
 fun StartRoutineScreen(
@@ -212,14 +213,14 @@ fun StartRoutineScreen(
                 }
 
 
-                items(items = uiState.exercisesLog, key = {it.id.toHexString()}) {exerciseLog->
+                items(items = uiState.workouts, key = {it._id.toHexString()}) {workout->
 
 
 
 
 
                         ExerciseSetLogCard(
-                            exerciseLog = exerciseLog,
+                            workout = workout,
                             onAddSetBtnClick = {
                                 onEvent(
                                     StartRoutineScreenEvent.OnAddSetInExerciseLog(
@@ -227,33 +228,33 @@ fun StartRoutineScreen(
                                     )
                                 )
                             },
-                            updateWeight = { id: String, exLogId, data: String ->
+                            updateWeight = { setId: ObjectId, workoutId:ObjectId, data: String ->
 
                                 onEvent(
                                     StartRoutineScreenEvent.OnUpdateWeight(
-                                        id = id,
+                                        setId = setId,
                                         data = data,
-                                        exLogId = exLogId
+                                        workoutId = workoutId
                                     )
                                 )
                             },
-                            updateReps = { id: String, exLogId, data: String ->
+                            updateReps = { setId: ObjectId, workoutId:ObjectId, data: String ->
 
                                 onEvent(
                                     StartRoutineScreenEvent.OnUpdateReps(
-                                        id = id,
+                                        setId = setId,
                                         data = data,
-                                        exLogId = exLogId
+                                        workoutId = workoutId
                                     )
                                 )
 
                             },
-                            updateNotes = { id: String, exLogId, data: String ->
+                            updateNotes = { setId: ObjectId, workoutId:ObjectId, data: String ->
                                 onEvent(
                                     StartRoutineScreenEvent.OnUpdateNotes(
-                                        id = id,
+                                        setId = setId,
                                         data = data,
-                                        exLogId = exLogId
+                                        workoutId = workoutId
                                     )
                                 )
                             }

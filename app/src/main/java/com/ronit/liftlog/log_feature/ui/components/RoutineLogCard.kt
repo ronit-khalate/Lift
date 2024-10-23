@@ -13,13 +13,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ronit.liftlog.core.data.model.entity.Exercise
-import com.ronit.liftlog.core.data.model.entity.ExerciseLog
 import com.ronit.liftlog.core.data.model.entity.Log
 import com.ronit.liftlog.core.data.model.entity.Set
+import com.ronit.liftlog.core.data.model.entity.Workout
 import com.ronit.liftlog.ui.theme.neutral
 import com.ronit.liftlog.ui.theme.primaryText
 import io.realm.kotlin.ext.realmListOf
@@ -34,7 +32,7 @@ fun RoutineLogCard(
         Card(
             modifier = modifier
                 .fillMaxWidth()
-                .clickable { onClick(log.routineId?.toHexString()) },
+                .clickable { onClick(log.routine?._id?.toHexString()) },
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(containerColor = neutral)
         ) {
@@ -53,7 +51,7 @@ fun RoutineLogCard(
                 ) {
                     Text(
 
-                        text = log.routineName,
+                        text = log.routine?.name?:"",
                         style = MaterialTheme.typography.headlineSmall,
                         color = primaryText
                     )
@@ -67,11 +65,11 @@ fun RoutineLogCard(
                 ) {
 
 
-                    for (exerciseLog in log.exercisesLog){
+                    for (workout in log.workouts){
 
                         Text(
                             modifier = Modifier.padding(vertical = 2.dp),
-                            text = "${exerciseLog.setList.size} x ${exerciseLog.exercise?.name}",
+                            text = "${workout.sets.size} x ${workout.exerciseName}",
                             color = primaryText,
                             style = MaterialTheme.typography.labelSmall
                         )
@@ -89,41 +87,19 @@ private fun RoutineLogCardPreview() {
     RoutineLogCard(
         log = Log().apply {
 
-            this.routineName = "Chest"
-            this.exercisesLog = realmListOf(
+            this.workouts = realmListOf(
 
-                ExerciseLog().apply {
-                    this.exercise = Exercise()
-                        .apply {
-                            this.name ="Bench Press"
-                        }
+                Workout().apply {
 
-                    this.setList = realmListOf(Set(), Set())
+                    this.sets  = realmListOf(Set())
+                    this.exerciseName = "XYZ"
                 },
-                ExerciseLog().apply {
-                    this.exercise = Exercise()
-                        .apply {
-                            this.name ="Bench Press"
-                        }
+                Workout().apply {
 
-                    this.setList = realmListOf(Set(), Set())
+                    this.sets  = realmListOf(Set())
+                    this.exerciseName = "XYZ"
                 },
-                ExerciseLog().apply {
-                    this.exercise = Exercise()
-                        .apply {
-                            this.name ="Bench Press"
-                        }
 
-                    this.setList = realmListOf(Set(), Set())
-                },
-                ExerciseLog().apply {
-                    this.exercise = Exercise()
-                        .apply {
-                            this.name ="Bench Press"
-                        }
-
-                    this.setList = realmListOf(Set(), Set())
-                },
             )
         },
         onClick = {}

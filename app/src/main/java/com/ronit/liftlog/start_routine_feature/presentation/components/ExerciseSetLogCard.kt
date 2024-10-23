@@ -25,7 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,25 +42,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ronit.liftlog.R
+import com.ronit.liftlog.core.data.model.entity.Set
+import com.ronit.liftlog.core.data.model.entity.Workout
 import com.ronit.liftlog.routine_feature.presntation.routine.components.SelectedIdentifier
-import com.ronit.liftlog.start_routine_feature.data.model.ExerciseLogDto
-import com.ronit.liftlog.start_routine_feature.data.model.SetDto
 import com.ronit.liftlog.ui.theme.black
 import com.ronit.liftlog.ui.theme.body
 import com.ronit.liftlog.ui.theme.neutral
 import com.ronit.liftlog.ui.theme.primary
 import com.ronit.liftlog.ui.theme.primaryText
 import com.ronit.liftlog.ui.theme.tertiary
+import org.mongodb.kbson.ObjectId
 
 
 @Composable
 fun ExerciseSetLogCard(
     modifier: Modifier = Modifier,
-    exerciseLog:ExerciseLogDto,
-    onAddSetBtnClick:(id:String)->Unit,
-    updateWeight: (id:String,exLogId:String,data:String)->Unit,
-    updateReps: (id:String,exLogId:String,data:String)->Unit,
-    updateNotes: (id:String,exLogId:String,data:String)->Unit,
+    workout: Workout,
+    onAddSetBtnClick:(workoutId:String)->Unit,
+    updateWeight: (setId:ObjectId,workoutId: ObjectId,data:String)->Unit,
+    updateReps: (setId:ObjectId,workoutId: ObjectId,data:String)->Unit,
+    updateNotes: (setId:ObjectId,workoutId: ObjectId,data:String)->Unit,
 ) {
 
 
@@ -70,7 +70,7 @@ fun ExerciseSetLogCard(
 
 
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .clip(RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp))
@@ -111,7 +111,7 @@ fun ExerciseSetLogCard(
 
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = "${exerciseLog.name}",
+                            text = workout.exerciseName,
                             color = primaryText,
                             style = MaterialTheme.typography.titleMedium
                         )
@@ -134,13 +134,13 @@ fun ExerciseSetLogCard(
 
                 // Data
 
-                exerciseLog.setList.forEachIndexed { index, set ->
+                workout.sets.forEachIndexed { index, set ->
 
 
                     ExerciseSetLogData(
                         set = set,
-                        exId = exerciseLog.id.toHexString(),
-                        index = index + 1,
+                        index = set.setNo,
+                        workoutId = workout._id,
                         updateWeight = updateWeight,
                         updateReps = updateReps,
                         updateNotes = updateNotes
@@ -168,7 +168,7 @@ fun ExerciseSetLogCard(
 
 
                 TextButton(
-                    onClick ={onAddSetBtnClick(exerciseLog.id.toHexString())}
+                    onClick ={onAddSetBtnClick(workout._id.toHexString())}
                 ) {
                     Text(
                         text = "Add Set",
@@ -338,11 +338,11 @@ private fun ExerciseSetLogCardHeader(
 @Composable
 private fun ExerciseSetLogData(
     modifier: Modifier = Modifier,
-    updateWeight: (id: String,exLogId:String, data: String) -> Unit,
-    updateReps: (id: String, exLogId: String, data: String) -> Unit,
-    updateNotes: (id: String, exLogId: String, data: String) -> Unit,
-    exId:String,
-    set: SetDto,
+    workoutId:ObjectId,
+    updateWeight: (id: ObjectId,workoutId: ObjectId, data: String) -> Unit,
+    updateReps: (id: ObjectId, workoutId: ObjectId, data: String) -> Unit,
+    updateNotes: (id: ObjectId, workoutId: ObjectId, data: String) -> Unit,
+    set: Set,
     index: Int
 ) {
 
@@ -380,7 +380,7 @@ private fun ExerciseSetLogData(
 
                     Text(
                         modifier = Modifier,
-                        text = index.toString(),
+                        text = set.setNo.toString(),
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText),
                     )
 
@@ -413,7 +413,7 @@ private fun ExerciseSetLogData(
                         value = if(set.weight=="0.0") "" else set.weight,
                         singleLine = true,
                         cursorBrush = SolidColor(primaryText),
-                        onValueChange = { updateWeight(set.id.toHexString(),exId,it) },
+                        onValueChange = { updateWeight(set._id,workoutId,it) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                         keyboardActions = KeyboardActions(onNext = {repsTextFieldFocusRequester.requestFocus()}),
                         decorationBox = {
@@ -425,7 +425,7 @@ private fun ExerciseSetLogData(
                                 if(set.weight.isBlank()){
 
                                     Text(
-                                        text = set.prevWeight.ifBlank { "0" },
+                                        text = set.previousWeight.ifBlank { "0" },
                                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = body),
 
                                     )
@@ -465,8 +465,8 @@ private fun ExerciseSetLogData(
                         textStyle = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true,
-                        value = set.repetitions.toString(),
-                        onValueChange = {updateReps(set.id.toHexString(),exId,it)},
+                        value = set.repetitions,
+                        onValueChange = {updateReps(set._id,workoutId,it)},
                         cursorBrush = SolidColor(primaryText),
 
                         decorationBox = {
@@ -479,7 +479,7 @@ private fun ExerciseSetLogData(
                                 if(set.repetitions.isBlank()){
 
                                     Text(
-                                        text = set.prevRepetitions.ifBlank { "0" },
+                                        text =  set.previousRepetitions.ifBlank { "0" } ,
                                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = body),
 
                                         )
@@ -511,7 +511,7 @@ private fun ExerciseSetLogData(
                     textStyle = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold , color = primaryText),
 
                     value = set.notes,
-                    onValueChange = {updateNotes(set.id.toHexString(),exId , it)},
+                    onValueChange = {updateNotes(set._id,workoutId , it)},
                     cursorBrush = SolidColor(primaryText),
 
                     decorationBox = {
@@ -523,7 +523,7 @@ private fun ExerciseSetLogData(
                             if(set.notes.isBlank()){
 
                                 Text(
-                                    text = set.prevNotes,
+                                    text = set.previousNote,
                                     style = TextStyle(color = body , fontSize = 10.sp)
                                 )
                             }
@@ -555,23 +555,24 @@ val b = black.toArgb().toLong()
 @Composable
 private fun ExerciseSetLogCardPreview() {
 
-    ExerciseSetLogCard(
-        exerciseLog = ExerciseLogDto(
-            exerciseID = "",
-            name = "Chest",
-            note = "",
-            muscleGroup = "asd",
-            setList = mutableStateListOf(
-                SetDto(
-                    exerciseId = "",
-
-                )
-            )
-        ),
-        onAddSetBtnClick = {},
-        updateWeight = {id,ex,data ->},
-        updateReps = {id,ex,data ->},
-        updateNotes = {id,ex,data ->},
-
-    )
+//    ExerciseSetLogCard(
+//
+//        exerciseLog = ExerciseLogDto(
+//            exerciseID = "",
+//            name = "Chest",
+//            note = "",
+//            muscleGroup = "asd",
+//            setList = mutableStateListOf(
+//                SetDto(
+//                    exerciseId = "",
+//
+//                )
+//            )
+//        ),
+//        onAddSetBtnClick = {},
+//        updateWeight = {id,ex,data ->},
+//        updateReps = {id,ex,data ->},
+//        updateNotes = {id,ex,data ->},
+//
+//    )
 }

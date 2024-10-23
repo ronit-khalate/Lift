@@ -1,6 +1,7 @@
 package com.ronit.liftlog.start_routine_feature.presentation
 
 import android.util.Log
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,7 +10,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ronit.liftlog.core.data.model.entity.ExerciseLog
 import com.ronit.liftlog.core.data.model.entity.Set
+import com.ronit.liftlog.core.data.model.entity.Workout
 import com.ronit.liftlog.core.domain.RealmResponse
+import com.ronit.liftlog.core.domain.repository.ExerciseRepositoryImpl
+import com.ronit.liftlog.core.domain.repository.WorkoutRepositoryImpl
 import com.ronit.liftlog.core.domain.toEpochMillis
 import com.ronit.liftlog.start_routine_feature.data.model.ExerciseLogDto
 import com.ronit.liftlog.start_routine_feature.data.model.SetDto
@@ -21,6 +25,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.realm.kotlin.ext.realmListOf
 import kotlinx.coroutines.launch
 import org.mongodb.kbson.ObjectId
 import java.time.LocalDate
@@ -29,7 +34,9 @@ import java.time.LocalDate
 class StartRoutineViewModel @AssistedInject constructor(
     @Assisted("routineID") private val routineID:String,
     @Assisted("routineName") val routineName:String,
-    private val startRoutineRepositoryImpl: StartRoutineRepositoryImpl
+    private val startRoutineRepo: StartRoutineRepositoryImpl,
+    private val exerciseRepo:ExerciseRepositoryImpl,
+    private val workoutRepo: WorkoutRepositoryImpl
 ) : ViewModel(){
 
 
@@ -59,7 +66,7 @@ class StartRoutineViewModel @AssistedInject constructor(
             else {
 
 
-                when (val response = startRoutineRepositoryImpl.getRoutine(id = ObjectId(hexString = routineID))) {
+                when (val response = startRoutineRepo.getRoutine(id = ObjectId(hexString = routineID))) {
                     is RealmResponse.Error -> {
 
                         Log.d(TAG,response.error.message.toString())
@@ -70,17 +77,33 @@ class StartRoutineViewModel @AssistedInject constructor(
                         state = state.copy(
                             routine = response.data,
                             date = LocalDate.now().toEpochMillis(),
-                            exercisesLog = response.data.exercise.map {
+                            workouts = exerciseRepo.getExercises(response.data.exerciseIds)
+                                .map {exercise ->
 
-                                ExerciseLogDto(
-                                    exerciseID = it._id.toHexString(),
-                                    name = it.name,
-                                    muscleGroup = it.muscleGroup?:"",
-                                    note = ""
+                                    val prevSet =workoutRepo.getLatestWorkoutOfExercise(exercise._id)?.sets?: emptyList()
+                                    Workout().apply {
+                                        this.exerciseId = exercise._id
+
+//                                        this.previousSets =
+                                        this.sets =  realmListOf(
+
+                                                *prevSet.map {
+                                                    Set().apply {
+                                                        this.setNo= it.setNo
+                                                        this.previousWeight = it.weight
+                                                        this.previousRepetitions =it.repetitions
+                                                        this.previousNote = it.notes
+                                                    }
+                                                }.toTypedArray()
+                                        )
+                                        this.exerciseName = exercise.name
 
 
-                                )
-                            }.toMutableStateList()
+                                    }
+                                }
+                                .toMutableStateList()
+
+
                         )
                         StartRoutineServiceManager.setState(state)
                     }
@@ -96,61 +119,6 @@ class StartRoutineViewModel @AssistedInject constructor(
 
     }
 
-    init {
-
-        if (!StartRoutineServiceManager.isRunning) {
-
-
-            viewModelScope.launch {
-
-                when (val response = startRoutineRepositoryImpl.getLastLogOfRoutineOrNull(
-                    routineId = ObjectId(routineID)
-                )) {
-                    is RealmResponse.Error -> {
-
-                        Log.d(TAG,response.error.message.toString())
-                    }
-                    is RealmResponse.Success -> {
-
-
-                        val previousExerciseLog = response.data?.exercisesLog
-                        val currentExerciseLog = state.exercisesLog
-
-                        if(previousExerciseLog != null) {
-
-
-                            currentExerciseLog.zip(previousExerciseLog).forEach { pair: Pair<ExerciseLogDto, ExerciseLog> ->
-
-
-                                pair.second.setList.sortedBy { it.setNo }.forEach {preSet: Set ->
-
-                                    pair.first.setList.add(
-                                        SetDto(
-                                            setNo = preSet.setNo,
-                                            exerciseId = pair.first.exerciseID,
-                                            prevWeight = preSet.weight,
-                                            prevRepetitions = preSet.repetitions,
-                                            prevNotes = preSet.notes
-                                        )
-                                    )
-                                }
-
-
-                            }
-                        }
-
-                        response.data?.let {
-                            state = state.copy(
-                                lastLog = it.exercisesLog
-                            )
-                        }
-
-                    }
-                }
-            }
-        }
-    }
-
     // Service Binding
     init {
 
@@ -163,14 +131,6 @@ class StartRoutineViewModel @AssistedInject constructor(
 
 
     }
-
-    // get last Routine Log
-
-
-
-
-
-
 
 
     fun onEvent(event:StartRoutineScreenEvent){
@@ -185,20 +145,35 @@ class StartRoutineViewModel @AssistedInject constructor(
 
 
 
-                updateSetProperty(event.id,event.data,event.exLogId){
+                updateSetProperty(workoutId = event.workoutId, data = event.data){data->
 
-                    this.copy(weight = it)
+                    this.updateSet(
+                        setId = event.setId,
+                        update = { this.copyData(weight = event.data)}
+                    )
                 }
             }
 
             is StartRoutineScreenEvent.OnUpdateReps -> {
 
-                updateSetProperty(event.id,event.data,event.exLogId){this.copy(repetitions = it)}
+                updateSetProperty(workoutId = event.workoutId, data = event.data){data->
+
+                    this.updateSet(
+                        setId =  event.setId,
+                        update = { this.copyData(repetitions = event.data)}
+                    )
+                }
 
             }
 
             is StartRoutineScreenEvent.OnUpdateNotes -> {
-                updateSetProperty(event.id,event.data,event.exLogId){this.copy(notes = it)}
+                updateSetProperty(workoutId = event.workoutId, data = event.data){data->
+
+                    this.updateSet(
+                        setId = event.setId,
+                        update = {this.copyData(notes = event.data)}
+                    )
+                }
             }
 
             is StartRoutineScreenEvent.OnRoutineFinish -> {
@@ -215,55 +190,42 @@ class StartRoutineViewModel @AssistedInject constructor(
     }
 
 
-    private fun updateSetProperty(setId:String, data:String ,exLogId: String , update: SetDto.(data:String)-> SetDto){
-        val exLogIndex = state.exercisesLog.indexOfFirst { it.id.toHexString()== exLogId }
-
-        if (exLogIndex != -1){
-
-            val exLog = state.exercisesLog[exLogIndex]
-
-            val setToBeUpdatedIndex = exLog.setList.indexOfFirst { it.id.toHexString() == setId }
+    private fun updateSetProperty(workoutId:ObjectId, data:String , update: Workout.(data:String)-> Workout){
 
 
-            if(setToBeUpdatedIndex != -1){
 
-                var setToBeUpdated = exLog.setList[setToBeUpdatedIndex]
-                setToBeUpdated = setToBeUpdated.update(data)
 
-                exLog.setList[setToBeUpdatedIndex] = setToBeUpdated
-            }
+        val idOfWorkoutToBeUpdate = state.workouts.indexOfFirst { it._id == workoutId }
 
-            state.exercisesLog[exLogIndex] =exLog.copy()
+
+
+        if(idOfWorkoutToBeUpdate != -1){
+
+            state.workouts[idOfWorkoutToBeUpdate] = state.workouts[idOfWorkoutToBeUpdate].update(data)
         }
+
+
     }
 
 
-    private fun addSetInExerciseLog(id: String) {
+    private fun addSetInExerciseLog(workoutId: String) {
 
 
-        val exLogIndex = state.exercisesLog.indexOfFirst { it.id.toHexString()== id }
+        val indexOfWorkout = state.workouts.indexOfFirst { it._id.toHexString() == workoutId }
 
 
-        if(exLogIndex != -1) {
-
-
-            val exLogToUpdate = state.exercisesLog[exLogIndex]
-
-            exLogToUpdate.setList.add(
-                SetDto(
-                    exerciseId = exLogToUpdate.exerciseID,
-                )
-            )
-            state.exercisesLog[exLogIndex] = exLogToUpdate.copy(setList = exLogToUpdate.setList)
-
-
-            state = state.copy(exercisesLog = state.exercisesLog)
+        if (indexOfWorkout != -1) {
+            state.workouts[indexOfWorkout]=state.workouts[indexOfWorkout].addSet()
         }
+
+
 
     }
 
 
     // TODO Save state in service
+
+
     override fun onCleared() {
         super.onCleared()
         StartRoutineServiceManager.setState(state)
