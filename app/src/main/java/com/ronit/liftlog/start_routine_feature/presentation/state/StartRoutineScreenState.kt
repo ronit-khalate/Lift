@@ -15,7 +15,8 @@ data class StartRoutineScreenState(
     val endTime: RealmInstant? = null,
     val date:Long=0L,
     val bodyWeight:String="",
+    val previousBodyWeight:String="",
     val workouts: SnapshotStateList<Workout> = mutableStateListOf(),
-
+    val isBodyWeightValid:Boolean =  true,
     val lastLog:List<ExerciseLog>? =null
 )

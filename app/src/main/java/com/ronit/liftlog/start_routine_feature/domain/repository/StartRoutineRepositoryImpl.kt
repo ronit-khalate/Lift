@@ -1,22 +1,22 @@
-package com.ronit.liftlog.start_routine_feature.data.repository
+package com.ronit.liftlog.start_routine_feature.domain.repository
 
 //import com.example.liftlog.core.data.mappers.toLog
-import androidx.core.util.Predicate
 import com.ronit.liftlog.core.data.mappers.toRealmList
-import com.ronit.liftlog.core.data.model.entity.Exercise
-import com.ronit.liftlog.core.data.model.entity.ExerciseLog
+import com.ronit.liftlog.core.data.model.entity.BodyWeight
 import com.ronit.liftlog.core.data.model.entity.Log
 import com.ronit.liftlog.core.data.model.entity.Routine
-import com.ronit.liftlog.core.data.model.entity.Set
 import com.ronit.liftlog.core.domain.RealmResponse
 import com.ronit.liftlog.core.domain.toEpochMillis
-import com.ronit.liftlog.start_routine_feature.domain.repository.StartRoutineRepository
+import com.ronit.liftlog.start_routine_feature.data.repository.StartRoutineRepository
 import com.ronit.liftlog.start_routine_feature.presentation.state.StartRoutineScreenState
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.types.RealmInstant
 import org.mongodb.kbson.ObjectId
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import javax.inject.Inject
 
 
@@ -98,7 +98,15 @@ class StartRoutineRepositoryImpl @Inject constructor(
 
 
 
+                val bodyWeight = BodyWeight().apply {
 
+                    this.weight = state.bodyWeight.toFloat()
+
+                    val instant = Instant.ofEpochSecond(state.startTime.epochSeconds, state.startTime.nanosecondsOfSecond.toLong())
+                    this.dateTime = ZonedDateTime.ofInstant(instant,ZoneId.of("UTC")).toEpochSecond()
+                }
+
+                copyToRealm(bodyWeight)
 
                 copyToRealm(log)
             }
@@ -111,18 +119,3 @@ class StartRoutineRepositoryImpl @Inject constructor(
     }
 }
 
-
-inline fun <T, R> Iterable<T>.mapIf(predicate: (T)->Boolean,transform: (T) -> R): List<R> {
-
-    val list = mutableListOf<R>()
-
-    for( element in this){
-
-        if(predicate(element)){
-
-            list.add(transform(element))
-        }
-    }
-
-    return list.toList()
-}

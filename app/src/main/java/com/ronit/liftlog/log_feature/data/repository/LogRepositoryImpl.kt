@@ -1,10 +1,9 @@
-package com.ronit.liftlog.log_feature.domain
+package com.ronit.liftlog.log_feature.data.repository
 
 import com.ronit.liftlog.core.data.model.entity.Log
 import com.ronit.liftlog.core.domain.toEpochMillis
-import com.ronit.liftlog.log_feature.data.repository.LogRepository
+import com.ronit.liftlog.log_feature.domain.LogRepository
 import io.realm.kotlin.Realm
-import io.realm.kotlin.delete
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -13,7 +12,7 @@ import javax.inject.Inject
 
 class LogRepositoryImpl @Inject constructor(
     private val realm: Realm
-):LogRepository {
+): LogRepository {
     override suspend fun getAllLog(): Flow<List<Log>> {
 
         return realm.query<Log>().asFlow()

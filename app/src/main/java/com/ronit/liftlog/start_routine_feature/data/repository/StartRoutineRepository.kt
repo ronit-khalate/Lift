@@ -1,4 +1,4 @@
-package com.ronit.liftlog.start_routine_feature.domain.repository
+package com.ronit.liftlog.start_routine_feature.data.repository
 
 import com.ronit.liftlog.core.data.model.entity.Log
 import com.ronit.liftlog.core.data.model.entity.Routine

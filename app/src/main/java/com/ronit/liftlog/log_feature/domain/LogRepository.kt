@@ -1,4 +1,4 @@
-package com.ronit.liftlog.log_feature.data.repository
+package com.ronit.liftlog.log_feature.domain
 
 import com.ronit.liftlog.core.data.model.entity.Log
 import kotlinx.coroutines.flow.Flow

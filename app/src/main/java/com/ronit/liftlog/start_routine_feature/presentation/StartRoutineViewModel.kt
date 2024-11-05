@@ -1,23 +1,20 @@
 package com.ronit.liftlog.start_routine_feature.presentation
 
 import android.util.Log
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ronit.liftlog.core.data.model.entity.ExerciseLog
 import com.ronit.liftlog.core.data.model.entity.Set
 import com.ronit.liftlog.core.data.model.entity.Workout
 import com.ronit.liftlog.core.domain.RealmResponse
+import com.ronit.liftlog.core.domain.repository.BodyWeightRepositoryImpl
 import com.ronit.liftlog.core.domain.repository.ExerciseRepositoryImpl
 import com.ronit.liftlog.core.domain.repository.WorkoutRepositoryImpl
 import com.ronit.liftlog.core.domain.toEpochMillis
-import com.ronit.liftlog.start_routine_feature.data.model.ExerciseLogDto
-import com.ronit.liftlog.start_routine_feature.data.model.SetDto
-import com.ronit.liftlog.start_routine_feature.data.repository.StartRoutineRepositoryImpl
+import com.ronit.liftlog.start_routine_feature.domain.repository.StartRoutineRepositoryImpl
 import com.ronit.liftlog.start_routine_feature.domain.StartRoutineServiceManager
 import com.ronit.liftlog.start_routine_feature.presentation.event.StartRoutineScreenEvent
 import com.ronit.liftlog.start_routine_feature.presentation.state.StartRoutineScreenState
@@ -36,7 +33,8 @@ class StartRoutineViewModel @AssistedInject constructor(
     @Assisted("routineName") val routineName:String,
     private val startRoutineRepo: StartRoutineRepositoryImpl,
     private val exerciseRepo:ExerciseRepositoryImpl,
-    private val workoutRepo: WorkoutRepositoryImpl
+    private val workoutRepo: WorkoutRepositoryImpl,
+    private val bodyWeightRepo: BodyWeightRepositoryImpl
 ) : ViewModel(){
 
 
@@ -77,6 +75,7 @@ class StartRoutineViewModel @AssistedInject constructor(
                         state = state.copy(
                             routine = response.data,
                             date = LocalDate.now().toEpochMillis(),
+                            previousBodyWeight = bodyWeightRepo.getLatestBodyWeight().toString(),
                             workouts = exerciseRepo.getExercises(response.data.exerciseIds)
                                 .map {exercise ->
 
@@ -84,7 +83,7 @@ class StartRoutineViewModel @AssistedInject constructor(
                                     Workout().apply {
                                         this.exerciseId = exercise._id
 
-//                                        this.previousSets =
+
                                         this.sets =  realmListOf(
 
                                                 *prevSet.map {
@@ -184,7 +183,7 @@ class StartRoutineViewModel @AssistedInject constructor(
 
             is StartRoutineScreenEvent.OnBodyWeightEntered -> {
 
-                state= state.copy(bodyWeight = event.weight)
+                state= state.copy(bodyWeight = event.weight , isBodyWeightValid = event.weight.isBodyWeightValid())
             }
         }
     }
@@ -220,6 +219,11 @@ class StartRoutineViewModel @AssistedInject constructor(
 
 
 
+    }
+
+    private fun String.isBodyWeightValid():Boolean {
+
+        return this.toFloatOrNull()?.let { it>0 }?:false
     }
 
 

@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.ronit.liftlog.core.domain.Until
 import com.ronit.liftlog.core.domain.toEpochMillis
 import com.ronit.liftlog.core.domain.toLocalDate
-import com.ronit.liftlog.log_feature.domain.LogRepositoryImpl
+import com.ronit.liftlog.log_feature.data.repository.LogRepositoryImpl
 import com.ronit.liftlog.log_feature.ui.event.LogScreenUiEvent
 import com.ronit.liftlog.log_feature.ui.state.LogScreenUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LogViewModel@Inject constructor(
-    private val logRepo:LogRepositoryImpl
+    private val logRepo: LogRepositoryImpl
 ):ViewModel() {
 
 

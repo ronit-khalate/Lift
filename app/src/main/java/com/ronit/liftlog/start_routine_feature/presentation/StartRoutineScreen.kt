@@ -208,6 +208,8 @@ fun StartRoutineScreen(
                     Spacer(Modifier.height(8.dp))
                     BodyWeightTextField(
                         bodyWeight = uiState.bodyWeight,
+                        isBodyWeightValid = uiState.isBodyWeightValid,
+                        previousBodyWeight = uiState.previousBodyWeight,
                         onBodyWeightChange = {onEvent(StartRoutineScreenEvent.OnBodyWeightEntered(it))}
                     )
                     Spacer(Modifier.height(8.dp))
@@ -277,6 +279,8 @@ fun StartRoutineScreen(
 private fun BodyWeightTextField(
     modifier: Modifier=Modifier,
     bodyWeight: String,
+    previousBodyWeight:String,
+    isBodyWeightValid:Boolean,
     onBodyWeightChange: (String) -> Unit
 ) {
 
@@ -286,21 +290,22 @@ private fun BodyWeightTextField(
         modifier = modifier
             .fillMaxWidth(),
 
-        textStyle = MaterialTheme.typography.titleMedium.copy(color = primaryText),
+        textStyle = MaterialTheme.typography.titleMedium.copy(color = if(isBodyWeightValid) primaryText else MaterialTheme.colorScheme.error),
         singleLine = true,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Decimal),
         value = bodyWeight,
         cursorBrush = SolidColor(primaryText),
         onValueChange = onBodyWeightChange,
         decorationBox = {
+
             if (bodyWeight.isEmpty() || bodyWeight.isBlank()) {
                 Text(
-                    text = "Enter today's body weight",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = body
+                    text = previousBodyWeight.ifBlank { "Enter today's body weight" },
+                    style = MaterialTheme.typography.titleMedium.copy(color = body),
                 )
             }
             it()
+
         }
     )
 }
