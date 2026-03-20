@@ -2,8 +2,6 @@
 
 Lift Log is a modern Android application designed to help fitness enthusiasts track their workouts, routines, and body progress. Built with the latest Android technologies, it provides a seamless and efficient user experience.
 
-> **Note:** This repository is currently **private**. Access is restricted to authorized contributors only.
-
 ## Project Documentation
 
 We use Notion to discuss features, track progress, and manage the development roadmap. You can find our workspace here:
@@ -50,10 +48,6 @@ The project follows modern Android development practices and Clean Architecture 
 - MVVM (Model-View-ViewModel) pattern.
 - Repository pattern for data abstraction.
 - Kotlin Coroutines and Flow for asynchronous programming.
-
-## Contributing
-
-This is a private project. If you are a team member, please follow the guidelines discussed in our Notion workspace before submitting a Pull Request.
 
 ## License
 
